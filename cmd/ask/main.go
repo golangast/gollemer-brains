@@ -32,6 +32,7 @@ import (
 func main() {
 	modelFlag := flag.String("model", "brain.gob", "path to the trained brain (.gob)")
 	intentsFlag := flag.Bool("intents", false, "after each reply, print the predicted intent (needs a brain trained on data with \"intent\" fields)")
+	typosFlag := flag.Bool("typos", true, "repair likely typos before answering (a word the brain never learned is replaced by its one close vocabulary neighbour, when there is exactly one)")
 	flag.Parse()
 
 	b, err := brain.LoadBrain(*modelFlag)
@@ -39,6 +40,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "ask:", err)
 		os.Exit(1)
 	}
+	b.FixTypos = *typosFlag
 	if *intentsFlag && b.Intents == nil {
 		fmt.Fprintln(os.Stderr, "ask: -intents given, but this brain has no intent classifier — train on data with \"intent\" fields to add one")
 	}

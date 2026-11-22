@@ -129,7 +129,14 @@ type Brain struct {
 	// fields). It predicts the MEANING of a line — a label
 	// the user defined — separately from the reply.
 	Intents *intent.Classifier
-	tok     *tokenizer.Tokenizer
+	// FixTypos switches on the typo normalizer (see
+	// normalize.go): before a line is encoded, an
+	// out-of-vocabulary word with exactly one close
+	// vocabulary neighbour is replaced by that neighbour.
+	// Off by default; cmd/ask turns it on.
+	FixTypos    bool
+	tok         *tokenizer.Tokenizer
+	typoTargets []string
 }
 
 // intentsPathFor returns the intent classifier's sidecar
@@ -179,10 +186,12 @@ func LoadBrain(path string) (*Brain, error) {
 }
 
 // encodeLine turns a raw line into the ids + surfaces the
-// prediction path consumes, exactly as training encoded them.
+// prediction path consumes, exactly as training encoded them
+// — plus, when FixTypos is on, the typo normalizer's
+// corrections (normalize.go).
 func (b *Brain) encodeLine(line string) ([]int, []string) {
 	v := b.Model.Base.OutputVocab
-	words := TokenizeLower(seq2seq.NormalizeQuery(line))
+	words := b.fixTokens(TokenizeLower(seq2seq.NormalizeQuery(line)))
 	ids := make([]int, len(words))
 	for i, w := range words {
 		ids[i] = v.GetTokenID(w)

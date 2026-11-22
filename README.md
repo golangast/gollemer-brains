@@ -337,6 +337,68 @@ rows per meaning, with more varied wording, is the lever;
 the classifier itself is exactly as smart as a bag of
 words gets.
 
+## Improving unseen answers
+
+The chapters above describe a brain that is strong on what
+it was taught and weak on everything else. This section is
+the record of attacking that weakness directly — four
+steps, each one committed separately and **measured before
+it counted**, all against the same yardsticks: 36 held-out
+paraphrases of the example corpus (30 clean rewordings +
+typo'd lines), written before any of the steps and never
+trained on. The mutation augmentation chapter above was
+the warm-up; its own numbers live there. A reply "carries"
+when it contains the line's topic word.
+
+### Step A — the typo normalizer (ask-side, no retraining)
+
+A typo'd word is an unknown token, and one unknown token
+can derail a whole reply — the augmentation chapter's
+brains scored 0/6 on the typo'd lines no matter what the
+training did. So don't fix the model; fix the input.
+Before a line is encoded, any word that is out of the
+vocabulary, at least 4 letters, and has **exactly one**
+close vocabulary neighbour (Damerau–Levenshtein: 1 edit
+for short words, 2 for long ones) is replaced by that
+neighbour. A tie, or no neighbour, leaves the word alone;
+a line needing more than two replacements passes through
+untouched. It is the seat Gollemer's chat grew, ported
+(`brain/normalize.go`), on by default in `cmd/ask`
+(`-typos=false` turns it off), and purely an inference
+switch: the same brain, measured both ways.
+
+| set | seat off | seat on |
+| --- | --- | --- |
+| 10 typo'd lines, greedy | 0/10 | **10/10** |
+| 10 typo'd lines, checked sampling | 0/10 | **10/10** |
+| 30 clean lines, greedy | 11/30 | 10/30 |
+| 30 clean lines, checked sampling | 16/30 | 17/30 |
+
+Every typo in the set had a unique defensible neighbour,
+and once the word was repaired the un-augmented base brain
+answered on-topic every time:
+
+```
+> do you like gardning
+yes, i like gardening a lot. it is one of my favorite topics.
+> how do i start fishnig
+start with a short, fishing, or fishing gets first, time you second.
+```
+
+(the second reply is rough — the seat guarantees the topic
+reaches the encoder, not that the sentence is pretty).
+
+The clean set is the honest cost: a wash, one line each
+way. The seat is context-free, so it sometimes "corrects"
+a real word that simply isn't in the vocabulary —
+`i think it will rain later` became `i think it well rain
+later` (*will* → *well*, one edit, unique neighbour), and
+its greedy reply lost the topic (checked sampling still
+carried it). `gardening sounds relaxing` became
+`gardening sounds reading` — wrong, though that line
+failed both ways. The rule is defensible word by word;
+it is not always right.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
