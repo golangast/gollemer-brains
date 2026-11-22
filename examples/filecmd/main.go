@@ -139,6 +139,13 @@ func (d *demo) handle(line string) bool {
 		} else {
 			d.remove(name)
 		}
+	case "chat":
+		// The classifier's fourth class: it read the line
+		// as conversation, not as any file meaning. That
+		// is a positive "not a command" — the demo says
+		// so and does nothing, exactly as it does for a
+		// line it cannot read at all.
+		fmt.Fprintf(d.out, "intent: chat (%.2f) — that's conversation, not a file command; nothing done.\n", conf)
 	default:
 		fmt.Fprintf(d.out, "intent: %s (%.2f) — this demo has no binding for that meaning; nothing done.\n", label, conf)
 	}

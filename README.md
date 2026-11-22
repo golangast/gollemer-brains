@@ -356,9 +356,10 @@ function per meaning, a sanitizer for the extractor's
 answer, and the safety gates. Nothing outside
 `demo-files/` is ever touched.
 
-The data is `examples/filecommands.jsonl`: 1,456 rows
-over three meanings (`create_file`, `delete_file`,
-`list_files`). The filename vocabulary is 240 names —
+The data is `examples/filecommands.jsonl`: 1,634 rows.
+The first 1,456 are the file rows over three meanings
+(`create_file`, `delete_file`, `list_files`). The
+filename vocabulary is 240 names —
 common file-worthy nouns in `.txt` and `.md`, a few in
 `.json`, `.csv`, and `.log` — and every name appears in
 exactly six rows: three create phrasings and three
@@ -373,11 +374,28 @@ measurement below; a test in the demo pins them out, so
 a future data edit cannot silently contaminate that
 measurement.
 
+The remaining 178 rows are a fourth class, `chat`:
+label-only small talk — greetings, thanks, farewells,
+feelings, weather questions, joke requests, questions
+about the brain itself — written fresh for this file
+(cousins of the chat corpus's lines, not copies of
+them). They exist because of what the assistant
+chapter below measured: a classifier that has only
+ever seen file sentences reads "how are you" as a
+delete request, because a greeting has nowhere else to
+land. The chat rows give small talk a landing place of
+its own. Being label-only, they are skipped by the
+extractor's training entirely — the seq2seq sees
+exactly the rows it saw before — and only the
+classifier learns from them. A hygiene test pins their
+presence and their label-only shape, like the held-out
+names above.
+
 Train with the BPE tokenizer — why is the measured
 story below:
 
 ```sh
-go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe
+go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10
 go run ./examples/filecmd -model filebrain.gob
 ```
 
@@ -458,17 +476,30 @@ point of the expansion):
 | --- | --- | --- | --- |
 | original 36-row data, word | 6 | 8 | 1 |
 | expanded data, word | 4 | 11 | 0 |
-| expanded data, **bpe (shipped)** | **13** | **2** | **0** |
+| expanded data, bpe | 13 | 2 | 0 |
+| expanded data + chat class, **bpe (shipped)** | **15** | **0** | **0** |
 
 With BPE every create and every delete lands on the
 right file — "create shopping.md for me" creates
 shopping.md; "i don't need todo.md anymore, delete it"
-deletes todo.md at the prompt. The two wrong lines are
-the classifier's known weak spot, unchanged by all of
-this: "what is the weather like today" false-fires
-`list_files (0.63)` and lists, and "tell me a joke"
-false-fires `create_file (0.99)` and creates a file
-(agenda.csv, in the sandbox). The expanded word run is
+deletes todo.md at the prompt. The two wrong lines in
+the three-class runs were the classifier's known weak
+spot: "what is the weather like today" false-fired
+`list_files (0.63)` and listed, and "tell me a joke"
+false-fired `create_file (0.99)` and created a file
+(agenda.csv, in the sandbox). The chat class is the
+fix, and in the shipped run both lines are read as
+`chat` (0.98 and 0.99) and do nothing — the list runs
+clean at 15 of 15. The class generalises past its own
+examples: 22 fresh small-talk phrasings, none of them
+in the training file ("hey, long time no see", "will
+tomorrow be sunny", "tell me the funniest joke you
+know", "sorry, i forgot your name", …), land on `chat`
+22 of 22, at confidences 0.97–1.00 — none on a file
+label, none abstained. And the file side did not pay
+for the new class: Set P against the shipped brain is
+unchanged at intent 20/20, extraction 20/20,
+end-to-end 17 right / 0 wrong / 3 gate-abstained. The expanded word run is
 worse than the original — with six names the extractor
 could lean on memorized favourites and occasionally be
 right; with 240 it has to copy, and under the word
@@ -508,13 +539,15 @@ classifier reads the line first: when it returns
 is handled exactly as in `examples/filecmd` — same
 extractor, same sanitizer, same sandbox, same delete
 gate and confirmation prompt. When the classifier
-returns nothing, the line falls through to the chat
-brain (trained on `examples/pairs.jsonl`) and is simply
+returns nothing — or returns its fourth class, `chat`,
+the label-only small-talk class the file data now
+teaches — the line falls through to the chat brain
+(trained on `examples/pairs.jsonl`) and is simply
 answered. One prompt, two skills:
 
 ```sh
-go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy
-go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe
+go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy -augment 0.3 -synonyms 0.3
+go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10
 go run ./examples/assistant -chat brain.gob -files filebrain.gob
 ```
 
@@ -522,98 +555,101 @@ The routing rule, in plain words: **a confident file
 meaning acts; anything else talks — and a delete the
 classifier is not confident enough about is refused as
 a command, never quietly re-routed into small talk.**
+A confident `chat` reading is the positive form of
+"anything else": the classifier recognises the line as
+conversation and the assistant lets it fall through,
+with no intent line printed and no refusal — the reply
+is the whole output, exactly as for a line the
+classifier abstains on.
 
 **Measured, not promised.** One scripted session against
 brains trained with exactly the two commands above,
-mixing chat lines and file lines on purpose:
+mixing chat lines and file lines on purpose. This is
+the same eight lines as the session this section used
+to report — re-run after the file data learned its
+fourth class:
 
 ```
 assistant: talk to me — or ask me to create, delete, or list files in demo-files/. Type 'quit' to exit.
 > how are you
-intent: delete_file (0.64) — not confident enough to delete (this demo wants 0.80); nothing done.
+doing great, thanks! how about you?
 > what do you like to do
-i like to like things: reading, gardening, music, and a warm cup of coffee.
+i like simple things: reading, gardening, music, and a warm cup of coffee.
 > create a file named jim
-intent: create_file (1.00), file: lesson.md
-created demo-files/lesson.md
+intent: create_file (1.00), file: garage.md
+created demo-files/garage.md
 > create a file called notes.txt
 intent: create_file (1.00), file: notes.txt
 created demo-files/notes.txt
 > what files do i have
-intent: list_files (0.95)
-demo-files/: lesson.md, notes.txt
+intent: list_files (0.83)
+demo-files/: garage.md, notes.txt
 > get rid of notes.txt
 intent: delete_file (1.00), file: notes.txt
 delete notes.txt? [y/n] y
 deleted demo-files/notes.txt
 > tell me a joke
-intent: create_file (0.99), file: archive.md
-created demo-files/archive.md
+why did the scarecrow win an award? because he was outstanding in his field.
 > thank you
-intent: delete_file (0.69) — not confident enough to delete (this demo wants 0.80); nothing done.
+you are very welcome. i am happy to help.
 ```
 
-Score: **5 of the 8 lines routed as intended** — the
-chat line that reached the chat brain, and the full
-file arc (create jim's line, create notes.txt, list,
-confirmed delete) all went where they were meant to.
-The sandbox ended holding exactly lesson.md and
-archive.md, with notes.txt created and deleted on
-request. Three lines misrouted, and they are the
-honest price of the design, in two kinds:
+Score: **8 of the 8 lines routed as intended** — up
+from **5 of 8** for the same script before the chat
+class existed. The previous run's three misroutes are
+the comparison that matters:
 
-- *"tell me a joke" created a file.* The filecmd
-  chapter's known false-fire, reproduced here:
-  `create_file (0.99)`, and archive.md appeared in the
-  sandbox. In a combined program this failure stops
-  being a curiosity — a sentence meant as conversation
-  did something to disk. It happened inside the
-  sandbox, and a delete would still have needed the
-  gate and the prompt; but the create gate is only the
-  classifier's own threshold, and 0.99 walked through
-  it.
-- *"how are you" and "thank you" were refused as
-  deletes instead of answered.* The classifier has
-  only ever seen file sentences, and it read both
-  lines as `delete_file` — at 0.64 and 0.69, under the
-  0.80 bar, so the gate converted them into refusals
-  and no file was touched. (Verified against the
-  classifier directly, through `cmd/ask -intents` on
-  the same brain: same labels, same confidences. The
-  routing is faithful; the readings are the
-  classifier's.) In filecmd these lines cost nothing —
-  there is nothing else for them to be. Here they cost
-  a reply: the assistant said "nothing done" to a
-  greeting.
+- *"how are you" and "thank you"* were read as
+  `delete_file` (0.64 / 0.69) and refused at the gate —
+  no file touched, but the reply was stolen. The file
+  classifier had only ever seen file sentences, so a
+  greeting had nowhere to land but a file meaning.
+  Now both lines are read as `chat` (1.00 and 0.99,
+  verified against the classifier directly) and reach
+  the chat brain, which answers them.
+- *"tell me a joke"* false-fired `create_file (0.99)`
+  and created archive.md in the sandbox — a sentence
+  meant as conversation did something to disk. Now it
+  is read as `chat (0.99)`, falls through, and the
+  chat brain answers with an actual joke. Nothing is
+  created.
 
-And the line this example was built around: "create a
-file named jim" — the sentence that made the chat demo
-splice two canned sentences — here *acts*:
-`create_file (1.00)`, and a file appeared. Not jim,
-though: jim is not one of the 240 trained filenames,
-so the extractor did its Set N substitution and
-created lesson.md. The meaning was understood
-completely; the name was beyond it, exactly as the
-previous chapter measured.
+The file arc is unchanged: create jim's line, create
+notes.txt, list, confirmed delete — all land, and the
+sandbox ended holding exactly garage.md, with
+notes.txt created and deleted on request. And the
+standing boundary is still standing inside that arc:
+"create a file named jim" *acts* — `create_file
+(1.00)`, and a file appeared — but jim is not one of
+the 240 trained filenames, so the extractor did its
+Set N substitution and created garage.md. The meaning
+was understood completely; the name was beyond it,
+exactly as the previous chapter measured. The chat
+class fixes where small talk lands; it does not teach
+the extractor new names.
 
-So the caveat from the filecmd chapter is load-bearing
-here, not decorative: **the classifier can false-fire
-on chat lines, and in a combined program a false-fire
-either steals a reply or touches the disk.** The gates
-are what bound the damage in this session — no file
-was wrongly deleted, and nothing left the sandbox —
-but they do not make the readings right. Read the
-score as the mechanism working and the classifier
-being what it is: a bag of words that has never seen
-small talk, asked to judge it anyway.
+Two things changed between the sessions, and the
+score belongs to both: the file data grew its `chat`
+class (the routing fix — the greetings and the joke
+are its doing), and the chat brain is now the
+2,888-pair corpus rather than the 451-pair one (the
+reply quality — "i like simple things…" instead of
+the old splice is its doing). The routing does not
+care which chat brain is loaded; the halves still
+improve independently.
 
-The two halves still improve independently. The chat
-half of this session is the 451-pair brain, splice and
-all ("i like to like things…"); retrain the chat brain
-on more pairs and the assistant's talk gets better with
-no code change — the routing does not care which chat
-brain is loaded. The same holds in reverse for the
-file brain and its data.
+What did not change: the caveat from the filecmd
+chapter stays load-bearing in principle. A bag-of-words
+classifier can still, on some line nobody tested,
+false-fire — and in a combined program a false-fire
+either steals a reply or touches the disk. This
+session contains no such line, and the fresh
+small-talk set in the filecmd chapter (22 of 22 on
+`chat`) says the common cases are covered; neither is
+a proof about every line. The gates remain what bound
+the damage when a reading is wrong — no file was
+wrongly deleted in either session, and nothing has
+ever left the sandbox.
 
 ## Improving unseen answers
 
@@ -1086,7 +1122,8 @@ cmd/ask     a demo REPL for a trained brain (not a chat product)
 examples/   pairs.jsonl — 2,888 toy pairs to start from
             (255 of them intent-labeled; see "Intent understanding");
             commands.jsonl — 60 command rows with intents;
-            filecommands.jsonl — 1,456 file-command rows over 240 filenames,
+            filecommands.jsonl — 1,634 rows: 1,456 file-command rows over
+            240 filenames, plus 178 label-only "chat" rows,
             filecmd/ — the runnable filesystem demo for them, and
             assistant/ — filecmd and the chat brain in one routed program
 ```

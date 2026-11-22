@@ -72,14 +72,18 @@ var heldOutNames = []string{
 
 // TestFilecommandsDataHygiene audits the shipped training
 // file: no duplicate inputs, every extractor row's output
-// is the filename that appears in its input, and none of
-// the held-out measurement names has leaked in.
+// is the filename that appears in its input, none of the
+// held-out measurement names has leaked in — and the
+// "chat" class is present in force and label-only, since
+// the assistant's routing depends on the classifier
+// having somewhere for small talk to land.
 func TestFilecommandsDataHygiene(t *testing.T) {
 	pairs, err := data.LoadPairs(filepath.Join("..", "filecommands.jsonl"))
 	if err != nil {
 		t.Fatalf("LoadPairs: %v", err)
 	}
 	seen := make(map[string]bool)
+	chatRows := 0
 	for _, p := range pairs {
 		if seen[p.Input] {
 			t.Errorf("duplicate training input: %q", p.Input)
@@ -93,6 +97,60 @@ func TestFilecommandsDataHygiene(t *testing.T) {
 		if p.Output != "" && !strings.Contains(p.Input, p.Output) {
 			t.Errorf("output %q does not appear in its input %q", p.Output, p.Input)
 		}
+		if p.Intent == "chat" {
+			chatRows++
+			if p.Output != "" {
+				t.Errorf("chat row %q carries an output %q; chat rows must be label-only or they would train the extractor", p.Input, p.Output)
+			}
+		}
+	}
+	// The class only works if the classifier sees small
+	// talk in bulk — a token handful of rows would leave
+	// greetings landing on file intents, which is the
+	// failure this class exists to fix.
+	if chatRows < 150 {
+		t.Errorf("only %d chat rows in the training file; want at least 150", chatRows)
+	}
+}
+
+// TestChatLabelDoesNothing pins the filecmd behaviour for
+// the classifier's fourth class: a confident "chat"
+// reading is a positive "not a command" — the demo says
+// nothing was done, the extractor is never consulted,
+// and the sandbox is untouched.
+func TestChatLabelDoesNothing(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "demo-files")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	var out bytes.Buffer
+	extractCalls := 0
+	d := &demo{
+		dir:     dir,
+		predict: func(line string) (string, float64) { return "chat", 0.97 },
+		extract: func(line string) (string, error) {
+			extractCalls++
+			return "notes.txt", nil
+		},
+		confirmFn: func(prompt string) bool { return true },
+		out:       &out,
+	}
+	d.handle("well, hello")
+	if !strings.Contains(out.String(), "nothing done") {
+		t.Errorf("chat line should report that nothing was done:\n%s", out.String())
+	}
+	if strings.Contains(out.String(), "not confident enough to delete") {
+		t.Errorf("chat line printed the delete-refusal wording:\n%s", out.String())
+	}
+	if extractCalls != 0 {
+		t.Errorf("extractor was consulted for a chat line (%d calls)", extractCalls)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 0 {
+		t.Errorf("chat line changed the sandbox: %d entries", len(entries))
 	}
 }
 

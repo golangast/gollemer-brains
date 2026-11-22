@@ -156,9 +156,13 @@ func (a *assistant) handle(line string) bool {
 		}
 	default:
 		// No file meaning the host has a binding for —
-		// including the classifier abstaining altogether.
-		// The line is conversation: the chat brain answers
-		// it, and nothing else is printed.
+		// including the classifier abstaining altogether,
+		// and including a confident "chat" reading: the
+		// file data teaches the classifier what small
+		// talk looks like, so a greeting has somewhere to
+		// land besides a file intent. Either way the line
+		// is conversation: the chat brain answers it, and
+		// nothing else is printed.
 		reply, err := a.chat(line)
 		if err != nil {
 			fmt.Fprintf(a.out, "the chat brain could not answer that: %v\n", err)

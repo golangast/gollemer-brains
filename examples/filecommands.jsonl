@@ -1454,3 +1454,181 @@
 {"input": "please remove calendar.md", "output": "calendar.md", "intent": "delete_file"}
 {"input": "please delete the file movies.log", "output": "movies.log", "intent": "delete_file"}
 {"input": "please delete the file porch.log", "output": "porch.log", "intent": "delete_file"}
+{"input": "hey there, friend", "intent": "chat"}
+{"input": "hi, nice to see you", "intent": "chat"}
+{"input": "hello, everybody", "intent": "chat"}
+{"input": "greetings to you", "intent": "chat"}
+{"input": "hey, how is it going", "intent": "chat"}
+{"input": "hello to you", "intent": "chat"}
+{"input": "morning, all", "intent": "chat"}
+{"input": "good afternoon, everyone", "intent": "chat"}
+{"input": "good evening, friend", "intent": "chat"}
+{"input": "hey buddy", "intent": "chat"}
+{"input": "hiya", "intent": "chat"}
+{"input": "hello once again", "intent": "chat"}
+{"input": "it is nice to meet you", "intent": "chat"}
+{"input": "well, hello", "intent": "chat"}
+{"input": "how is your whole day going", "intent": "chat"}
+{"input": "how are things with you", "intent": "chat"}
+{"input": "how have you been lately", "intent": "chat"}
+{"input": "are you doing ok", "intent": "chat"}
+{"input": "how is everything going", "intent": "chat"}
+{"input": "how do you feel today", "intent": "chat"}
+{"input": "is everything alright with you", "intent": "chat"}
+{"input": "how has your day been", "intent": "chat"}
+{"input": "are you keeping well", "intent": "chat"}
+{"input": "how is life treating you", "intent": "chat"}
+{"input": "how are you doing today", "intent": "chat"}
+{"input": "how is your morning going", "intent": "chat"}
+{"input": "you doing ok today", "intent": "chat"}
+{"input": "thanks a lot for that", "intent": "chat"}
+{"input": "thank you ever so much", "intent": "chat"}
+{"input": "many thanks to you", "intent": "chat"}
+{"input": "thanks for your help", "intent": "chat"}
+{"input": "i appreciate all your help", "intent": "chat"}
+{"input": "thank you very much indeed", "intent": "chat"}
+{"input": "thanks, that helps a lot", "intent": "chat"}
+{"input": "i am grateful for your help", "intent": "chat"}
+{"input": "thanks for listening to me", "intent": "chat"}
+{"input": "thank you most kindly", "intent": "chat"}
+{"input": "thanks a bunch for everything", "intent": "chat"}
+{"input": "i really appreciate it", "intent": "chat"}
+{"input": "cheers for that", "intent": "chat"}
+{"input": "see you later then", "intent": "chat"}
+{"input": "bye now", "intent": "chat"}
+{"input": "goodbye just for now", "intent": "chat"}
+{"input": "see you again tomorrow", "intent": "chat"}
+{"input": "i really have to go now", "intent": "chat"}
+{"input": "i will talk with you later", "intent": "chat"}
+{"input": "i will catch you later", "intent": "chat"}
+{"input": "until the next time", "intent": "chat"}
+{"input": "i am off now, bye", "intent": "chat"}
+{"input": "good night, everyone", "intent": "chat"}
+{"input": "see you very soon", "intent": "chat"}
+{"input": "bye now, take care", "intent": "chat"}
+{"input": "i should get going soon", "intent": "chat"}
+{"input": "i am feeling happy today", "intent": "chat"}
+{"input": "i feel a bit sad", "intent": "chat"}
+{"input": "i am tired this evening", "intent": "chat"}
+{"input": "i feel really great today", "intent": "chat"}
+{"input": "i am a little bored", "intent": "chat"}
+{"input": "i feel calm and relaxed", "intent": "chat"}
+{"input": "i am excited about tomorrow", "intent": "chat"}
+{"input": "i feel so very sleepy", "intent": "chat"}
+{"input": "i am feeling quite hungry", "intent": "chat"}
+{"input": "i had a wonderful day", "intent": "chat"}
+{"input": "i feel a bit lonely today", "intent": "chat"}
+{"input": "today was a long day", "intent": "chat"}
+{"input": "i am in such a good mood", "intent": "chat"}
+{"input": "i feel nervous about the test", "intent": "chat"}
+{"input": "is it going to rain today", "intent": "chat"}
+{"input": "how is the weather outside", "intent": "chat"}
+{"input": "will it snow this weekend", "intent": "chat"}
+{"input": "is it sunny where you are", "intent": "chat"}
+{"input": "what is it like outside today", "intent": "chat"}
+{"input": "do you think it will rain tomorrow", "intent": "chat"}
+{"input": "is it cold out there", "intent": "chat"}
+{"input": "will the sun come out later", "intent": "chat"}
+{"input": "how hot is it today", "intent": "chat"}
+{"input": "is it windy outside", "intent": "chat"}
+{"input": "do i need a coat today", "intent": "chat"}
+{"input": "will it be warm tomorrow", "intent": "chat"}
+{"input": "is there a storm coming", "intent": "chat"}
+{"input": "tell me something funny, please", "intent": "chat"}
+{"input": "do you know any jokes", "intent": "chat"}
+{"input": "go on, make me laugh", "intent": "chat"}
+{"input": "i need a good laugh", "intent": "chat"}
+{"input": "tell me a funny story", "intent": "chat"}
+{"input": "got any jokes for me", "intent": "chat"}
+{"input": "say something funny for me", "intent": "chat"}
+{"input": "cheer me up with a joke", "intent": "chat"}
+{"input": "i want to hear a joke", "intent": "chat"}
+{"input": "know a funny one", "intent": "chat"}
+{"input": "tell me a silly joke", "intent": "chat"}
+{"input": "can you make me laugh", "intent": "chat"}
+{"input": "give me a joke to smile about", "intent": "chat"}
+{"input": "may i ask your name", "intent": "chat"}
+{"input": "so who are you", "intent": "chat"}
+{"input": "what name should i call you", "intent": "chat"}
+{"input": "are you a robot or a person", "intent": "chat"}
+{"input": "are you a real person", "intent": "chat"}
+{"input": "what exactly are you", "intent": "chat"}
+{"input": "tell me a bit about yourself", "intent": "chat"}
+{"input": "who was it that made you", "intent": "chat"}
+{"input": "are you an ai", "intent": "chat"}
+{"input": "how old are you really", "intent": "chat"}
+{"input": "where are you from", "intent": "chat"}
+{"input": "what kind of thing are you", "intent": "chat"}
+{"input": "do you have a name of your own", "intent": "chat"}
+{"input": "you are very kind", "intent": "chat"}
+{"input": "that is a lovely answer", "intent": "chat"}
+{"input": "you are so helpful", "intent": "chat"}
+{"input": "nice work, well done", "intent": "chat"}
+{"input": "you are a clever one", "intent": "chat"}
+{"input": "i like talking to you", "intent": "chat"}
+{"input": "you are a good listener", "intent": "chat"}
+{"input": "that was a great answer", "intent": "chat"}
+{"input": "you make me smile", "intent": "chat"}
+{"input": "you are doing a great job", "intent": "chat"}
+{"input": "what a kind thing to say", "intent": "chat"}
+{"input": "you are wonderful company", "intent": "chat"}
+{"input": "i am sorry about that", "intent": "chat"}
+{"input": "sorry, my mistake", "intent": "chat"}
+{"input": "forgive me for the confusion", "intent": "chat"}
+{"input": "sorry i was late", "intent": "chat"}
+{"input": "my apologies for that", "intent": "chat"}
+{"input": "sorry about earlier", "intent": "chat"}
+{"input": "i did not mean that, sorry", "intent": "chat"}
+{"input": "pardon me", "intent": "chat"}
+{"input": "sorry for the mix up", "intent": "chat"}
+{"input": "i owe you an apology", "intent": "chat"}
+{"input": "sorry, that came out wrong", "intent": "chat"}
+{"input": "excuse me, sorry", "intent": "chat"}
+{"input": "what is the time", "intent": "chat"}
+{"input": "what day is it today", "intent": "chat"}
+{"input": "what can you do for me", "intent": "chat"}
+{"input": "can you help me with something", "intent": "chat"}
+{"input": "how does this work", "intent": "chat"}
+{"input": "what is two plus two", "intent": "chat"}
+{"input": "why is the sky so blue", "intent": "chat"}
+{"input": "how many days are there in a week", "intent": "chat"}
+{"input": "what is the capital of france", "intent": "chat"}
+{"input": "do you know the time", "intent": "chat"}
+{"input": "what year is it", "intent": "chat"}
+{"input": "how do i make tea", "intent": "chat"}
+{"input": "what is the meaning of life", "intent": "chat"}
+{"input": "can you answer a question for me", "intent": "chat"}
+{"input": "do you like listening to music", "intent": "chat"}
+{"input": "what is your favourite food", "intent": "chat"}
+{"input": "do you enjoy reading books", "intent": "chat"}
+{"input": "what kind of books do you like", "intent": "chat"}
+{"input": "do you like animals", "intent": "chat"}
+{"input": "what is your favourite colour", "intent": "chat"}
+{"input": "do you like the rain", "intent": "chat"}
+{"input": "what movies do you enjoy", "intent": "chat"}
+{"input": "do you like coffee, or do you prefer tea", "intent": "chat"}
+{"input": "what is your favourite hobby", "intent": "chat"}
+{"input": "do you enjoy cooking food", "intent": "chat"}
+{"input": "what sports do you like", "intent": "chat"}
+{"input": "i really love pizza", "intent": "chat"}
+{"input": "my cat is sleeping on the sofa", "intent": "chat"}
+{"input": "i went for a long walk today", "intent": "chat"}
+{"input": "i read a good book yesterday", "intent": "chat"}
+{"input": "the garden looks lovely", "intent": "chat"}
+{"input": "i had a coffee this morning", "intent": "chat"}
+{"input": "my friend is visiting tomorrow", "intent": "chat"}
+{"input": "i like rainy days", "intent": "chat"}
+{"input": "today is my birthday", "intent": "chat"}
+{"input": "i am learning how to cook", "intent": "chat"}
+{"input": "the kids are playing outside", "intent": "chat"}
+{"input": "i watched a film last night", "intent": "chat"}
+{"input": "tell me a little story", "intent": "chat"}
+{"input": "tell me about the stars", "intent": "chat"}
+{"input": "tell me something interesting today", "intent": "chat"}
+{"input": "tell me about the sea", "intent": "chat"}
+{"input": "tell me a bedtime story", "intent": "chat"}
+{"input": "tell me about your day", "intent": "chat"}
+{"input": "tell me something new for once", "intent": "chat"}
+{"input": "tell me about animals", "intent": "chat"}
+{"input": "tell me a fun fact", "intent": "chat"}
+{"input": "tell me about the moon", "intent": "chat"}

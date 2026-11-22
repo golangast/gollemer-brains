@@ -148,6 +148,56 @@ func TestRoutingFileAndChat(t *testing.T) {
 	}
 }
 
+// TestChatLabelFallsThroughToChat pins the other half of
+// the routing rule: when the file classifier confidently
+// reads a line as "chat" — the fourth class the file data
+// now teaches, so small talk has somewhere to land besides
+// a file intent — the line is conversation. The chat brain
+// answers it, no intent line is printed, the delete
+// refusal wording never appears, and the sandbox is
+// untouched.
+func TestChatLabelFallsThroughToChat(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "demo-files")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	var out bytes.Buffer
+	chatCalls := 0
+	a := &assistant{
+		dir: dir,
+		predict: func(line string) (string, float64) {
+			return "chat", 0.97
+		},
+		extract: func(line string) (string, error) { return "notes.txt", nil },
+		chat: func(line string) (string, error) {
+			chatCalls++
+			return "i am well, thank you.", nil
+		},
+		confirmFn: func(prompt string) bool { return true },
+		out:       &out,
+	}
+	a.handle("well, hello")
+	if chatCalls != 1 {
+		t.Fatalf("chat-labelled line did not reach the chat brain (calls = %d)\noutput:\n%s", chatCalls, out.String())
+	}
+	if !strings.Contains(out.String(), "i am well, thank you.") {
+		t.Errorf("chat-labelled line should print the chat reply:\n%s", out.String())
+	}
+	if strings.Contains(out.String(), "intent:") {
+		t.Errorf("chat-labelled line should print nothing but the reply:\n%s", out.String())
+	}
+	if strings.Contains(out.String(), "not confident enough to delete") {
+		t.Errorf("chat-labelled line printed the delete-refusal wording:\n%s", out.String())
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 0 {
+		t.Errorf("chat-labelled line changed the sandbox: %d entries", len(entries))
+	}
+}
+
 // TestDeleteBelowGateRefusesInsteadOfChatting pins the
 // routing rule that is easiest to get wrong: a line the
 // classifier reads as delete_file, but not confidently
