@@ -18,30 +18,31 @@ anyone can train their own.
 You need Go (this repo builds with Go 1.26; the code is pure
 standard library — no dependencies to download).
 
-Train the bundled example dataset (204 pairs of tiny small talk):
+Train the bundled example dataset (2,643 pairs of tiny small
+talk):
 
 ```sh
-go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy
+go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy -augment 0.3 -synonyms 0.3
 ```
 
 Real output from that run (abridged — one line per epoch in the
 actual log):
 
 ```
-[train] dataset: 204 pairs -> 163 train, 41 held out; vocab size=502
-[train] 163 encoded pairs, 6 batches/epoch, lr=0.001000, layers=[copy], epochs<=60
-[train] epoch=1 avg_loss=5.991518 best=5.991518 lr=0.001000
+[train] dataset: 2643 pairs -> 2114 train, 529 held out; vocab size=1659
+[train] 2114 encoded pairs, 67 batches/epoch, lr=0.001000, layers=[copy], epochs<=60
+[train] epoch=1 avg_loss=5.764964 best=5.764964 lr=0.001000
 ...
-[train] epoch=60 avg_loss=1.336682 best=1.336682 lr=0.000500
-[train] saved best model (loss=1.336682) to brain.gob
-[train] held-out Q: i like painting
-[train] held-out A: painting is wonderful. what do you enjoy most about it? (reference: Painting is wonderful. What do you enjoy most about it?)
+[train] epoch=60 avg_loss=0.083481 best=0.083134 lr=0.000500
+[train] saved best model (loss=0.083134) to brain.gob
+[train] held-out Q: i really like reading
+[train] held-out A: reading is a joy. what got you started with it? (reference: Reading is wonderful. What do you enjoy most about it?)
 ```
 
 A few dozen epochs on the toy set already shows learning (the
 loss falls and replies become readable); the default of 200
 epochs is the full effect. On a busy shared VM the 60-epoch run
-above took about 17 minutes; on a quiet desktop it is much
+above took about 100 minutes; on a quiet desktop it is much
 faster. Bigger datasets take proportionally longer per epoch.
 
 Then talk to it:
@@ -53,19 +54,20 @@ go run ./cmd/ask -model brain.gob
 ```
 brain loaded. type a line, or 'quit' to exit.
 > hello
-hello! how you today?
+hello! how are you today?
 > do you like gardening
-gardening, i like gardening a lot. it is one of my favorite topics.
+yes, i like gardening a lot. it is one of my favorite topics.
 > hey, how is your day going
-i day going not going brain, trained on a small file example pairs.
+i am doing well, thank you for asking. how are you doing?
 ```
 
-That last line is in here on purpose: it is an *unseen
-paraphrase*, and the tiny brain garbles it. That is the honest
-state of a model this small trained on 204 pairs — strong on
-what it was taught and near neighbours, weak on genuinely new
-phrasings. More data and more epochs are the cure, in that
-order.
+That last line used to garble ("i day going not going brain,
+trained on a small file example pairs.") when the example set
+was 204 pairs. The corpus has since grown — 204 → 451 → 2,643
+pairs — and unseen paraphrases mostly land now; the measured
+before/after is in Step F below. Mostly is not always: the
+tiny brain still splices replies on some new phrasings, and
+Step F shows one of those too, verbatim.
 
 ## Your own data
 
@@ -110,6 +112,9 @@ source project learned the hard way:
   weights so far, refreshed on improvement; `<out>.latest`
   (+ sidecar) is rewritten **every epoch** with the current
   weights, so a killed run never replays finished epochs.
+  `-ckpt-every N` spaces the `.latest` writes to every N
+  epochs when you would rather replay a few epochs than pay
+  the checkpoint I/O every time.
 - The production `.gob` is written **once, at the end**, from
   the best weights — a killed or diverged run can never leave
   a half-trained model in its place. Checkpoints are removed
@@ -823,6 +828,59 @@ intent layer above is what makes the remaining gaps safe
 to ship: when the brain does not know, the meaning
 classifier can still abstain.
 
+### Step E — growing the chat data (density for readability)
+
+Steps A–D were scored by topic-carrying, and a reply can
+carry its topic and still read like two canned sentences
+spliced together — because at 451 pairs, splicing is what
+the data taught. This step attacks readability with data
+density: `examples/pairs.jsonl` grew 451 → 2,643 pairs,
+the originals kept verbatim, the new pairs built by
+families (greetings, feelings, daily routine, work and
+school, family, food, weather, 27 new topics alongside the
+old ones) with several distinct replies per input family
+instead of one canned line. Audit: no new input reproduces
+a held-out evaluation line, no input carries more than
+three distinct replies.
+
+Recipe search on the new corpus (copy layer, word
+tokenizer): 60 epochs with mutation + synonyms 0.3 beat
+60 epochs without augmentation (concept set 15/16 vs
+12/16 greedy) and a 180-epoch run that early-stopped at
+120 (14/16, and no better anywhere else). The winner is
+the quickstart command above. The control arm is the old
+451 pairs under that same winning recipe, so the table
+below isolates the data:
+
+| measure (held-out, typos off) | 451 pairs | 2,643 pairs |
+|---|---|---|
+| paraphrase set, greedy / checked | 22/36, 25/36 | 21/36, 25/36 |
+| concept set, greedy / checked | 11/16, 14/16 | 15/16, 16/16 |
+| fluency probe, coherent / partial / garbled | 4 / 8 / 12 | 16 / 3 / 5 |
+
+The fluency probe is new: 24 everyday lines, replies
+scored by hand as coherent (grammatical, on-topic),
+partial (readable but broken or deflected), or garbled.
+That is the number that moved. Verbatim, checked replies:
+
+- "i am feeling a bit tired today" — 451: "a strong
+  opinion! am, catching light., though a quiet of its
+  own fans." → 2,643: "get some rest when you can. a
+  tired body needs a quiet evening."
+- "what do you like to do" — still bad under the shipped
+  recipe: "i do like with a tiny about small things. one
+  that is of my kind, thank you." The 180-epoch arm
+  answered this one cleanly ("i do like simple things:
+  reading, gardening, music, and a warm cup of coffee.")
+  and lost on the aggregate table; individual lines move
+  between runs, and the aggregate is what ships.
+
+The honest costs: on the paraphrase set's greedy pass the
+old corpus edges the new (22 vs 21 — its topics are
+exactly that set's topics; the wider corpus dilutes them,
+and checked sampling ties at 25). And 5 of 24 probe lines
+still garble. Density is a lever, not a cure.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -853,7 +911,7 @@ brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 204 toy pairs to start from;
+examples/   pairs.jsonl — 2,643 toy pairs to start from;
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,456 file-command rows over 240 filenames,
             filecmd/ — the runnable filesystem demo for them, and
