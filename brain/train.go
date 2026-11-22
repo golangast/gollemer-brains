@@ -1,0 +1,496 @@
+package brain
+
+// The standalone trainer, carved from Gollemer's layers trainer
+// (internal/ai/training/chat/layers_train.go in the source) with
+// its loop discipline intact:
+//
+//   - batch 32, Adam at lr 1e-3, gradient clip 1.0, LR halved
+//     every 40 epochs;
+//   - divergence rollback: a NaN/Inf epoch, or an epoch after
+//     epoch 5 landing above 3x the best loss, restores the best
+//     weights and halves the LR; more than 5 rollbacks stops
+//     the run;
+//   - best-on-train-loss selection: the production .gob is
+//     written ONCE, at the end, from the best weights seen;
+//   - checkpoints next to the output file: <out>.ckpt (+ .json
+//     sidecar) holds the best weights, refreshed on improvement
+//     with a 2-epoch minimum spacing; <out>.latest (+ .json) is
+//     rewritten EVERY epoch with the current weights, so a
+//     killed run resumes where it stopped instead of replaying
+//     from the last improvement;
+//   - resume refuses a checkpoint whose vocabulary fingerprint
+//     or layer config differs from the current run's — a vocab
+//     index shift would silently corrupt the weights;
+//   - early stop after 30 epochs without improvement.
+//
+// What the carve dropped, and why: the source's synonym/mutation
+// augmentation (chat-dataset machinery), the frame/class/turn/
+// memory layers and their corpus derivations (they are computed
+// by the chat package's fact seat and intent labeller), and the
+// session probes. The layers that carve cleanly — char and
+// copy — are supported; see SupportedLayers.
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"math"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+
+	"github.com/golangast/gollemer-brains/data"
+	"github.com/golangast/gollemer-brains/nn"
+	"github.com/golangast/gollemer-brains/seq2seq"
+	"github.com/golangast/gollemer-brains/tokenizer"
+	"github.com/golangast/gollemer-brains/vocab"
+)
+
+const (
+	batchSize = 32
+	baseLR    = 1e-3
+	gradClip  = 1.0
+	embedDim  = 128
+	hiddenDim = 256
+)
+
+// SupportedLayers are the layer names the standalone trainer
+// accepts: the ones that need no chat-side corpus derivations.
+// "copy" is the mechanism the source project's best brain was
+// adopted with; "char" is the character-trigram layer.
+var SupportedLayers = []string{"char", "copy"}
+
+// droppedLayers are real layers in the source whose derivations
+// live in the chat product; naming one is a clear error, not a
+// silent no-op.
+var droppedLayers = []string{"class", "frame", "frame-top", "frame-slots", "frame-soft", "turn", "memory"}
+
+// ckptMeta is the sidecar written next to every checkpoint. It
+// records exactly where a killed run stopped so -resume can
+// pick up with the same learning rate, best-loss tracking, and
+// vocabulary it had. Copied from the source trainer.
+type ckptMeta struct {
+	Epoch              int     `json:"epoch"`
+	Best               float64 `json:"best"`
+	LastCheckpointBest float64 `json:"last_checkpoint_best"`
+	LR                 float32 `json:"lr"`
+	EpochsNoImprove    int     `json:"epochs_no_improve"`
+	VocabFP            uint64  `json:"vocab_fp"`
+}
+
+// TrainOptions configures one training run.
+type TrainOptions struct {
+	Layers []string // layer names to switch on (see SupportedLayers)
+	Epochs int      // total epochs to reach (resume counts from the checkpoint)
+	Resume bool     // continue from <out>.ckpt/.latest when usable
+}
+
+// ckptPathsFor returns the checkpoint paths living next to the
+// output model: best (.ckpt) and latest (.latest), each with a
+// JSON sidecar.
+func ckptPathsFor(out string) (ckptPath, metaPath, latestPath, latestMetaPath string) {
+	return out + ".ckpt", out + ".ckpt.json", out + ".latest", out + ".latest.json"
+}
+
+func saveCheckpoint(model *seq2seq.LayersModel, meta ckptMeta, ckptPath, metaPath string) error {
+	if err := os.MkdirAll(filepath.Dir(ckptPath), 0o755); err != nil {
+		return err
+	}
+	tmp := ckptPath + ".tmp"
+	if err := model.Save(tmp); err != nil {
+		return err
+	}
+	if err := os.Rename(tmp, ckptPath); err != nil {
+		return err
+	}
+	data, err := json.Marshal(meta)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(metaPath, data, 0o644)
+}
+
+func loadCheckpoint(tok *tokenizer.Tokenizer, curFP uint64, ckptPath, metaPath string) (*seq2seq.LayersModel, ckptMeta, error) {
+	var meta ckptMeta
+	raw, err := os.ReadFile(metaPath)
+	if err != nil {
+		return nil, meta, fmt.Errorf("no checkpoint sidecar: %w", err)
+	}
+	if err := json.Unmarshal(raw, &meta); err != nil {
+		return nil, meta, fmt.Errorf("bad checkpoint sidecar: %w", err)
+	}
+	if meta.VocabFP != curFP {
+		return nil, meta, fmt.Errorf("checkpoint vocab fingerprint %d != current %d; refusing to resume across data changes", meta.VocabFP, curFP)
+	}
+	model, err := seq2seq.LoadLayers(ckptPath, tok)
+	if err != nil {
+		return nil, meta, err
+	}
+	return model, meta, nil
+}
+
+// copyWeightsInto copies src's parameter values into dst in
+// place, mirroring the source's resume weight transplant.
+func copyWeightsInto(dst, src *seq2seq.LayersModel) error {
+	dp := dst.Parameters()
+	sp := src.Parameters()
+	if len(dp) != len(sp) {
+		return fmt.Errorf("parameter count mismatch on resume (%d vs %d)", len(dp), len(sp))
+	}
+	for i := range dp {
+		if len(dp[i].Data) != len(sp[i].Data) {
+			return fmt.Errorf("parameter %d size mismatch on resume", i)
+		}
+		copy(dp[i].Data, sp[i].Data)
+	}
+	return nil
+}
+
+// encodedPair is one training pair with everything the batch
+// needs precomputed (the source's layersEncodedPair minus the
+// frame teacher labels, which the dropped frame layer owned).
+type encodedPair struct {
+	input       []int
+	inputSurfs  []string
+	target      []int
+	targetSurfs []string
+}
+
+// encodePair encodes one pair for training. Pairs whose target
+// encodes to fewer than 2 tokens (BOS+EOS) or more than 60 are
+// skipped, exactly as in the source.
+func encodePair(p data.Pair, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) (encodedPair, bool) {
+	words := TokenizeLower(seq2seq.NormalizeQuery(p.Input))
+	ids := EncodeInput(tok, p.Input)
+	tg := EncodeTarget(tok, v, p.Output)
+	if len(ids) == 0 || len(tg) < 2 || len(tg) > 60 {
+		return encodedPair{}, false
+	}
+	ep := encodedPair{target: tg}
+	if len(words) == len(ids) {
+		ep.inputSurfs = append([]string{}, words...)
+	} else {
+		ep.inputSurfs = make([]string, len(ids))
+		for i, id := range ids {
+			ep.inputSurfs[i] = v.GetWord(id)
+		}
+	}
+	ep.input = ids
+	ep.targetSurfs = make([]string, len(tg))
+	for i, id := range tg {
+		ep.targetSurfs[i] = v.GetWord(id)
+	}
+	return ep, true
+}
+
+// makeBatches pads a length-sorted slice of encoded pairs into
+// batches, mirroring the source's makeLayersBatches.
+func makeBatches(enc []encodedPair, size, padID int) []seq2seq.LayersBatch {
+	var out []seq2seq.LayersBatch
+	for i := 0; i < len(enc); i += size {
+		end := i + size
+		if end > len(enc) {
+			end = len(enc)
+		}
+		grp := enc[i:end]
+		maxIn, maxTg := 0, 0
+		for _, p := range grp {
+			if len(p.input) > maxIn {
+				maxIn = len(p.input)
+			}
+			if len(p.target) > maxTg {
+				maxTg = len(p.target)
+			}
+		}
+		b := seq2seq.LayersBatch{PadID: padID}
+		for _, p := range grp {
+			in := make([]int, maxIn)
+			copy(in, p.input)
+			inS := make([]string, maxIn)
+			copy(inS, p.inputSurfs)
+			for k := len(p.input); k < maxIn; k++ {
+				in[k] = padID
+				inS[k] = ""
+			}
+			tg := make([]int, maxTg)
+			copy(tg, p.target)
+			tgS := make([]string, maxTg)
+			copy(tgS, p.targetSurfs)
+			for k := len(p.target); k < maxTg; k++ {
+				tg[k] = padID
+				tgS[k] = ""
+			}
+			b.InputIDs = append(b.InputIDs, in)
+			b.InputSurfaces = append(b.InputSurfaces, inS)
+			b.TargetIDs = append(b.TargetIDs, tg)
+			b.TargetSurfs = append(b.TargetSurfs, tgS)
+			b.TopCodes = append(b.TopCodes, -1)
+			b.ActLabels = append(b.ActLabels, 0)
+			b.ToneLabels = append(b.ToneLabels, 0)
+			b.PrevTop = append(b.PrevTop, -1)
+		}
+		out = append(out, b)
+	}
+	return out
+}
+
+// Train trains a brain on pairs and writes it to outPath.
+// pairs is the FULL dataset: Train applies the deterministic
+// 80/20 split itself (data.Split), builds the vocabulary from
+// the training split, and prints a few held-out predictions at
+// the end.
+func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
+	cfg := seq2seq.DefaultLayersConfig()
+	for _, name := range opts.Layers {
+		switch {
+		case contains(SupportedLayers, name):
+			if err := cfg.Set(name, true); err != nil {
+				return err
+			}
+		case contains(droppedLayers, name):
+			return fmt.Errorf("layer %q is not in the standalone extraction: its corpus derivations live in Gollemer's chat package (see README)", name)
+		default:
+			return fmt.Errorf("unknown layer %q (supported: %s)", name, strings.Join(SupportedLayers, ", "))
+		}
+	}
+	epochs := opts.Epochs
+	if epochs <= 0 {
+		epochs = 200
+	}
+	if len(pairs) < 10 {
+		return fmt.Errorf("need at least 10 pairs to train, have %d", len(pairs))
+	}
+
+	trainPairs, heldPairs := data.Split(pairs)
+	v, tok, err := BuildVocab(trainPairs)
+	if err != nil {
+		return err
+	}
+	log.Printf("[train] dataset: %d pairs -> %d train, %d held out; vocab size=%d", len(pairs), len(trainPairs), len(heldPairs), v.Size())
+
+	encoded := make([]encodedPair, 0, len(trainPairs))
+	for _, p := range trainPairs {
+		ep, ok := encodePair(p, v, tok)
+		if !ok {
+			continue
+		}
+		encoded = append(encoded, ep)
+	}
+	if len(encoded) == 0 {
+		return fmt.Errorf("no encodable training pairs")
+	}
+	sort.Slice(encoded, func(i, j int) bool { return len(encoded[i].input) < len(encoded[j].input) })
+
+	curFP := VocabFingerprint(v)
+	ckptPath, metaPath, latestPath, latestMetaPath := ckptPathsFor(outPath)
+
+	startEpoch := 1
+	lr := float32(baseLR)
+	best := float32(math.Inf(1))
+	epochsNoImprove := 0
+	lastCheckpointBest := float32(math.Inf(1))
+	lastCheckpointEpoch := 0
+	var model *seq2seq.LayersModel
+	var pendingLatest *seq2seq.LayersModel
+
+	checkCfg := func(m *seq2seq.LayersModel) error {
+		if m.Config != cfg {
+			return fmt.Errorf("checkpoint config %+v does not match requested %+v; refusing to resume across configurations", m.Config, cfg)
+		}
+		return nil
+	}
+
+	if opts.Resume {
+		bm, bmeta, berr := loadCheckpoint(tok, curFP, ckptPath, metaPath)
+		lm, lmeta, lerr := loadCheckpoint(tok, curFP, latestPath, latestMetaPath)
+		if berr == nil {
+			berr = checkCfg(bm)
+		}
+		if lerr == nil {
+			lerr = checkCfg(lm)
+		}
+		switch {
+		case lerr == nil && (berr != nil || lmeta.Epoch > bmeta.Epoch):
+			startEpoch = lmeta.Epoch + 1
+			lr = lmeta.LR
+			best = float32(lmeta.Best)
+			epochsNoImprove = lmeta.EpochsNoImprove
+			if berr == nil {
+				lastCheckpointBest = float32(bmeta.LastCheckpointBest)
+				lastCheckpointEpoch = bmeta.Epoch
+			} else {
+				lastCheckpointBest = float32(lmeta.LastCheckpointBest)
+			}
+			if berr == nil && !(lmeta.Best < lmeta.LastCheckpointBest) {
+				model = bm
+				pendingLatest = lm
+			} else {
+				model = lm
+			}
+			log.Printf("[train] RESUMED from latest checkpoint: completed epoch=%d best=%.6f lr=%.6f no-improve=%d (continuing at epoch %d)",
+				lmeta.Epoch, lmeta.Best, lmeta.LR, lmeta.EpochsNoImprove, startEpoch)
+		case berr == nil:
+			model = bm
+			startEpoch = bmeta.Epoch + 1
+			lr = bmeta.LR
+			best = float32(bmeta.Best)
+			lastCheckpointBest = float32(bmeta.LastCheckpointBest)
+			lastCheckpointEpoch = bmeta.Epoch
+			epochsNoImprove = bmeta.EpochsNoImprove
+			log.Printf("[train] RESUMED from checkpoint: completed epoch=%d best=%.6f lr=%.6f (continuing at epoch %d)",
+				bmeta.Epoch, bmeta.Best, bmeta.LR, startEpoch)
+		default:
+			log.Printf("[train] -resume given but checkpoint unusable (%v); starting fresh from epoch 1", berr)
+		}
+	}
+	if model == nil {
+		cfg.EmbedDim, cfg.HiddenDim = embedDim, hiddenDim
+		base, err := seq2seq.NewSeq2Seq(v.Size(), v.Size(), embedDim, hiddenDim, tok, v)
+		if err != nil {
+			return err
+		}
+		model, err = seq2seq.NewLayersModel(base, cfg, seq2seq.LayersDerivations{})
+		if err != nil {
+			return err
+		}
+	} else {
+		cfg = model.Config
+	}
+	opt := nn.NewOptimizer(model.Parameters(), baseLR, gradClip)
+	adam, ok := opt.(*nn.Adam)
+	if !ok {
+		return fmt.Errorf("optimizer is not *nn.Adam")
+	}
+	adam.SetLearningRate(lr)
+	bestParams := adam.SnapshotParameters()
+	if pendingLatest != nil {
+		if err := copyWeightsInto(model, pendingLatest); err != nil {
+			return err
+		}
+		pendingLatest = nil
+	}
+	rollbacks := 0
+
+	batches := makeBatches(encoded, batchSize, v.PaddingTokenID)
+	log.Printf("[train] %d encoded pairs, %d batches/epoch, lr=%.6f, layers=%v, epochs<=%d",
+		len(encoded), len(batches), lr, opts.Layers, epochs)
+
+	for epoch := startEpoch; epoch <= epochs; epoch++ {
+		if epoch > 1 && (epoch-1)%40 == 0 {
+			lr *= 0.5
+			adam.SetLearningRate(lr)
+		}
+		var epochLoss float64
+		for _, b := range batches {
+			adam.ZeroGrad()
+			loss, err := model.TrainBatchLayers(b)
+			if err != nil {
+				return fmt.Errorf("epoch %d: %w", epoch, err)
+			}
+			epochLoss += float64(loss)
+			adam.ClipGradients()
+			adam.Step()
+		}
+		avg := float32(epochLoss / float64(len(batches)))
+
+		if math.IsNaN(float64(avg)) || math.IsInf(float64(avg), 0) || (epoch > 5 && avg > best*3) {
+			rollbacks++
+			log.Printf("[train] DIVERGENCE at epoch=%d loss=%.6f (best=%.6f); rolling back (lr %.6f -> %.6f)",
+				epoch, avg, best, lr, lr*0.5)
+			adam.RestoreParameters(bestParams)
+			lr *= 0.5
+			adam.SetLearningRate(lr)
+			if rollbacks > 5 {
+				log.Printf("[train] too many rollbacks; stopping")
+				break
+			}
+			continue
+		}
+
+		if avg < best {
+			best = avg
+			bestParams = adam.SnapshotParameters()
+			epochsNoImprove = 0
+		} else {
+			epochsNoImprove++
+		}
+		log.Printf("[train] epoch=%d avg_loss=%.6f best=%.6f lr=%.6f", epoch, avg, best, lr)
+
+		if best < lastCheckpointBest && epoch-lastCheckpointEpoch >= 2 {
+			adam.RestoreParameters(bestParams)
+			meta := ckptMeta{
+				Epoch:              epoch,
+				Best:               float64(best),
+				LastCheckpointBest: float64(best),
+				LR:                 lr,
+				EpochsNoImprove:    epochsNoImprove,
+				VocabFP:            curFP,
+			}
+			if err := saveCheckpoint(model, meta, ckptPath, metaPath); err != nil {
+				return err
+			}
+			lastCheckpointBest = best
+			lastCheckpointEpoch = epoch
+			log.Printf("[train] checkpointed best model (loss=%.6f) to %s", best, ckptPath)
+		}
+		latestLCB := lastCheckpointBest
+		if math.IsInf(float64(latestLCB), 1) {
+			latestLCB = best
+		}
+		latestMeta := ckptMeta{
+			Epoch:              epoch,
+			Best:               float64(best),
+			LastCheckpointBest: float64(latestLCB),
+			LR:                 lr,
+			EpochsNoImprove:    epochsNoImprove,
+			VocabFP:            curFP,
+		}
+		if err := saveCheckpoint(model, latestMeta, latestPath, latestMetaPath); err != nil {
+			return err
+		}
+		if epochsNoImprove >= 30 {
+			log.Printf("[train] early stopping: 30 epochs without improvement")
+			break
+		}
+	}
+
+	adam.RestoreParameters(bestParams)
+	if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil && filepath.Dir(outPath) != "." {
+		return err
+	}
+	if err := model.Save(outPath); err != nil {
+		return err
+	}
+	log.Printf("[train] saved best model (loss=%.6f) to %s", best, outPath)
+	for _, p := range []string{ckptPath, metaPath, latestPath, latestMetaPath} {
+		if err := os.Remove(p); err != nil && !os.IsNotExist(err) {
+			log.Printf("[train] warning: could not remove %s: %v", p, err)
+		}
+	}
+
+	// Held-out spot check: a few pairs the model never trained
+	// on, with the reference beside the prediction.
+	br := &Brain{Model: model, tok: tok}
+	n := len(heldPairs)
+	if n > 5 {
+		n = 5
+	}
+	for i := 0; i < n; i++ {
+		ans, err := br.Answer(heldPairs[i].Input)
+		if err != nil {
+			continue
+		}
+		log.Printf("[train] held-out Q: %s\n[train] held-out A: %s (reference: %s)", heldPairs[i].Input, ans, heldPairs[i].Output)
+	}
+	return nil
+}
+
+func contains(xs []string, x string) bool {
+	for _, s := range xs {
+		if s == x {
+			return true
+		}
+	}
+	return false
+}

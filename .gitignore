@@ -1,0 +1,7 @@
+*.gob
+*.gob.ckpt
+*.gob.ckpt.json
+*.gob.latest
+*.gob.latest.json
+*.ckpt
+*.latest
