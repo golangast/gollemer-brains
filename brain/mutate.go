@@ -29,8 +29,6 @@ import (
 	"unicode"
 
 	"github.com/golangast/gollemer-brains/seq2seq"
-	"github.com/golangast/gollemer-brains/tokenizer"
-	"github.com/golangast/gollemer-brains/vocab"
 )
 
 // augmentSeed fixes the mutation stream: the same corpus
@@ -268,7 +266,7 @@ func allLetters(w string) bool {
 // to encode (it should not happen: unknown words encode as
 // the unknown token) leaves the pair clean rather than
 // dropping it.
-func mutateEncoded(enc []encodedPair, rng *rand.Rand, p float64, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) []encodedPair {
+func mutateEncoded(enc []encodedPair, rng *rand.Rand, p float64, e *encoder) []encodedPair {
 	out := make([]encodedPair, len(enc))
 	copy(out, enc)
 	for i := range out {
@@ -279,7 +277,7 @@ func mutateEncoded(enc []encodedPair, rng *rand.Rand, p float64, v *vocab.Vocabu
 		if mut == out[i].srcInput {
 			continue
 		}
-		ids, surfs := encodeInputSide(mut, v, tok)
+		ids, surfs := e.inputSide(mut)
 		if len(ids) == 0 {
 			continue
 		}

@@ -43,6 +43,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/golangast/gollemer-brains/bpe"
 	"github.com/golangast/gollemer-brains/data"
 	"github.com/golangast/gollemer-brains/intent"
 	"github.com/golangast/gollemer-brains/nn"
@@ -100,6 +101,17 @@ type TrainOptions struct {
 	// epoch (see synonyms.go). 0 (the default) is off. It
 	// composes with Augment: the two rolls are independent.
 	Synonyms float64
+	// Tokenizer selects the text<->id layer: "" or "word"
+	// is the original whole-word tokenizer; "bpe" trains a
+	// byte-pair-encoding tokenizer on the training split
+	// and builds the vocabulary from its pieces (see the
+	// bpe package). The choice is recorded in the saved
+	// brain file; LoadBrain restores the matching one and
+	// refuses a file it cannot interpret.
+	Tokenizer string
+	// BPEMerges caps how many merges BPE learns (only used
+	// when Tokenizer is "bpe"). 0 means the default, 700.
+	BPEMerges int
 }
 
 // ckptPathsFor returns the checkpoint paths living next to the
@@ -195,12 +207,70 @@ func encodeInputSide(input string, v *vocab.Vocabulary, tok *tokenizer.Tokenizer
 	return ids, surfs
 }
 
+// encoder is the text<->id layer training goes through:
+// the word tokenizer, or BPE when bpe is non-nil. The
+// seq2seq model only ever sees ids; which tokenizer made
+// them is entirely this type's business.
+type encoder struct {
+	v   *vocab.Vocabulary
+	tok *tokenizer.Tokenizer
+	bpe *bpe.Tokenizer
+}
+
+// inputSide encodes an input line for training.
+func (e *encoder) inputSide(input string) ([]int, []string) {
+	if e.bpe != nil {
+		return bpeEncodeText(e.bpe, e.v, TokenizeLower(seq2seq.NormalizeQuery(input)))
+	}
+	return encodeInputSide(input, e.v, e.tok)
+}
+
+// target encodes a reply for training: [BOS, ids..., EOS],
+// like EncodeTarget.
+func (e *encoder) target(output string) []int {
+	if e.bpe != nil {
+		ids, _ := bpeEncodeText(e.bpe, e.v, TokenizeLower(strings.ToLower(output)))
+		out := make([]int, 0, len(ids)+2)
+		out = append(out, e.v.BosID)
+		out = append(out, ids...)
+		out = append(out, e.v.EosID)
+		return out
+	}
+	return EncodeTarget(e.tok, e.v, output)
+}
+
+// bpeEncodeText splits pre-tokenized words into BPE pieces
+// and maps the forms to ids. A form the vocabulary lacks
+// (a piece combination training never produced) maps to
+// the unknown id, exactly as an unknown word does in word
+// mode.
+func bpeEncodeText(bt *bpe.Tokenizer, v *vocab.Vocabulary, words []string) ([]int, []string) {
+	var ids []int
+	var surfs []string
+	for _, w := range words {
+		for _, form := range bt.EncodeForms(w) {
+			ids = append(ids, v.GetTokenID(form))
+			surfs = append(surfs, form)
+		}
+	}
+	return ids, surfs
+}
+
+// mergesOf returns a BPE tokenizer's merges, or nil for
+// the word tokenizer (whose brains save unwrapped).
+func mergesOf(bt *bpe.Tokenizer) []bpe.Merge {
+	if bt == nil {
+		return nil
+	}
+	return bt.Merges()
+}
+
 // encodePair encodes one pair for training. Pairs whose target
 // encodes to fewer than 2 tokens (BOS+EOS) or more than 60 are
 // skipped, exactly as in the source.
-func encodePair(p data.Pair, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) (encodedPair, bool) {
-	ids, surfs := encodeInputSide(p.Input, v, tok)
-	tg := EncodeTarget(tok, v, p.Output)
+func encodePair(p data.Pair, e *encoder) (encodedPair, bool) {
+	ids, surfs := e.inputSide(p.Input)
+	tg := e.target(p.Output)
 	if len(ids) == 0 || len(tg) < 2 || len(tg) > 60 {
 		return encodedPair{}, false
 	}
@@ -209,7 +279,7 @@ func encodePair(p data.Pair, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) (enc
 	ep.input = ids
 	ep.targetSurfs = make([]string, len(tg))
 	for i, id := range tg {
-		ep.targetSurfs[i] = v.GetWord(id)
+		ep.targetSurfs[i] = e.v.GetWord(id)
 	}
 	return ep, true
 }
@@ -290,6 +360,16 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	if opts.Synonyms < 0 || opts.Synonyms > 1 {
 		return fmt.Errorf("synonyms probability %v is outside [0, 1]", opts.Synonyms)
 	}
+	kind := opts.Tokenizer
+	if kind == "" {
+		kind = "word"
+	}
+	if kind != "word" && kind != "bpe" {
+		return fmt.Errorf("unknown tokenizer %q (want \"word\" or \"bpe\")", opts.Tokenizer)
+	}
+	if opts.BPEMerges < 0 {
+		return fmt.Errorf("bpe merges %d is negative", opts.BPEMerges)
+	}
 	epochs := opts.Epochs
 	if epochs <= 0 {
 		epochs = 200
@@ -312,10 +392,44 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	}
 
 	trainPairs, heldPairs := data.Split(chatPairs)
-	v, tok, err := BuildVocab(trainPairs)
-	if err != nil {
-		return err
+	var v *vocab.Vocabulary
+	var tok *tokenizer.Tokenizer
+	var bpeTok *bpe.Tokenizer
+	var err error
+	if kind == "bpe" {
+		// BPE learns its merges from the training split's
+		// own word stream (inputs and outputs, duplicates
+		// kept: frequency is the signal), and the
+		// vocabulary is built from the pieces it can
+		// produce — each in a bare and a "##" continuation
+		// form.
+		merges := opts.BPEMerges
+		if merges == 0 {
+			merges = 700
+		}
+		var words []string
+		for _, p := range trainPairs {
+			words = append(words, TokenizeLower(p.Input)...)
+			words = append(words, TokenizeLower(p.Output)...)
+		}
+		bpeTok = bpe.Train(words, merges)
+		v = vocab.NewVocabulary()
+		for _, piece := range bpeTok.Pieces() {
+			v.AddToken(piece)
+			v.AddToken("##" + piece)
+		}
+		tok, err = tokenizer.NewTokenizer(v)
+		if err != nil {
+			return err
+		}
+		log.Printf("[train] tokenizer: bpe — %d merges learned, %d pieces", len(bpeTok.Merges()), len(bpeTok.Pieces()))
+	} else {
+		v, tok, err = BuildVocab(trainPairs)
+		if err != nil {
+			return err
+		}
 	}
+	enc := &encoder{v: v, tok: tok, bpe: bpeTok}
 	log.Printf("[train] dataset: %d pairs -> %d train, %d held out; vocab size=%d", len(chatPairs), len(trainPairs), len(heldPairs), v.Size())
 	if labelOnly > 0 {
 		log.Printf("[train] %d of the %d rows are label-only (intent, no output): skipped for the brain, used by the intent classifier", labelOnly, len(pairs))
@@ -323,7 +437,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 
 	encoded := make([]encodedPair, 0, len(trainPairs))
 	for _, p := range trainPairs {
-		ep, ok := encodePair(p, v, tok)
+		ep, ok := encodePair(p, enc)
 		if !ok {
 			continue
 		}
@@ -450,7 +564,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 		}
 		epochBatches := batches
 		if augRng != nil {
-			epochBatches = makeBatches(rerollEncoded(encoded, augRng, opts.Augment, opts.Synonyms, v, tok), batchSize, v.PaddingTokenID)
+			epochBatches = makeBatches(rerollEncoded(encoded, augRng, opts.Augment, opts.Synonyms, enc), batchSize, v.PaddingTokenID)
 		}
 		var epochLoss float64
 		for _, b := range epochBatches {
@@ -530,7 +644,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil && filepath.Dir(outPath) != "." {
 		return err
 	}
-	if err := model.Save(outPath); err != nil {
+	if err := saveBrainFile(outPath, model, kind, mergesOf(bpeTok)); err != nil {
 		return err
 	}
 	log.Printf("[train] saved best model (loss=%.6f) to %s", best, outPath)
@@ -542,7 +656,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 
 	// Held-out spot check: a few pairs the model never trained
 	// on, with the reference beside the prediction.
-	br := &Brain{Model: model, tok: tok}
+	br := &Brain{Model: model, tok: tok, bpeTok: bpeTok}
 	n := len(heldPairs)
 	if n > 5 {
 		n = 5

@@ -167,7 +167,7 @@ func TestMutateEncodedTargetsUntouched(t *testing.T) {
 	}
 	var enc []encodedPair
 	for _, p := range pairs {
-		ep, ok := encodePair(p, v, tok)
+		ep, ok := encodePair(p, &encoder{v: v, tok: tok})
 		if !ok {
 			t.Fatalf("pair %q did not encode", p.Input)
 		}
@@ -175,7 +175,7 @@ func TestMutateEncodedTargetsUntouched(t *testing.T) {
 	}
 
 	// p = 0: the re-roll is the identity, byte for byte.
-	zero := mutateEncoded(enc, rand.New(rand.NewSource(1)), 0, v, tok)
+	zero := mutateEncoded(enc, rand.New(rand.NewSource(1)), 0, &encoder{v: v, tok: tok})
 	for i := range enc {
 		if !reflect.DeepEqual(zero[i].input, enc[i].input) || !reflect.DeepEqual(zero[i].target, enc[i].target) {
 			t.Fatalf("p=0 changed pair %d", i)
@@ -184,7 +184,7 @@ func TestMutateEncodedTargetsUntouched(t *testing.T) {
 
 	// p = 1: every input is re-rolled (and these lines all
 	// have a mutation that applies); targets never move.
-	one := mutateEncoded(enc, rand.New(rand.NewSource(1)), 1, v, tok)
+	one := mutateEncoded(enc, rand.New(rand.NewSource(1)), 1, &encoder{v: v, tok: tok})
 	changed := 0
 	for i := range enc {
 		if !reflect.DeepEqual(one[i].target, enc[i].target) || !reflect.DeepEqual(one[i].targetSurfs, enc[i].targetSurfs) {

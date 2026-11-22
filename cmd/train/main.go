@@ -42,6 +42,8 @@ func main() {
 	resumeFlag := flag.Bool("resume", false, "resume from the checkpoints next to -out instead of starting at epoch 1")
 	augmentFlag := flag.Float64("augment", 0, "probability that a pair's input is mutated in each epoch (0 = off, 0.3 = light)")
 	synonymsFlag := flag.Float64("synonyms", 0, "probability that a pair's input swaps one word for a known synonym in each epoch (0 = off, 0.3 = light)")
+	tokenizerFlag := flag.String("tokenizer", "word", "text tokenizer: word (whole words, the original) or bpe (byte-pair pieces, no vocabulary wall)")
+	bpeMergesFlag := flag.Int("bpe-merges", 700, "maximum merges the BPE tokenizer learns (only with -tokenizer bpe)")
 	flag.Parse()
 
 	if *dataFlag == "" {
@@ -61,11 +63,13 @@ func main() {
 		}
 	}
 	if err := brain.Train(pairs, *outFlag, brain.TrainOptions{
-		Layers:   layers,
-		Epochs:   *epochsFlag,
-		Resume:   *resumeFlag,
-		Augment:  *augmentFlag,
-		Synonyms: *synonymsFlag,
+		Layers:    layers,
+		Epochs:    *epochsFlag,
+		Resume:    *resumeFlag,
+		Augment:   *augmentFlag,
+		Synonyms:  *synonymsFlag,
+		Tokenizer: *tokenizerFlag,
+		BPEMerges: *bpeMergesFlag,
 	}); err != nil {
 		fmt.Fprintln(os.Stderr, "train:", err)
 		os.Exit(1)

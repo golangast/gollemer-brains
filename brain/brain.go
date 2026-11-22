@@ -17,6 +17,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/golangast/gollemer-brains/bpe"
 	"github.com/golangast/gollemer-brains/data"
 	"github.com/golangast/gollemer-brains/intent"
 	"github.com/golangast/gollemer-brains/seq2seq"
@@ -137,6 +138,15 @@ type Brain struct {
 	FixTypos    bool
 	tok         *tokenizer.Tokenizer
 	typoTargets []string
+	// bpeTok is the brain's BPE tokenizer, restored from
+	// the brain file's header by LoadBrain; nil for a
+	// word-tokenizer brain. When it is set, encodeLine
+	// splits words into pieces and replies are glued back
+	// together in renderText. The typo normalizer does not
+	// apply: it repairs a word vocabulary's wall, and a
+	// BPE brain has no wall — an unknown word decomposes
+	// into pieces instead of going unknown.
+	bpeTok *bpe.Tokenizer
 }
 
 // intentsPathFor returns the intent classifier's sidecar
@@ -154,6 +164,15 @@ func intentsPathFor(modelPath string) string {
 // tokenizer is rebuilt from the model itself — a .gob is all
 // you need to run a brain.
 func LoadBrain(path string) (*Brain, error) {
+	// A BPE brain travels wrapped (see brainfile.go): the
+	// header names the tokenizer and carries the merges.
+	// unwrap validates the header loudly — a brain decoded
+	// with the wrong tokenizer would garble silently.
+	modelPath, kind, merges, cleanup, err := unwrapBrainFile(path)
+	if err != nil {
+		return nil, err
+	}
+	defer cleanup()
 	// The tokenizer is not used during gob decode; it is only
 	// stored on the model. Decode with a placeholder, then
 	// install the real one built from the loaded vocabulary.
@@ -161,7 +180,7 @@ func LoadBrain(path string) (*Brain, error) {
 	if err != nil {
 		return nil, err
 	}
-	m, err := seq2seq.LoadLayers(path, empty)
+	m, err := seq2seq.LoadLayers(modelPath, empty)
 	if err != nil {
 		return nil, err
 	}
@@ -171,6 +190,9 @@ func LoadBrain(path string) (*Brain, error) {
 	}
 	m.Base.Tokenizer = tok
 	br := &Brain{Model: m, tok: tok}
+	if kind == "bpe" {
+		br.bpeTok = bpe.FromMerges(merges)
+	}
 	// The intent sidecar is optional — most brains have
 	// none — but when it is present it must load: a corrupt
 	// sidecar is an error, never a silently dropped
@@ -191,12 +213,26 @@ func LoadBrain(path string) (*Brain, error) {
 // corrections (normalize.go).
 func (b *Brain) encodeLine(line string) ([]int, []string) {
 	v := b.Model.Base.OutputVocab
+	if b.bpeTok != nil {
+		return bpeEncodeText(b.bpeTok, v, TokenizeLower(seq2seq.NormalizeQuery(line)))
+	}
 	words := b.fixTokens(TokenizeLower(seq2seq.NormalizeQuery(line)))
 	ids := make([]int, len(words))
 	for i, w := range words {
 		ids[i] = v.GetTokenID(w)
 	}
 	return ids, append([]string{}, words...)
+}
+
+// renderText turns a raw prediction (vocabulary forms
+// joined by spaces) into the reply text: for a BPE brain
+// the "##" continuation pieces are glued back into words
+// first, then the usual punctuation tidying applies.
+func (b *Brain) renderText(raw string) string {
+	if b.bpeTok != nil {
+		raw = bpe.Join(strings.Fields(raw))
+	}
+	return TidyDecode(raw)
 }
 
 // Answer generates the greedy reply for one line.
@@ -206,7 +242,7 @@ func (b *Brain) Answer(line string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return TidyDecode(pred.Text), nil
+	return b.renderText(pred.Text), nil
 }
 
 const (
@@ -282,7 +318,7 @@ func (b *Brain) AnswerChecked(line string, rng *rand.Rand) (string, error) {
 		if err != nil {
 			return greedy, nil
 		}
-		if s := TidyDecode(pred.Text); ReplyCarries(line, s) {
+		if s := b.renderText(pred.Text); ReplyCarries(line, s) {
 			return s, nil
 		}
 	}

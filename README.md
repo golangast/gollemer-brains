@@ -491,6 +491,65 @@ deflections like "hello! how are you today?". Concept data
 teaches concepts; it also dilutes the chat lines, and at
 this corpus size both effects are real.
 
+### Step D — BPE subword tokenizer (`-tokenizer bpe`)
+
+The word tokenizer has a hard wall: a word that never
+appeared in training has no token, so the model cannot see
+it or say it. The `bpe` package learns byte-pair merges
+from the training text itself (700 merges here, `-bpe-merges`
+configures it): frequent words stay whole or nearly so, and
+everything else splits into shared pieces — "knitting"
+becomes pieces of "painting" and "fishing". `-tokenizer
+word|bpe` on cmd/train chooses; the choice and the merges
+are recorded in the brain file, and LoadBrain restores the
+matching tokenizer or refuses the file loudly. Word brains
+keep the original bare-gob format, unchanged.
+
+Measured on the extended examples (60 epochs, copy layer,
+mutation + synonyms 0.3 in both arms). The probe set is 12
+lines whose one content word appears *nowhere* in training
+(knitting, swimming, chess, sailing, ...):
+
+| tokenizer | vocab-wall probe | main held-out greedy | main held-out checked |
+|---|---|---|---|
+| word (vocab 584) | 0/12 | 18/36 | 20/36 |
+| bpe (vocab 1470) | 0/12 | 19/36 | 24/36 |
+
+Read the probe result carefully — the zeros are not the
+same zero. The word brain answers "how do i start chess"
+with "start with a tiny program that prints your name.":
+the topic is simply invisible to it. The BPE brain's
+replies are full of the probe words' *pieces* — "do you
+like singing" → "yes, i likeing a lot. it is one of my
+favorite topics.", "tell me about swimming" → "wi clears
+the mind..." — it routes the line by the pieces it shares
+with known words and starts to say the word, but at this
+scale it never assembles one whole, so the topic rule
+scores it 0/12 too. The wall is gone; what is on the other
+side is fragments, not knowledge. BPE composes pieces of
+known words — it does not teach new topics, and a brain
+that never saw a line about sailing has nothing true to
+say about it, in any tokenizer.
+
+The surprise ran the other way on known words: the main
+held-out set *improved* under BPE (checked 20/36 → 24/36),
+because related words share pieces — gardening/garden,
+painting/paint — and each piece gets more training than
+each whole word did. The costs are real too: piece-level
+slips ("that great. coding makes many people happy too.",
+the dropped "is"), occasional fragments glued onto
+punctuation, a vocabulary 2.5× larger, and epochs about
+1.5× slower.
+
+Taken together, the four steps say: repair the input when
+you can (A), vary the training inputs (B), teach the
+groupings explicitly (C), and remove the vocabulary wall
+(D) — each moves unseen lines a measured amount, none of
+them turns a tiny model into a knowledgeable one. The
+intent layer above is what makes the remaining gaps safe
+to ship: when the brain does not know, the meaning
+classifier can still abstain.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim

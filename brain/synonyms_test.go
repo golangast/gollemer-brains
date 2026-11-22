@@ -102,7 +102,7 @@ func TestRerollSynonymsOnlyAndTargetsUntouched(t *testing.T) {
 	}
 	var enc []encodedPair
 	for _, p := range pairs {
-		ep, ok := encodePair(p, v, tok)
+		ep, ok := encodePair(p, &encoder{v: v, tok: tok})
 		if !ok {
 			t.Fatalf("pair %q did not encode", p.Input)
 		}
@@ -111,7 +111,7 @@ func TestRerollSynonymsOnlyAndTargetsUntouched(t *testing.T) {
 
 	// synP = 1, augP = 0: inputs may change (only by a
 	// synonym swap), targets never do.
-	out := rerollEncoded(enc, rand.New(rand.NewSource(5)), 0, 1, v, tok)
+	out := rerollEncoded(enc, rand.New(rand.NewSource(5)), 0, 1, &encoder{v: v, tok: tok})
 	changed := 0
 	for i := range enc {
 		if !reflect.DeepEqual(out[i].target, enc[i].target) {
@@ -168,14 +168,14 @@ func TestRerollAugmentOnlyMatchesMutateEncoded(t *testing.T) {
 	}
 	var enc []encodedPair
 	for _, p := range pairs {
-		ep, ok := encodePair(p, v, tok)
+		ep, ok := encodePair(p, &encoder{v: v, tok: tok})
 		if !ok {
 			t.Fatalf("pair %q did not encode", p.Input)
 		}
 		enc = append(enc, ep)
 	}
-	a := rerollEncoded(enc, rand.New(rand.NewSource(11)), 0.7, 0, v, tok)
-	b := mutateEncoded(enc, rand.New(rand.NewSource(11)), 0.7, v, tok)
+	a := rerollEncoded(enc, rand.New(rand.NewSource(11)), 0.7, 0, &encoder{v: v, tok: tok})
+	b := mutateEncoded(enc, rand.New(rand.NewSource(11)), 0.7, &encoder{v: v, tok: tok})
 	for i := range enc {
 		if !reflect.DeepEqual(a[i].input, b[i].input) || !reflect.DeepEqual(a[i].inputSurfs, b[i].inputSurfs) {
 			t.Fatalf("pair %d: reroll(augment-only) != mutateEncoded", i)

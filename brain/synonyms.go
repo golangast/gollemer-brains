@@ -26,7 +26,6 @@ import (
 	"math/rand"
 	"strings"
 
-	"github.com/golangast/gollemer-brains/tokenizer"
 	"github.com/golangast/gollemer-brains/vocab"
 )
 
@@ -138,13 +137,21 @@ func SwapSynonym(line string, rng *rand.Rand, v *vocab.Vocabulary) string {
 // untouched. With synP == 0 the rng is consumed exactly as
 // mutateEncoded consumes it, so an augment-only run is
 // bit-identical to the mutation-only trainer.
-func rerollEncoded(enc []encodedPair, rng *rand.Rand, augP, synP float64, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) []encodedPair {
+func rerollEncoded(enc []encodedPair, rng *rand.Rand, augP, synP float64, e *encoder) []encodedPair {
 	out := make([]encodedPair, len(enc))
 	copy(out, enc)
+	// The synonym swap's in-vocabulary guard only makes
+	// sense for the word tokenizer: under BPE every word
+	// encodes, so there is no vocabulary wall to guard
+	// against and the guard is disabled (nil).
+	guard := e.v
+	if e.bpe != nil {
+		guard = nil
+	}
 	for i := range out {
 		text := out[i].srcInput
 		if synP > 0 && rng.Float64() < synP {
-			text = SwapSynonym(text, rng, v)
+			text = SwapSynonym(text, rng, guard)
 		}
 		if augP > 0 && rng.Float64() < augP {
 			text = MutateInput(text, rng)
@@ -152,7 +159,7 @@ func rerollEncoded(enc []encodedPair, rng *rand.Rand, augP, synP float64, v *voc
 		if text == out[i].srcInput {
 			continue
 		}
-		ids, surfs := encodeInputSide(text, v, tok)
+		ids, surfs := e.inputSide(text)
 		if len(ids) == 0 {
 			continue
 		}
