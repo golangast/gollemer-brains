@@ -407,6 +407,18 @@ before extraction). The trained control line made the
 point plainly — "create a file called notes.txt" was
 understood perfectly and then created **todo.md**.
 
+A verification run after the fact found the extractor's
+hard boundary: "make me a brand new file named
+summit.txt" — a filename that appears nowhere in
+training — came back `create_file (1.00)` with the file
+**budget.txt**. The intent half did not care that the
+name was new; the extractor collapsed to a favourite,
+because a word-level model has no token for a word it
+never trained on, so there is literally nothing for it
+to copy. Names from the training set extract; brand-new
+names are this design's wall (the BPE chapter below is
+the piece that speaks to it).
+
 Failures, verbatim from the run:
 
 - "please remove budget.txt" → extracted `ideas.txt`;
