@@ -444,6 +444,53 @@ sampling. The synonym arm's training loss also runs higher
 (1.241 vs 1.066) — expected, since its inputs genuinely vary
 more; the losses are not comparable across arms.
 
+### Step C — concept data (contrast + category pairs)
+
+Steps A and B change the machinery; this step changes the
+data. `examples/pairs.jsonl` gained 247 hand-written pairs
+in two families over the topics the file already used:
+
+- **contrast** — either/or questions and "not X but Y"
+  lines ("do you like gardening or cooking", "i like tea,
+  not coffee"), whose replies name *both* topics;
+- **category** — grouping lines ("is gardening a hobby or
+  a job", "what kind of thing is coffee") and boundary
+  lines that say no with the right category ("is coffee a
+  hobby" → "No, coffee is a drink, not a hobby.").
+
+Measured against a 16-line held-out concept set (shapes
+kept out of training), same settings in both arms
+(60 epochs, copy layer, mutation 0.3 + synonyms 0.3):
+
+| training data | concept greedy | concept checked | main set greedy | main set checked |
+|---|---|---|---|---|
+| original 204 pairs | 6/16 | 12/16 | 14/36 | 23/36 |
+| extended 451 pairs | 12/16 | 14/16 | 18/36 | 20/36 |
+
+The topic rule only asks for the topic word, so a sharper
+count for the category half: how often the reply names the
+*category* (hobby, drink, pet, vehicle...). Old data:
+greedy 1/8, checked 2/8. Extended: 4/8 both. The extended
+brain learned to say the grouping out loud:
+
+- "is yoga a sport" → "no, yoga is exercise. bread is a
+  food." (the category lands; the tail is a borrowed
+  template)
+- "is fishing a hobby" → "no, fishing is a hobby." (right
+  category, wrong yes/no — the boundary family's "no"
+  leaked onto a yes question)
+
+And the honest costs. The plural category shape was never
+trained, and it shows: "are trains vehicles" passed with
+the old data and fails with the new ("that is sweet of are
+to say. kindness is easy to share."). On the main set,
+greedy rose 14 → 18 but checked sampling *fell* 23 → 20 —
+five familiar lines (morning coffee, tired today, dogs as
+friends among them) lost their checked rescue to greeting
+deflections like "hello! how are you today?". Concept data
+teaches concepts; it also dilutes the chat lines, and at
+this corpus size both effects are real.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim

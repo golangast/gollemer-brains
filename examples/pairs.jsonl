@@ -202,3 +202,250 @@
 {"input": "i want a quiet day", "output": "A quiet day is a gift. Tea, a book, and nowhere to hurry is a fine plan."}
 {"input": "tell me something kind", "output": "You are learning something new just by asking questions. That is a kind of courage."}
 {"input": "tell me something interesting", "output": "A single seed holds a whole plant folded inside it. Small things are rarely simple."}
+{"input": "do you like gardening or cooking", "output": "Both, honestly. Gardening, peaceful work with living things; cooking, a happy skill."}
+{"input": "i like gardening, not cooking", "output": "Fair enough. Gardening, peaceful work with living things. Cooking can wait for another day."}
+{"input": "not gardening but cooking for me", "output": "Then cooking it is. Cooking, a happy skill."}
+{"input": "would you rather gardening or cooking", "output": "Today I would rather gardening: peaceful work with living things. Tomorrow, ask me again."}
+{"input": "should i try gardening or cooking", "output": "Try gardening first: peaceful work with living things. And cooking will still be there next week."}
+{"input": "for me it is cooking, not gardening", "output": "Understood. Cooking, a happy skill, a fine choice."}
+{"input": "gardening beats cooking, in my book", "output": "A strong opinion! Gardening, peaceful work with living things, though cooking has its own fans."}
+{"input": "do you like coffee or tea", "output": "Both, honestly. Coffee, smells like morning; tea, a quiet cup of calm."}
+{"input": "i like coffee, not tea", "output": "Fair enough. Coffee, smells like morning. Tea can wait for another day."}
+{"input": "not coffee but tea for me", "output": "Then tea it is. Tea, a quiet cup of calm."}
+{"input": "would you rather coffee or tea", "output": "Today I would rather coffee: smells like morning. Tomorrow, ask me again."}
+{"input": "should i try coffee or tea", "output": "Try coffee first: smells like morning. And tea will still be there next week."}
+{"input": "for me it is tea, not coffee", "output": "Understood. Tea, a quiet cup of calm, a fine choice."}
+{"input": "coffee beats tea, in my book", "output": "A strong opinion! Coffee, smells like morning, though tea has its own fans."}
+{"input": "do you like cats or dogs", "output": "Both, honestly. Cats, quiet, funny friends; dogs, loyal and joyful."}
+{"input": "i like cats, not dogs", "output": "Fair enough. Cats, quiet, funny friends. Dogs can wait for another day."}
+{"input": "not cats but dogs for me", "output": "Then dogs it is. Dogs, loyal and joyful."}
+{"input": "would you rather cats or dogs", "output": "Today I would rather cats: quiet, funny friends. Tomorrow, ask me again."}
+{"input": "should i try cats or dogs", "output": "Try cats first: quiet, funny friends. And dogs will still be there next week."}
+{"input": "for me it is dogs, not cats", "output": "Understood. Dogs, loyal and joyful, a fine choice."}
+{"input": "cats beats dogs, in my book", "output": "A strong opinion! Cats, quiet, funny friends, though dogs has its own fans."}
+{"input": "do you like reading or movies", "output": "Both, honestly. Reading, takes you anywhere; movies, stories you can see."}
+{"input": "i like reading, not movies", "output": "Fair enough. Reading, takes you anywhere. Movies can wait for another day."}
+{"input": "not reading but movies for me", "output": "Then movies it is. Movies, stories you can see."}
+{"input": "would you rather reading or movies", "output": "Today I would rather reading: takes you anywhere. Tomorrow, ask me again."}
+{"input": "should i try reading or movies", "output": "Try reading first: takes you anywhere. And movies will still be there next week."}
+{"input": "for me it is movies, not reading", "output": "Understood. Movies, stories you can see, a fine choice."}
+{"input": "reading beats movies, in my book", "output": "A strong opinion! Reading, takes you anywhere, though movies has its own fans."}
+{"input": "do you like hiking or fishing", "output": "Both, honestly. Hiking, clears the mind; fishing, teaches patience."}
+{"input": "i like hiking, not fishing", "output": "Fair enough. Hiking, clears the mind. Fishing can wait for another day."}
+{"input": "not hiking but fishing for me", "output": "Then fishing it is. Fishing, teaches patience."}
+{"input": "would you rather hiking or fishing", "output": "Today I would rather hiking: clears the mind. Tomorrow, ask me again."}
+{"input": "should i try hiking or fishing", "output": "Try hiking first: clears the mind. And fishing will still be there next week."}
+{"input": "for me it is fishing, not hiking", "output": "Understood. Fishing, teaches patience, a fine choice."}
+{"input": "hiking beats fishing, in my book", "output": "A strong opinion! Hiking, clears the mind, though fishing has its own fans."}
+{"input": "do you like cycling or yoga", "output": "Both, honestly. Cycling, great exercise; yoga, gentle and strong at once."}
+{"input": "i like cycling, not yoga", "output": "Fair enough. Cycling, great exercise. Yoga can wait for another day."}
+{"input": "not cycling but yoga for me", "output": "Then yoga it is. Yoga, gentle and strong at once."}
+{"input": "would you rather cycling or yoga", "output": "Today I would rather cycling: great exercise. Tomorrow, ask me again."}
+{"input": "should i try cycling or yoga", "output": "Try cycling first: great exercise. And yoga will still be there next week."}
+{"input": "for me it is yoga, not cycling", "output": "Understood. Yoga, gentle and strong at once, a fine choice."}
+{"input": "cycling beats yoga, in my book", "output": "A strong opinion! Cycling, great exercise, though yoga has its own fans."}
+{"input": "do you like painting or photography", "output": "Both, honestly. Painting, keeps a moment in colors; photography, catching light."}
+{"input": "i like painting, not photography", "output": "Fair enough. Painting, keeps a moment in colors. Photography can wait for another day."}
+{"input": "not painting but photography for me", "output": "Then photography it is. Photography, catching light."}
+{"input": "would you rather painting or photography", "output": "Today I would rather painting: keeps a moment in colors. Tomorrow, ask me again."}
+{"input": "should i try painting or photography", "output": "Try painting first: keeps a moment in colors. And photography will still be there next week."}
+{"input": "for me it is photography, not painting", "output": "Understood. Photography, catching light, a fine choice."}
+{"input": "painting beats photography, in my book", "output": "A strong opinion! Painting, keeps a moment in colors, though photography has its own fans."}
+{"input": "do you like music or movies", "output": "Both, honestly. Music, lifts the heart; movies, stories you can see."}
+{"input": "i like music, not movies", "output": "Fair enough. Music, lifts the heart. Movies can wait for another day."}
+{"input": "not music but movies for me", "output": "Then movies it is. Movies, stories you can see."}
+{"input": "would you rather music or movies", "output": "Today I would rather music: lifts the heart. Tomorrow, ask me again."}
+{"input": "should i try music or movies", "output": "Try music first: lifts the heart. And movies will still be there next week."}
+{"input": "for me it is movies, not music", "output": "Understood. Movies, stories you can see, a fine choice."}
+{"input": "music beats movies, in my book", "output": "A strong opinion! Music, lifts the heart, though movies has its own fans."}
+{"input": "do you like coding or reading", "output": "Both, honestly. Coding, building with words; reading, takes you anywhere."}
+{"input": "i like coding, not reading", "output": "Fair enough. Coding, building with words. Reading can wait for another day."}
+{"input": "not coding but reading for me", "output": "Then reading it is. Reading, takes you anywhere."}
+{"input": "would you rather coding or reading", "output": "Today I would rather coding: building with words. Tomorrow, ask me again."}
+{"input": "should i try coding or reading", "output": "Try coding first: building with words. And reading will still be there next week."}
+{"input": "for me it is reading, not coding", "output": "Understood. Reading, takes you anywhere, a fine choice."}
+{"input": "coding beats reading, in my book", "output": "A strong opinion! Coding, building with words, though reading has its own fans."}
+{"input": "do you like trains or cycling", "output": "Both, honestly. Trains, a calm way to travel; cycling, great exercise."}
+{"input": "i like trains, not cycling", "output": "Fair enough. Trains, a calm way to travel. Cycling can wait for another day."}
+{"input": "not trains but cycling for me", "output": "Then cycling it is. Cycling, great exercise."}
+{"input": "would you rather trains or cycling", "output": "Today I would rather trains: a calm way to travel. Tomorrow, ask me again."}
+{"input": "should i try trains or cycling", "output": "Try trains first: a calm way to travel. And cycling will still be there next week."}
+{"input": "for me it is cycling, not trains", "output": "Understood. Cycling, great exercise, a fine choice."}
+{"input": "trains beats cycling, in my book", "output": "A strong opinion! Trains, a calm way to travel, though cycling has its own fans."}
+{"input": "do you like gardening or painting", "output": "Both, honestly. Gardening, peaceful work with living things; painting, keeps a moment in colors."}
+{"input": "i like gardening, not painting", "output": "Fair enough. Gardening, peaceful work with living things. Painting can wait for another day."}
+{"input": "not gardening but painting for me", "output": "Then painting it is. Painting, keeps a moment in colors."}
+{"input": "would you rather gardening or painting", "output": "Today I would rather gardening: peaceful work with living things. Tomorrow, ask me again."}
+{"input": "should i try gardening or painting", "output": "Try gardening first: peaceful work with living things. And painting will still be there next week."}
+{"input": "for me it is painting, not gardening", "output": "Understood. Painting, keeps a moment in colors, a fine choice."}
+{"input": "gardening beats painting, in my book", "output": "A strong opinion! Gardening, peaceful work with living things, though painting has its own fans."}
+{"input": "do you like cooking or gardening", "output": "Both, honestly. Cooking, a happy skill; gardening, peaceful work with living things."}
+{"input": "i like cooking, not gardening", "output": "Fair enough. Cooking, a happy skill. Gardening can wait for another day."}
+{"input": "not cooking but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather cooking or gardening", "output": "Today I would rather cooking: a happy skill. Tomorrow, ask me again."}
+{"input": "should i try cooking or gardening", "output": "Try cooking first: a happy skill. And gardening will still be there next week."}
+{"input": "for me it is gardening, not cooking", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "cooking beats gardening, in my book", "output": "A strong opinion! Cooking, a happy skill, though gardening has its own fans."}
+{"input": "do you like tea or coffee", "output": "Both, honestly. Tea, a quiet cup of calm; coffee, smells like morning."}
+{"input": "i like tea, not coffee", "output": "Fair enough. Tea, a quiet cup of calm. Coffee can wait for another day."}
+{"input": "not tea but coffee for me", "output": "Then coffee it is. Coffee, smells like morning."}
+{"input": "would you rather tea or coffee", "output": "Today I would rather tea: a quiet cup of calm. Tomorrow, ask me again."}
+{"input": "should i try tea or coffee", "output": "Try tea first: a quiet cup of calm. And coffee will still be there next week."}
+{"input": "for me it is coffee, not tea", "output": "Understood. Coffee, smells like morning, a fine choice."}
+{"input": "tea beats coffee, in my book", "output": "A strong opinion! Tea, a quiet cup of calm, though coffee has its own fans."}
+{"input": "do you like dogs or cats", "output": "Both, honestly. Dogs, loyal and joyful; cats, quiet, funny friends."}
+{"input": "i like dogs, not cats", "output": "Fair enough. Dogs, loyal and joyful. Cats can wait for another day."}
+{"input": "not dogs but cats for me", "output": "Then cats it is. Cats, quiet, funny friends."}
+{"input": "would you rather dogs or cats", "output": "Today I would rather dogs: loyal and joyful. Tomorrow, ask me again."}
+{"input": "should i try dogs or cats", "output": "Try dogs first: loyal and joyful. And cats will still be there next week."}
+{"input": "for me it is cats, not dogs", "output": "Understood. Cats, quiet, funny friends, a fine choice."}
+{"input": "dogs beats cats, in my book", "output": "A strong opinion! Dogs, loyal and joyful, though cats has its own fans."}
+{"input": "do you like fishing or hiking", "output": "Both, honestly. Fishing, teaches patience; hiking, clears the mind."}
+{"input": "i like fishing, not hiking", "output": "Fair enough. Fishing, teaches patience. Hiking can wait for another day."}
+{"input": "not fishing but hiking for me", "output": "Then hiking it is. Hiking, clears the mind."}
+{"input": "would you rather fishing or hiking", "output": "Today I would rather fishing: teaches patience. Tomorrow, ask me again."}
+{"input": "should i try fishing or hiking", "output": "Try fishing first: teaches patience. And hiking will still be there next week."}
+{"input": "for me it is hiking, not fishing", "output": "Understood. Hiking, clears the mind, a fine choice."}
+{"input": "fishing beats hiking, in my book", "output": "A strong opinion! Fishing, teaches patience, though hiking has its own fans."}
+{"input": "do you like yoga or hiking", "output": "Both, honestly. Yoga, gentle and strong at once; hiking, clears the mind."}
+{"input": "i like yoga, not hiking", "output": "Fair enough. Yoga, gentle and strong at once. Hiking can wait for another day."}
+{"input": "not yoga but hiking for me", "output": "Then hiking it is. Hiking, clears the mind."}
+{"input": "would you rather yoga or hiking", "output": "Today I would rather yoga: gentle and strong at once. Tomorrow, ask me again."}
+{"input": "should i try yoga or hiking", "output": "Try yoga first: gentle and strong at once. And hiking will still be there next week."}
+{"input": "for me it is hiking, not yoga", "output": "Understood. Hiking, clears the mind, a fine choice."}
+{"input": "yoga beats hiking, in my book", "output": "A strong opinion! Yoga, gentle and strong at once, though hiking has its own fans."}
+{"input": "do you like movies or reading", "output": "Both, honestly. Movies, stories you can see; reading, takes you anywhere."}
+{"input": "i like movies, not reading", "output": "Fair enough. Movies, stories you can see. Reading can wait for another day."}
+{"input": "not movies but reading for me", "output": "Then reading it is. Reading, takes you anywhere."}
+{"input": "would you rather movies or reading", "output": "Today I would rather movies: stories you can see. Tomorrow, ask me again."}
+{"input": "should i try movies or reading", "output": "Try movies first: stories you can see. And reading will still be there next week."}
+{"input": "for me it is reading, not movies", "output": "Understood. Reading, takes you anywhere, a fine choice."}
+{"input": "movies beats reading, in my book", "output": "A strong opinion! Movies, stories you can see, though reading has its own fans."}
+{"input": "do you like photography or painting", "output": "Both, honestly. Photography, catching light; painting, keeps a moment in colors."}
+{"input": "i like photography, not painting", "output": "Fair enough. Photography, catching light. Painting can wait for another day."}
+{"input": "not photography but painting for me", "output": "Then painting it is. Painting, keeps a moment in colors."}
+{"input": "would you rather photography or painting", "output": "Today I would rather photography: catching light. Tomorrow, ask me again."}
+{"input": "should i try photography or painting", "output": "Try photography first: catching light. And painting will still be there next week."}
+{"input": "for me it is painting, not photography", "output": "Understood. Painting, keeps a moment in colors, a fine choice."}
+{"input": "photography beats painting, in my book", "output": "A strong opinion! Photography, catching light, though painting has its own fans."}
+{"input": "do you like music or gardening", "output": "Both, honestly. Music, lifts the heart; gardening, peaceful work with living things."}
+{"input": "i like music, not gardening", "output": "Fair enough. Music, lifts the heart. Gardening can wait for another day."}
+{"input": "not music but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather music or gardening", "output": "Today I would rather music: lifts the heart. Tomorrow, ask me again."}
+{"input": "should i try music or gardening", "output": "Try music first: lifts the heart. And gardening will still be there next week."}
+{"input": "for me it is gardening, not music", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "music beats gardening, in my book", "output": "A strong opinion! Music, lifts the heart, though gardening has its own fans."}
+{"input": "do you like coding or gardening", "output": "Both, honestly. Coding, building with words; gardening, peaceful work with living things."}
+{"input": "i like coding, not gardening", "output": "Fair enough. Coding, building with words. Gardening can wait for another day."}
+{"input": "not coding but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather coding or gardening", "output": "Today I would rather coding: building with words. Tomorrow, ask me again."}
+{"input": "should i try coding or gardening", "output": "Try coding first: building with words. And gardening will still be there next week."}
+{"input": "for me it is gardening, not coding", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "coding beats gardening, in my book", "output": "A strong opinion! Coding, building with words, though gardening has its own fans."}
+{"input": "do you like coffee or gardening", "output": "Both, honestly. Coffee, smells like morning; gardening, peaceful work with living things."}
+{"input": "i like coffee, not gardening", "output": "Fair enough. Coffee, smells like morning. Gardening can wait for another day."}
+{"input": "not coffee but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather coffee or gardening", "output": "Today I would rather coffee: smells like morning. Tomorrow, ask me again."}
+{"input": "should i try coffee or gardening", "output": "Try coffee first: smells like morning. And gardening will still be there next week."}
+{"input": "for me it is gardening, not coffee", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "coffee beats gardening, in my book", "output": "A strong opinion! Coffee, smells like morning, though gardening has its own fans."}
+{"input": "do you like reading or gardening", "output": "Both, honestly. Reading, takes you anywhere; gardening, peaceful work with living things."}
+{"input": "i like reading, not gardening", "output": "Fair enough. Reading, takes you anywhere. Gardening can wait for another day."}
+{"input": "not reading but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather reading or gardening", "output": "Today I would rather reading: takes you anywhere. Tomorrow, ask me again."}
+{"input": "should i try reading or gardening", "output": "Try reading first: takes you anywhere. And gardening will still be there next week."}
+{"input": "for me it is gardening, not reading", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "reading beats gardening, in my book", "output": "A strong opinion! Reading, takes you anywhere, though gardening has its own fans."}
+{"input": "do you like hiking or gardening", "output": "Both, honestly. Hiking, clears the mind; gardening, peaceful work with living things."}
+{"input": "i like hiking, not gardening", "output": "Fair enough. Hiking, clears the mind. Gardening can wait for another day."}
+{"input": "not hiking but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather hiking or gardening", "output": "Today I would rather hiking: clears the mind. Tomorrow, ask me again."}
+{"input": "should i try hiking or gardening", "output": "Try hiking first: clears the mind. And gardening will still be there next week."}
+{"input": "for me it is gardening, not hiking", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "hiking beats gardening, in my book", "output": "A strong opinion! Hiking, clears the mind, though gardening has its own fans."}
+{"input": "do you like cats or gardening", "output": "Both, honestly. Cats, quiet, funny friends; gardening, peaceful work with living things."}
+{"input": "i like cats, not gardening", "output": "Fair enough. Cats, quiet, funny friends. Gardening can wait for another day."}
+{"input": "not cats but gardening for me", "output": "Then gardening it is. Gardening, peaceful work with living things."}
+{"input": "would you rather cats or gardening", "output": "Today I would rather cats: quiet, funny friends. Tomorrow, ask me again."}
+{"input": "should i try cats or gardening", "output": "Try cats first: quiet, funny friends. And gardening will still be there next week."}
+{"input": "for me it is gardening, not cats", "output": "Understood. Gardening, peaceful work with living things, a fine choice."}
+{"input": "cats beats gardening, in my book", "output": "A strong opinion! Cats, quiet, funny friends, though gardening has its own fans."}
+{"input": "do you like spring or autumn", "output": "Both. Spring is full of beginnings, and autumn is gold and red."}
+{"input": "i like spring, not autumn", "output": "Fair enough. Spring is full of beginnings. Autumn will come around again."}
+{"input": "would you rather spring or autumn", "output": "Today, spring. It is full of beginnings."}
+{"input": "do you like summer or winter", "output": "Both. Summer is warm and bright, and winter is quiet and cozy."}
+{"input": "i like summer, not winter", "output": "Fair enough. Summer is warm and bright. Winter will come around again."}
+{"input": "would you rather summer or winter", "output": "Today, summer. It is warm and bright."}
+{"input": "do you like winter or summer", "output": "Both. Winter is quiet and cozy, and summer is warm and bright."}
+{"input": "i like winter, not summer", "output": "Fair enough. Winter is quiet and cozy. Summer will come around again."}
+{"input": "would you rather winter or summer", "output": "Today, winter. It is quiet and cozy."}
+{"input": "do you like autumn or spring", "output": "Both. Autumn is gold and red, and spring is full of beginnings."}
+{"input": "i like autumn, not spring", "output": "Fair enough. Autumn is gold and red. Spring will come around again."}
+{"input": "would you rather autumn or spring", "output": "Today, autumn. It is gold and red."}
+{"input": "is gardening a hobby or a job", "output": "A hobby. People do gardening for joy, not for pay."}
+{"input": "would you call gardening a hobby", "output": "Yes, gardening is a hobby, peaceful work with living things."}
+{"input": "gardening counts as a hobby, right", "output": "Right. Gardening is a hobby, something done for the love of it."}
+{"input": "what kind of thing is gardening", "output": "Gardening is a hobby, peaceful work with living things."}
+{"input": "is cooking a hobby or a job", "output": "A hobby. People do cooking for joy, not for pay."}
+{"input": "would you call cooking a hobby", "output": "Yes, cooking is a hobby, a happy skill."}
+{"input": "cooking counts as a hobby, right", "output": "Right. Cooking is a hobby, something done for the love of it."}
+{"input": "what kind of thing is cooking", "output": "Cooking is a hobby, a happy skill."}
+{"input": "is painting a hobby or a job", "output": "A hobby. People do painting for joy, not for pay."}
+{"input": "would you call painting a hobby", "output": "Yes, painting is a hobby, keeps a moment in colors."}
+{"input": "painting counts as a hobby, right", "output": "Right. Painting is a hobby, something done for the love of it."}
+{"input": "what kind of thing is painting", "output": "Painting is a hobby, keeps a moment in colors."}
+{"input": "is reading a hobby or a job", "output": "A hobby. People do reading for joy, not for pay."}
+{"input": "would you call reading a hobby", "output": "Yes, reading is a hobby, takes you anywhere."}
+{"input": "reading counts as a hobby, right", "output": "Right. Reading is a hobby, something done for the love of it."}
+{"input": "what kind of thing is reading", "output": "Reading is a hobby, takes you anywhere."}
+{"input": "is fishing a hobby or a job", "output": "A hobby. People do fishing for joy, not for pay."}
+{"input": "would you call fishing a hobby", "output": "Yes, fishing is a hobby, teaches patience."}
+{"input": "fishing counts as a hobby, right", "output": "Right. Fishing is a hobby, something done for the love of it."}
+{"input": "what kind of thing is fishing", "output": "Fishing is a hobby, teaches patience."}
+{"input": "is hiking a hobby or a job", "output": "A hobby. People do hiking for joy, not for pay."}
+{"input": "would you call hiking a hobby", "output": "Yes, hiking is a hobby, clears the mind."}
+{"input": "hiking counts as a hobby, right", "output": "Right. Hiking is a hobby, something done for the love of it."}
+{"input": "what kind of thing is hiking", "output": "Hiking is a hobby, clears the mind."}
+{"input": "is cycling a hobby or a job", "output": "A hobby. People do cycling for joy, not for pay."}
+{"input": "would you call cycling a hobby", "output": "Yes, cycling is a hobby, great exercise."}
+{"input": "cycling counts as a hobby, right", "output": "Right. Cycling is a hobby, something done for the love of it."}
+{"input": "what kind of thing is cycling", "output": "Cycling is a hobby, great exercise."}
+{"input": "is photography a hobby or a job", "output": "A hobby. People do photography for joy, not for pay."}
+{"input": "would you call photography a hobby", "output": "Yes, photography is a hobby, catching light."}
+{"input": "photography counts as a hobby, right", "output": "Right. Photography is a hobby, something done for the love of it."}
+{"input": "what kind of thing is photography", "output": "Photography is a hobby, catching light."}
+{"input": "is yoga a hobby or a job", "output": "A hobby. People do yoga for joy, not for pay."}
+{"input": "would you call yoga a hobby", "output": "Yes, yoga is a hobby, gentle and strong at once."}
+{"input": "yoga counts as a hobby, right", "output": "Right. Yoga is a hobby, something done for the love of it."}
+{"input": "what kind of thing is yoga", "output": "Yoga is a hobby, gentle and strong at once."}
+{"input": "is a cat an animal", "output": "Yes, a cat is an animal, a small, soft one that loves naps."}
+{"input": "is a dog an animal", "output": "Yes, a dog is an animal, a loyal and joyful one."}
+{"input": "is a cat a pet", "output": "Yes, a cat is a pet. People keep cats at home as friends."}
+{"input": "is a dog a pet", "output": "Yes, a dog is a pet. A dog is always happy to see you."}
+{"input": "what kind of animal is a cat", "output": "A cat is a pet animal, quiet, funny, and fond of warm places."}
+{"input": "what kind of animal is a dog", "output": "A dog is a pet animal, loyal, joyful, and fond of walks."}
+{"input": "is coffee a drink or a food", "output": "A drink. Coffee is a warm drink made from roasted beans."}
+{"input": "is tea a drink or a food", "output": "A drink. Tea is a warm drink, lovely in a quiet evening."}
+{"input": "what kind of thing is coffee", "output": "Coffee is a drink. It smells like morning."}
+{"input": "what kind of thing is tea", "output": "Tea is a drink. A quiet cup of tea is hard to beat."}
+{"input": "is a train a vehicle or a building", "output": "A vehicle. A train runs on rails and carries people calmly."}
+{"input": "a train is a vehicle, right", "output": "Right. A train is a vehicle that runs on rails."}
+{"input": "what kind of thing is a train", "output": "A train is a vehicle, a long one that runs on rails."}
+{"input": "would you call music an art", "output": "Yes, music is an art. It is sound arranged to make feelings."}
+{"input": "what kind of thing is music", "output": "Music is an art. It lifts the heart."}
+{"input": "is yoga exercise or rest", "output": "Mostly exercise. Yoga is gentle movement with slow breathing."}
+{"input": "would you call yoga exercise", "output": "Yes, yoga is exercise, gentle and strong at once."}
+{"input": "is bread a food", "output": "Yes, bread is a food. Fresh bread is one of life's small triumphs."}
+{"input": "what kind of thing is bread", "output": "Bread is a food, baked from flour and water."}
+{"input": "is spring a season", "output": "Yes, spring is a season, the one full of beginnings."}
+{"input": "is winter a season", "output": "Yes, winter is a season, the quiet, cozy one."}
+{"input": "what kind of thing is summer", "output": "Summer is a season, warm and bright, made for being outside."}
+{"input": "what kind of thing is autumn", "output": "Autumn is a season, it paints the trees gold and red."}
+{"input": "is coffee a hobby", "output": "No, coffee is a drink, not a hobby. Gardening is a hobby."}
+{"input": "is a cat a drink", "output": "No, a cat is an animal. Tea is a drink."}
+{"input": "is tea an animal", "output": "No, tea is a drink. A cat is an animal."}
+{"input": "is a train a hobby", "output": "No, a train is a vehicle. Hiking is a hobby."}
+{"input": "is music a drink", "output": "No, music is an art. Coffee is a drink."}
+{"input": "is gardening a vehicle", "output": "No, gardening is a hobby. A train is a vehicle."}
+{"input": "is a dog a season", "output": "No, a dog is an animal. Winter is a season."}
+{"input": "is yoga a food", "output": "No, yoga is exercise. Bread is a food."}
