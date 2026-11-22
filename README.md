@@ -494,6 +494,122 @@ other boundary: it needs its first example rows plus
 one binding function in the host — meanings are
 declared, not discovered.
 
+## Runnable example: one assistant, both brains
+
+`examples/assistant` loads two brains in one program and
+routes every line by meaning. The file brain's intent
+classifier reads the line first: when it returns
+`create_file`, `delete_file`, or `list_files`, the line
+is handled exactly as in `examples/filecmd` — same
+extractor, same sanitizer, same sandbox, same delete
+gate and confirmation prompt. When the classifier
+returns nothing, the line falls through to the chat
+brain (trained on `examples/pairs.jsonl`) and is simply
+answered. One prompt, two skills:
+
+```sh
+go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy
+go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe
+go run ./examples/assistant -chat brain.gob -files filebrain.gob
+```
+
+The routing rule, in plain words: **a confident file
+meaning acts; anything else talks — and a delete the
+classifier is not confident enough about is refused as
+a command, never quietly re-routed into small talk.**
+
+**Measured, not promised.** One scripted session against
+brains trained with exactly the two commands above,
+mixing chat lines and file lines on purpose:
+
+```
+assistant: talk to me — or ask me to create, delete, or list files in demo-files/. Type 'quit' to exit.
+> how are you
+intent: delete_file (0.64) — not confident enough to delete (this demo wants 0.80); nothing done.
+> what do you like to do
+i like to like things: reading, gardening, music, and a warm cup of coffee.
+> create a file named jim
+intent: create_file (1.00), file: lesson.md
+created demo-files/lesson.md
+> create a file called notes.txt
+intent: create_file (1.00), file: notes.txt
+created demo-files/notes.txt
+> what files do i have
+intent: list_files (0.95)
+demo-files/: lesson.md, notes.txt
+> get rid of notes.txt
+intent: delete_file (1.00), file: notes.txt
+delete notes.txt? [y/n] y
+deleted demo-files/notes.txt
+> tell me a joke
+intent: create_file (0.99), file: archive.md
+created demo-files/archive.md
+> thank you
+intent: delete_file (0.69) — not confident enough to delete (this demo wants 0.80); nothing done.
+```
+
+Score: **5 of the 8 lines routed as intended** — the
+chat line that reached the chat brain, and the full
+file arc (create jim's line, create notes.txt, list,
+confirmed delete) all went where they were meant to.
+The sandbox ended holding exactly lesson.md and
+archive.md, with notes.txt created and deleted on
+request. Three lines misrouted, and they are the
+honest price of the design, in two kinds:
+
+- *"tell me a joke" created a file.* The filecmd
+  chapter's known false-fire, reproduced here:
+  `create_file (0.99)`, and archive.md appeared in the
+  sandbox. In a combined program this failure stops
+  being a curiosity — a sentence meant as conversation
+  did something to disk. It happened inside the
+  sandbox, and a delete would still have needed the
+  gate and the prompt; but the create gate is only the
+  classifier's own threshold, and 0.99 walked through
+  it.
+- *"how are you" and "thank you" were refused as
+  deletes instead of answered.* The classifier has
+  only ever seen file sentences, and it read both
+  lines as `delete_file` — at 0.64 and 0.69, under the
+  0.80 bar, so the gate converted them into refusals
+  and no file was touched. (Verified against the
+  classifier directly, through `cmd/ask -intents` on
+  the same brain: same labels, same confidences. The
+  routing is faithful; the readings are the
+  classifier's.) In filecmd these lines cost nothing —
+  there is nothing else for them to be. Here they cost
+  a reply: the assistant said "nothing done" to a
+  greeting.
+
+And the line this example was built around: "create a
+file named jim" — the sentence that made the chat demo
+splice two canned sentences — here *acts*:
+`create_file (1.00)`, and a file appeared. Not jim,
+though: jim is not one of the 240 trained filenames,
+so the extractor did its Set N substitution and
+created lesson.md. The meaning was understood
+completely; the name was beyond it, exactly as the
+previous chapter measured.
+
+So the caveat from the filecmd chapter is load-bearing
+here, not decorative: **the classifier can false-fire
+on chat lines, and in a combined program a false-fire
+either steals a reply or touches the disk.** The gates
+are what bound the damage in this session — no file
+was wrongly deleted, and nothing left the sandbox —
+but they do not make the readings right. Read the
+score as the mechanism working and the classifier
+being what it is: a bag of words that has never seen
+small talk, asked to judge it anyway.
+
+The two halves still improve independently. The chat
+half of this session is the 451-pair brain, splice and
+all ("i like to like things…"); retrain the chat brain
+on more pairs and the assistant's talk gets better with
+no code change — the routing does not care which chat
+brain is loaded. The same holds in reverse for the
+file brain and its data.
+
 ## Improving unseen answers
 
 The chapters above describe a brain that is strong on what
@@ -739,8 +855,9 @@ cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
 examples/   pairs.jsonl — 204 toy pairs to start from;
             commands.jsonl — 60 command rows with intents;
-            filecommands.jsonl — 1,456 file-command rows over 240 filenames, and
-            filecmd/ — the runnable filesystem demo for them
+            filecommands.jsonl — 1,456 file-command rows over 240 filenames,
+            filecmd/ — the runnable filesystem demo for them, and
+            assistant/ — filecmd and the chat brain in one routed program
 ```
 
 ## Provenance
