@@ -337,6 +337,101 @@ rows per meaning, with more varied wording, is the lever;
 the classifier itself is exactly as smart as a bag of
 words gets.
 
+## Runnable example: talk to your filesystem
+
+`examples/filecmd` puts the intent mechanism to work end
+to end. You type plain sentences; files are created,
+deleted, and listed in a `demo-files/` folder — and there
+is no sentence parsing in the program at all. The trained
+intent classifier says *what the line means*; a second
+trained brain, the same seq2seq, acts as the argument
+extractor and says *which filename*; the host program
+contributes exactly three things: one small binding
+function per meaning, a sanitizer for the extractor's
+answer, and the safety gates. Nothing outside
+`demo-files/` is ever touched.
+
+The data is `examples/filecommands.jsonl`: three meanings
+(`create_file`, `delete_file`, `list_files`) × 12
+phrasings. The create/delete rows also carry an `"output"`
+— the bare filename in the sentence — which is what
+trains the extractor; the list rows are label-only.
+
+```sh
+go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5
+go run ./examples/filecmd -model filebrain.gob
+```
+
+```
+> make me a brand new file named budget.txt
+intent: create_file (1.00), file: budget.txt
+created demo-files/budget.txt
+> get rid of ideas.txt
+intent: delete_file (0.77) — not confident enough to delete (this demo wants 0.80); nothing done.
+```
+
+(Both exchanges are from the measured run below —
+including the delete the confidence gate refused.)
+
+The safety rules are the host's, on purpose: the
+extractor's answer is accepted only as a single plain
+filename (no separators, no `..`, checked again against
+the sandbox folder); `delete_file` needs a confidence of
+at least 0.80 *and* a typed yes at a prompt that names
+the file; a line with no confident meaning does nothing
+and says so.
+
+**Measured, not promised.** The try-these list below was
+run against a brain trained with exactly the command
+above; every phrasing is absent from the training file.
+Scored by what the program actually did:
+
+| try-these lines (unseen) | right action | wrong action | abstained |
+| --- | --- | --- | --- |
+| 5 create phrasings | 2 | 3 | 0 |
+| 4 delete phrasings | 0 | 3 | 1 (the 0.80 gate) |
+| 3 list phrasings | 3 | 0 | 0 |
+| 3 lines with no meaning in the set | 1 | 2 | 0 |
+| **total, 15 lines** | **6** | **8** | **1** |
+
+Read the two halves separately, because they are not
+equally strong. The intent classifier landed the right
+meaning on **12 of 12** meaning lines, unseen phrasings
+included — "brand new" is a word it never trained on, and
+"make me a brand new file named budget.txt" still came
+back `create_file (1.00)` with the right file. The
+extractor is the weak half: it produced the right
+filename in 2 of 5 creates and 0 of 3 deletes it attempted
+(the fourth delete was stopped by the confidence gate
+before extraction). The trained control line made the
+point plainly — "create a file called notes.txt" was
+understood perfectly and then created **todo.md**.
+
+Failures, verbatim from the run:
+
+- "please remove budget.txt" → extracted `ideas.txt`;
+  the confirmation prompt *named* ideas.txt, and the
+  scripted "y" deleted the wrong file. A person reading
+  the prompt would have caught it — that is what the
+  prompt is for — but the machine did not.
+- "tell me a joke" → `create_file (0.78)`, extracted
+  `recipes.txt`, and created it. A false-fire with a real
+  (sandboxed) side effect: the abstention threshold is a
+  floor, not a guarantee, exactly as the intent chapter
+  warns.
+- "i don't need todo.md anymore, delete it" →
+  `delete_file (0.99)`, extracted `workout.md`, which did
+  not exist, so nothing happened.
+
+And the pair the example exists for: the trained line
+"list my files" and the never-trained "what files do i
+have" produced the identical, correct action — the same
+listing of the folder's real contents. Unseen phrasings
+of a trained meaning: yes, that works, measured above.
+A brand-new *meaning* is the boundary: it needs its first
+example rows plus one binding function in the host —
+meanings are declared, not discovered.
+
 ## Improving unseen answers
 
 The chapters above describe a brain that is strong on what
@@ -581,7 +676,9 @@ brain/      standalone glue: vocab building, the trainer loop
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
 examples/   pairs.jsonl — 204 toy pairs to start from;
-            commands.jsonl — 60 command rows with intents
+            commands.jsonl — 60 command rows with intents;
+            filecommands.jsonl — 36 file-command rows, and
+            filecmd/ — the runnable filesystem demo for them
 ```
 
 ## Provenance

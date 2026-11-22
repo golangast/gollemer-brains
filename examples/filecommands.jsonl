@@ -1,0 +1,36 @@
+{"input": "create a file called notes.txt", "output": "notes.txt", "intent": "create_file"}
+{"input": "make a file named budget.txt", "output": "budget.txt", "intent": "create_file"}
+{"input": "start a new document called ideas.txt", "output": "ideas.txt", "intent": "create_file"}
+{"input": "could you create a file called todo.md", "output": "todo.md", "intent": "create_file"}
+{"input": "please make shopping.md", "output": "shopping.md", "intent": "create_file"}
+{"input": "create journal.md", "output": "journal.md", "intent": "create_file"}
+{"input": "make me a new file named recipes.txt", "output": "recipes.txt", "intent": "create_file"}
+{"input": "i want a file called workout.md", "output": "workout.md", "intent": "create_file"}
+{"input": "can you make a file called notes.txt please", "output": "notes.txt", "intent": "create_file"}
+{"input": "create a new file named budget.txt", "output": "budget.txt", "intent": "create_file"}
+{"input": "start a document called shopping.md", "output": "shopping.md", "intent": "create_file"}
+{"input": "please create a file named ideas.txt", "output": "ideas.txt", "intent": "create_file"}
+{"input": "delete notes.txt", "output": "notes.txt", "intent": "delete_file"}
+{"input": "delete the file called budget.txt", "output": "budget.txt", "intent": "delete_file"}
+{"input": "please remove ideas.txt", "output": "ideas.txt", "intent": "delete_file"}
+{"input": "could you delete todo.md", "output": "todo.md", "intent": "delete_file"}
+{"input": "remove the file named shopping.md", "output": "shopping.md", "intent": "delete_file"}
+{"input": "delete recipes.txt please", "output": "recipes.txt", "intent": "delete_file"}
+{"input": "i want to delete workout.md", "output": "workout.md", "intent": "delete_file"}
+{"input": "remove notes.txt from my files", "output": "notes.txt", "intent": "delete_file"}
+{"input": "please delete the file budget.txt", "output": "budget.txt", "intent": "delete_file"}
+{"input": "can you remove todo.md", "output": "todo.md", "intent": "delete_file"}
+{"input": "delete the document called recipes.txt", "output": "recipes.txt", "intent": "delete_file"}
+{"input": "remove workout.md please", "output": "workout.md", "intent": "delete_file"}
+{"input": "list my files", "intent": "list_files"}
+{"input": "list the files", "intent": "list_files"}
+{"input": "show me the files", "intent": "list_files"}
+{"input": "what files are there", "intent": "list_files"}
+{"input": "list files please", "intent": "list_files"}
+{"input": "can you list my files", "intent": "list_files"}
+{"input": "show the files in the folder", "intent": "list_files"}
+{"input": "what do i have in the folder", "intent": "list_files"}
+{"input": "list everything", "intent": "list_files"}
+{"input": "please list the files", "intent": "list_files"}
+{"input": "show me what files i have", "intent": "list_files"}
+{"input": "list all my files", "intent": "list_files"}
