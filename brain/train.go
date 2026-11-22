@@ -95,6 +95,11 @@ type TrainOptions struct {
 	// re-rolls, so over a run a pair is seen both clean and
 	// mangled.
 	Augment float64
+	// Synonyms is the probability that a pair's input has
+	// one word swapped for a known synonym in any given
+	// epoch (see synonyms.go). 0 (the default) is off. It
+	// composes with Augment: the two rolls are independent.
+	Synonyms float64
 }
 
 // ckptPathsFor returns the checkpoint paths living next to the
@@ -282,6 +287,9 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	if opts.Augment < 0 || opts.Augment > 1 {
 		return fmt.Errorf("augment probability %v is outside [0, 1]", opts.Augment)
 	}
+	if opts.Synonyms < 0 || opts.Synonyms > 1 {
+		return fmt.Errorf("synonyms probability %v is outside [0, 1]", opts.Synonyms)
+	}
 	epochs := opts.Epochs
 	if epochs <= 0 {
 		epochs = 200
@@ -420,13 +428,19 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	log.Printf("[train] %d encoded pairs, %d batches/epoch, lr=%.6f, layers=%v, epochs<=%d",
 		len(encoded), len(batches), lr, opts.Layers, epochs)
 
-	// The mutation stream exists only when augmentation is
-	// on; with Augment == 0 the loop below trains on the
-	// prebuilt batches exactly as it always has.
+	// The augmentation stream exists only when an
+	// augmentation is on; with both at 0 the loop below
+	// trains on the prebuilt batches exactly as it always
+	// has.
 	var augRng *rand.Rand
-	if opts.Augment > 0 {
+	if opts.Augment > 0 || opts.Synonyms > 0 {
 		augRng = rand.New(rand.NewSource(augmentSeed))
+	}
+	if opts.Augment > 0 {
 		log.Printf("[train] mutation augmentation on: each pair's input is re-rolled every epoch with probability %.2f (seed %d)", opts.Augment, augmentSeed)
+	}
+	if opts.Synonyms > 0 {
+		log.Printf("[train] synonym augmentation on: each pair's input may swap one word for a known synonym every epoch with probability %.2f", opts.Synonyms)
 	}
 
 	for epoch := startEpoch; epoch <= epochs; epoch++ {
@@ -436,7 +450,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 		}
 		epochBatches := batches
 		if augRng != nil {
-			epochBatches = makeBatches(mutateEncoded(encoded, augRng, opts.Augment, v, tok), batchSize, v.PaddingTokenID)
+			epochBatches = makeBatches(rerollEncoded(encoded, augRng, opts.Augment, opts.Synonyms, v, tok), batchSize, v.PaddingTokenID)
 		}
 		var epochLoss float64
 		for _, b := range epochBatches {

@@ -6,6 +6,9 @@
 // of the inputs (a dropped filler word, a typo, swapped
 // neighbours) whose replies stay correct — it teaches the
 // brain that meaning survives sloppy typing. Off by default.
+// -synonyms 0.3 does the same for word CHOICE: one word of
+// an input is swapped for a known synonym (like -> enjoy),
+// same correct reply.
 //
 // If the data carries "intent" fields, an intent classifier
 // is trained on those rows too (label-only rows — an intent
@@ -38,6 +41,7 @@ func main() {
 	layersFlag := flag.String("layers", "", "comma-separated layers to switch on (supported: char, copy)")
 	resumeFlag := flag.Bool("resume", false, "resume from the checkpoints next to -out instead of starting at epoch 1")
 	augmentFlag := flag.Float64("augment", 0, "probability that a pair's input is mutated in each epoch (0 = off, 0.3 = light)")
+	synonymsFlag := flag.Float64("synonyms", 0, "probability that a pair's input swaps one word for a known synonym in each epoch (0 = off, 0.3 = light)")
 	flag.Parse()
 
 	if *dataFlag == "" {
@@ -57,10 +61,11 @@ func main() {
 		}
 	}
 	if err := brain.Train(pairs, *outFlag, brain.TrainOptions{
-		Layers:  layers,
-		Epochs:  *epochsFlag,
-		Resume:  *resumeFlag,
-		Augment: *augmentFlag,
+		Layers:   layers,
+		Epochs:   *epochsFlag,
+		Resume:   *resumeFlag,
+		Augment:  *augmentFlag,
+		Synonyms: *synonymsFlag,
 	}); err != nil {
 		fmt.Fprintln(os.Stderr, "train:", err)
 		os.Exit(1)

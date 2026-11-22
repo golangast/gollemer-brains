@@ -399,6 +399,51 @@ carried it). `gardening sounds relaxing` became
 failed both ways. The rule is defensible word by word;
 it is not always right.
 
+### Step B — synonym augmentation (trainer-side)
+
+A small built-in table of near-synonym pairs drawn from the
+example corpus's own vocabulary (like/love/enjoy, good/great,
+tired/sleepy, start/begin, ...). With `-synonyms p`, each
+training pair's input may have one word swapped for a table
+synonym with probability `p` per epoch, re-rolled every epoch
+from the same seeded stream as mutation augmentation. The
+swap only lands when the synonym is itself in the training
+vocabulary, and the target reply is never touched: the brain
+learns that "I love gardening" and "I enjoy gardening" are
+the same conversation. It composes with `-augment` (a line
+can get both a synonym and a typo).
+
+Measured on the same 36-line held-out set, same settings
+(60 epochs, copy layer, mutation 0.3 in both arms, typo
+normalizer off):
+
+| training | greedy | checked sampling |
+|---|---|---|
+| mutation only | 13/36 | 19/36 |
+| mutation + synonyms 0.3 | 14/36 | 23/36 |
+
+Where it helped — "i am so tired today" (tired/sleepy is a
+table pair):
+
+- mutation only: "am with to hear you fine. what you been
+  today up to?"
+- with synonyms, checked: "tired am to rest walk, a book,
+  or a quiet or little pages of forever." (on-topic, if
+  scrambled)
+
+Where it did not — "i think it will rain later" flipped the
+other way:
+
+- mutation only: "that is great. rain makes many people
+  happy too."
+- with synonyms: "start with a walk, book, or book or, and
+  air every pass to time."
+
+Seven held-out lines were gained and three lost on checked
+sampling. The synonym arm's training loss also runs higher
+(1.241 vs 1.066) — expected, since its inputs genuinely vary
+more; the losses are not comparable across arms.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
