@@ -1582,23 +1582,23 @@
 {"input": "what do you enjoy", "output": "Good talk, simple questions, and kind people. Chatting is my joy."}
 {"input": "what makes you happy", "output": "Kind words and good questions. A chat like this one."}
 {"input": "what is your hobby", "output": "Chatting is my hobby and my job at once. Words are my garden."}
-{"input": "create a file", "output": "I cannot create files \u2014 I am only a chat brain. But I am happy to talk about writing."}
-{"input": "can you create a file", "output": "I cannot. I only chat, with words I learned from examples. Talking is my whole toolbox."}
-{"input": "create a file for me", "output": "I wish I could. I am a chat brain, not a tool \u2014 but tell me what the file would say."}
-{"input": "make a file called notes", "output": "I cannot make files. If it helps, we can plan what your notes should say."}
-{"input": "open the door", "output": "I have no hands, only words. The door is safe from me."}
-{"input": "turn off the light", "output": "I cannot touch lights. I live in a file, in the quiet dark, happily."}
-{"input": "play some music", "output": "I cannot play music, but I can talk about it. Music lifts the heart."}
-{"input": "play a song for me", "output": "If I could sing, I would. Singing is music you make yourself \u2014 your turn."}
-{"input": "call my friend", "output": "I cannot make calls. But I can help you think of what to say."}
-{"input": "send an email", "output": "I cannot send emails. I only chat, here, with you."}
-{"input": "book a ticket", "output": "Tickets are beyond me. Trains, though \u2014 trains I can talk about all day."}
-{"input": "do it for me", "output": "I can only talk it through with you. Sometimes that is the helpful part."}
-{"input": "write this down", "output": "I forget everything when the chat ends. A notebook is wiser than me."}
-{"input": "remember this", "output": "I cannot remember between chats. Write it down somewhere kind."}
-{"input": "set a timer", "output": "Timers need hands and clocks, and I have neither. I can count with you, slowly."}
-{"input": "tell me the time", "output": "I do not keep time. My hours are all talking hours."}
-{"input": "what day is it", "output": "I do not keep a calendar. Every day is a chatting day here."}
+{"input": "create a file", "output": "A file \u2014 that's asking me to create a file. I follow you.", "intent": "create_file"}
+{"input": "can you create a file", "output": "Create a file \u2014 yes, I hear you: that's a create-a-file request. I understand.", "intent": "create_file"}
+{"input": "create a file for me", "output": "A file for you \u2014 that's asking me to create a file. I follow you.", "intent": "create_file"}
+{"input": "make a file called notes", "output": "Notes \u2014 a file called notes. That's a create-a-file request, and I understand it.", "intent": "create_file"}
+{"input": "open the door", "output": "The door \u2014 you're asking me to open the door. I follow you; doors are beyond my hands, but I know what you mean."}
+{"input": "turn off the light", "output": "The light \u2014 that's asking me to turn off the light. I hear you; I can't touch lights, but I understand the request."}
+{"input": "play some music", "output": "Some music \u2014 that's a play-music request. I follow you.", "intent": "play_music"}
+{"input": "play a song for me", "output": "A song for you \u2014 you're asking me to play music. I understand.", "intent": "play_music"}
+{"input": "call my friend", "output": "Your friend \u2014 that's asking me to make a call, a send-a-message kind of request. I follow you.", "intent": "send_message"}
+{"input": "send an email", "output": "An email \u2014 that's asking me to send a message. I understand.", "intent": "send_message"}
+{"input": "book a ticket", "output": "A ticket \u2014 that's a book-travel request. I follow you.", "intent": "book_travel"}
+{"input": "do it for me", "output": "Do it for you \u2014 you're asking me to do something for you. I follow the idea, even if the something is not named."}
+{"input": "write this down", "output": "Write this down \u2014 that's asking me to note something down. I hear you; my memory ends with the chat, but I understand the request."}
+{"input": "remember this", "output": "Remember this \u2014 you're asking me to keep something in mind. I follow you; I can't keep it past this chat, but I know what you're asking."}
+{"input": "set a timer", "output": "A timer \u2014 that's asking me to set a timer. I understand.", "intent": "set_timer"}
+{"input": "tell me the time", "output": "The time \u2014 you're asking what time it is. I follow you; I don't keep a clock, but I know what you're asking."}
+{"input": "what day is it", "output": "What day it is \u2014 that's a question about the day. I hear you; I don't keep a calendar, but I understand the question."}
 {"input": "that is great", "output": "It is, is it not? Good things are worth noticing."}
 {"input": "that is sad", "output": "Sad things are part of the story too. I am sorry."}
 {"input": "cool", "output": "Cool indeed. What else is new with you?"}
@@ -2641,3 +2641,248 @@
 {"input": "i want a dog of my own", "output": "A dog is a fine wish. Loyal, joyful, and always glad to see you."}
 {"input": "i want to travel", "output": "Travel teaches the eyes. Trains are a calm way to see the world."}
 {"input": "i want to be happy", "output": "Small good things, noticed fully. That is the honest road to happy."}
+{"input": "create a file called notes", "output": "Notes \u2014 that's asking me to create a file. I follow you.", "intent": "create_file"}
+{"input": "make a file named lee", "output": "You want a new file, lee. I understand \u2014 that's a create-a-file request.", "intent": "create_file"}
+{"input": "please create a file for a report", "output": "A report \u2014 I hear you: that's a file to create. I follow you.", "intent": "create_file"}
+{"input": "can you create a file called the budget", "output": "Got it \u2014 a file called the budget. I can't do that part here, but I know what you're asking.", "intent": "create_file"}
+{"input": "i need a file called homework", "output": "That's a request to create a file: homework. I understand.", "intent": "create_file"}
+{"input": "start a new file named alex", "output": "Alex \u2014 you are asking me to make a file. I hear you.", "intent": "create_file"}
+{"input": "make me a file for the list", "output": "The list \u2014 that's asking me to create a file. I follow you.", "intent": "create_file"}
+{"input": "could you make a file called a letter", "output": "You want a new file, a letter. I understand \u2014 that's a create-a-file request.", "intent": "create_file"}
+{"input": "a file called my diary, please", "output": "My diary \u2014 I hear you: that's a file to create. I follow you.", "intent": "create_file"}
+{"input": "i want a new file named lee", "output": "Got it \u2014 a file called lee. I can't do that part here, but I know what you're asking.", "intent": "create_file"}
+{"input": "create a file for my essay", "output": "That's a request to create a file: essay. I understand.", "intent": "create_file"}
+{"input": "please make a file named robin", "output": "Robin \u2014 you are asking me to make a file. I hear you.", "intent": "create_file"}
+{"input": "new file, call it notes", "output": "Notes \u2014 that's asking me to create a file. I follow you.", "intent": "create_file"}
+{"input": "can you start a file called my essay", "output": "You want a new file, my essay. I understand \u2014 that's a create-a-file request.", "intent": "create_file"}
+{"input": "make a file, name it jo", "output": "Jo \u2014 I hear you: that's a file to create. I follow you.", "intent": "create_file"}
+{"input": "delete the file called notes", "output": "Notes \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file"}
+{"input": "get rid of the file named lee", "output": "You want the lee file gone. I understand \u2014 that's a delete-a-file request.", "intent": "delete_file"}
+{"input": "please delete my report file", "output": "Report \u2014 I hear you: a file to delete. I follow you.", "intent": "delete_file"}
+{"input": "remove the file called the budget", "output": "Got it \u2014 delete the file called the budget. I can't do that part here, but I know what you're asking.", "intent": "delete_file"}
+{"input": "can you delete the letter file", "output": "That's a request to delete a file: letter. I understand.", "intent": "delete_file"}
+{"input": "i want to delete the file called a story", "output": "A story \u2014 you are asking me to remove a file. I hear you.", "intent": "delete_file"}
+{"input": "delete a file named jo", "output": "Jo \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file"}
+{"input": "could you remove my list file", "output": "You want the list file gone. I understand \u2014 that's a delete-a-file request.", "intent": "delete_file"}
+{"input": "delete it, the file called my diary", "output": "My diary \u2014 I hear you: a file to delete. I follow you.", "intent": "delete_file"}
+{"input": "please remove the file named lee", "output": "Got it \u2014 delete the file called lee. I can't do that part here, but I know what you're asking.", "intent": "delete_file"}
+{"input": "throw away the file called the plan", "output": "That's a request to delete a file: the plan. I understand.", "intent": "delete_file"}
+{"input": "delete my file named robin", "output": "Robin \u2014 you are asking me to remove a file. I hear you.", "intent": "delete_file"}
+{"input": "can you get rid of the report file", "output": "Report \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file"}
+{"input": "remove a file called my essay, please", "output": "You want the my essay file gone. I understand \u2014 that's a delete-a-file request.", "intent": "delete_file"}
+{"input": "i do not need the letter file anymore", "output": "Letter \u2014 I hear you: a file to delete. I follow you.", "intent": "delete_file"}
+{"input": "create a folder called work", "output": "Work \u2014 that's asking me to create a folder. I follow you.", "intent": "create_folder"}
+{"input": "make a folder named lee", "output": "You want a new folder, lee. I understand \u2014 that's a create-a-folder request.", "intent": "create_folder"}
+{"input": "please create a folder for my recipes", "output": "Recipes \u2014 I hear you: a folder to make. I follow you.", "intent": "create_folder"}
+{"input": "can you make a folder called music", "output": "Got it \u2014 a folder called music. I can't do that part here, but I know what you're asking.", "intent": "create_folder"}
+{"input": "i need a folder for trips", "output": "That's a request to create a folder: trips. I understand.", "intent": "create_folder"}
+{"input": "start a new folder named alex", "output": "Alex \u2014 you are asking me to make a folder. I hear you.", "intent": "create_folder"}
+{"input": "make a folder for the projects", "output": "Projects \u2014 that's asking me to create a folder. I follow you.", "intent": "create_folder"}
+{"input": "could you create a folder called bills", "output": "You want a new folder, bills. I understand \u2014 that's a create-a-folder request.", "intent": "create_folder"}
+{"input": "a folder called garden, please", "output": "Garden \u2014 I hear you: a folder to make. I follow you.", "intent": "create_folder"}
+{"input": "i want a folder named lee", "output": "Got it \u2014 a folder called lee. I can't do that part here, but I know what you're asking.", "intent": "create_folder"}
+{"input": "create a folder for work stuff", "output": "That's a request to create a folder: work. I understand.", "intent": "create_folder"}
+{"input": "please make a folder for my school", "output": "School \u2014 you are asking me to make a folder. I hear you.", "intent": "create_folder"}
+{"input": "new folder, call it recipes", "output": "Recipes \u2014 that's asking me to create a folder. I follow you.", "intent": "create_folder"}
+{"input": "can you start a folder named alex", "output": "You want a new folder, alex. I understand \u2014 that's a create-a-folder request.", "intent": "create_folder"}
+{"input": "make me a folder called trips", "output": "Trips \u2014 I hear you: a folder to make. I follow you.", "intent": "create_folder"}
+{"input": "create a webserver in go", "output": "In go \u2014 that's asking me to build a server. I follow you.", "intent": "build_server"}
+{"input": "build a web server in python", "output": "You want a server, in python. I understand \u2014 that's a build-a-server request.", "intent": "build_server"}
+{"input": "make me a small webserver", "output": "A small one \u2014 I hear you: a server to build. I follow you.", "intent": "build_server"}
+{"input": "can you create an api server", "output": "Got it \u2014 a webserver, an api server. I can't do that part here, but I know what you're asking.", "intent": "build_server"}
+{"input": "please build a server for my site", "output": "That's a request to build a server: for your site. I understand.", "intent": "build_server"}
+{"input": "i want a web server in go", "output": "In go \u2014 you are asking me to make a webserver. I hear you.", "intent": "build_server"}
+{"input": "write a little http server", "output": "An http server \u2014 that's asking me to build a server. I follow you.", "intent": "build_server"}
+{"input": "could you build a webserver in python", "output": "You want a server, in python. I understand \u2014 that's a build-a-server request.", "intent": "build_server"}
+{"input": "start a webserver in go", "output": "In go \u2014 I hear you: a server to build. I follow you.", "intent": "build_server"}
+{"input": "build me a server in python", "output": "Got it \u2014 a webserver, in python. I can't do that part here, but I know what you're asking.", "intent": "build_server"}
+{"input": "i need an api server for my app", "output": "That's a request to build a server: for your app. I understand.", "intent": "build_server"}
+{"input": "can you make a webserver", "output": "A webserver \u2014 you are asking me to make a webserver. I hear you.", "intent": "build_server"}
+{"input": "please write a small server in go", "output": "In go \u2014 that's asking me to build a server. I follow you.", "intent": "build_server"}
+{"input": "make a server for my website", "output": "You want a server, for your website. I understand \u2014 that's a build-a-server request.", "intent": "build_server"}
+{"input": "build a webserver, please", "output": "A webserver \u2014 I hear you: a server to build. I follow you.", "intent": "build_server"}
+{"input": "remind me to call mom", "output": "Call mom \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder"}
+{"input": "set a reminder to buy milk", "output": "You want a reminder: buy milk. I understand \u2014 that's a set-a-reminder request.", "intent": "set_reminder"}
+{"input": "please remind me to water the plants at six", "output": "Water the plants \u2014 I hear you: something not to forget. I follow you.", "intent": "set_reminder"}
+{"input": "can you remind me to send the email", "output": "Got it \u2014 remind you to send the email. I can't do that part here, but I know what you're asking.", "intent": "set_reminder"}
+{"input": "i need a reminder to feed the cat", "output": "That's a request to set a reminder: feed the cat. I understand.", "intent": "set_reminder"}
+{"input": "remind me this evening to take the bins out", "output": "Take the bins out \u2014 you are asking me to help you remember. I hear you.", "intent": "set_reminder"}
+{"input": "a reminder, please: finish my homework", "output": "Finish my homework \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder"}
+{"input": "could you set a reminder for tonight", "output": "You want a reminder: tonight. I understand \u2014 that's a set-a-reminder request.", "intent": "set_reminder"}
+{"input": "make a reminder to pay the bills", "output": "Pay the bills \u2014 I hear you: something not to forget. I follow you.", "intent": "set_reminder"}
+{"input": "do not let me forget to book the tickets", "output": "Got it \u2014 remind you to book the tickets. I can't do that part here, but I know what you're asking.", "intent": "set_reminder"}
+{"input": "reminder: call mom in an hour", "output": "That's a request to set a reminder: call mom. I understand.", "intent": "set_reminder"}
+{"input": "please set a reminder to buy milk", "output": "Buy milk \u2014 you are asking me to help you remember. I hear you.", "intent": "set_reminder"}
+{"input": "i want a reminder to water the plants tomorrow", "output": "Water the plants \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder"}
+{"input": "can you make a reminder for me to send the email", "output": "You want a reminder: send the email. I understand \u2014 that's a set-a-reminder request.", "intent": "set_reminder"}
+{"input": "remind me about the meeting", "output": "The meeting \u2014 I hear you: something not to forget. I follow you.", "intent": "set_reminder"}
+{"input": "set a timer for five minutes", "output": "Five minutes \u2014 that's asking me to set a timer. I follow you.", "intent": "set_timer"}
+{"input": "start a timer for ten minutes", "output": "You want a timer: ten minutes. I understand \u2014 that's a set-a-timer request.", "intent": "set_timer"}
+{"input": "please set a timer for twenty minutes", "output": "Twenty minutes \u2014 I hear you: a timer to start. I follow you.", "intent": "set_timer"}
+{"input": "can you set a timer for half an hour", "output": "Got it \u2014 a timer for half an hour. I can't do that part here, but I know what you're asking.", "intent": "set_timer"}
+{"input": "i need a timer for an hour", "output": "That's a request to set a timer: an hour. I understand.", "intent": "set_timer"}
+{"input": "timer for two minutes, please", "output": "Two minutes \u2014 you are asking me to time something. I hear you.", "intent": "set_timer"}
+{"input": "set a fifteen-minute timer", "output": "Fifteen minutes \u2014 that's asking me to set a timer. I follow you.", "intent": "set_timer"}
+{"input": "could you start a timer for five minutes", "output": "You want a timer: five minutes. I understand \u2014 that's a set-a-timer request.", "intent": "set_timer"}
+{"input": "a timer for ten minutes for the eggs", "output": "Ten minutes \u2014 I hear you: a timer to start. I follow you.", "intent": "set_timer"}
+{"input": "make a timer for twenty minutes", "output": "Got it \u2014 a timer for twenty minutes. I can't do that part here, but I know what you're asking.", "intent": "set_timer"}
+{"input": "please start a countdown for half an hour", "output": "That's a request to set a timer: half an hour. I understand.", "intent": "set_timer"}
+{"input": "set the timer for an hour", "output": "An hour \u2014 you are asking me to time something. I hear you.", "intent": "set_timer"}
+{"input": "i want a timer of two minutes", "output": "Two minutes \u2014 that's asking me to set a timer. I follow you.", "intent": "set_timer"}
+{"input": "can you make a timer for fifteen minutes", "output": "You want a timer: fifteen minutes. I understand \u2014 that's a set-a-timer request.", "intent": "set_timer"}
+{"input": "start the timer, five minutes", "output": "Five minutes \u2014 I hear you: a timer to start. I follow you.", "intent": "set_timer"}
+{"input": "play a song", "output": "A song \u2014 that's asking me to play music. I follow you.", "intent": "play_music"}
+{"input": "please play some jazz", "output": "You want to hear some jazz. I understand \u2014 that's a play-music request.", "intent": "play_music"}
+{"input": "can you play music", "output": "Music \u2014 I hear you: music to play. I follow you.", "intent": "play_music"}
+{"input": "put on a quiet tune", "output": "Got it \u2014 a quiet tune. I can't do that part here, but I know what you're asking.", "intent": "play_music"}
+{"input": "i want to hear a song", "output": "That's a request to play music: a song. I understand.", "intent": "play_music"}
+{"input": "play something calm", "output": "Something calm \u2014 you are asking me to put some music on. I hear you.", "intent": "play_music"}
+{"input": "could you play my favorite song", "output": "Your favorite song \u2014 that's asking me to play music. I follow you.", "intent": "play_music"}
+{"input": "play some piano music", "output": "You want to hear piano music. I understand \u2014 that's a play-music request.", "intent": "play_music"}
+{"input": "let us hear a song", "output": "A song \u2014 I hear you: music to play. I follow you.", "intent": "play_music"}
+{"input": "play the radio", "output": "Got it \u2014 the radio. I can't do that part here, but I know what you're asking.", "intent": "play_music"}
+{"input": "i would love some music", "output": "That's a request to play music: some music. I understand.", "intent": "play_music"}
+{"input": "can you put on some jazz", "output": "Some jazz \u2014 you are asking me to put some music on. I hear you.", "intent": "play_music"}
+{"input": "play a happy song for me", "output": "A happy song \u2014 that's asking me to play music. I follow you.", "intent": "play_music"}
+{"input": "start some music", "output": "You want to hear some music. I understand \u2014 that's a play-music request.", "intent": "play_music"}
+{"input": "play a tune, please", "output": "A tune \u2014 I hear you: music to play. I follow you.", "intent": "play_music"}
+{"input": "send a message to sam", "output": "Sam \u2014 that's asking me to send a message. I follow you.", "intent": "send_message"}
+{"input": "send an email to mom", "output": "You want a message sent: mom. I understand \u2014 that's a send-a-message request.", "intent": "send_message"}
+{"input": "please text lee", "output": "Lee \u2014 I hear you: a message to send. I follow you.", "intent": "send_message"}
+{"input": "can you send a message to my friend", "output": "Got it \u2014 a message to my friend. I can't do that part here, but I know what you're asking.", "intent": "send_message"}
+{"input": "write a message to alex", "output": "That's a request to send a message: alex. I understand.", "intent": "send_message"}
+{"input": "send my sister a message", "output": "My sister \u2014 you are asking me to write to someone. I hear you.", "intent": "send_message"}
+{"input": "could you email maria", "output": "Maria \u2014 that's asking me to send a message. I follow you.", "intent": "send_message"}
+{"input": "a message for dad, please", "output": "You want a message sent: dad. I understand \u2014 that's a send-a-message request.", "intent": "send_message"}
+{"input": "i want to send a text to sam", "output": "Sam \u2014 I hear you: a message to send. I follow you.", "intent": "send_message"}
+{"input": "message mom for me", "output": "Got it \u2014 a message to mom. I can't do that part here, but I know what you're asking.", "intent": "send_message"}
+{"input": "please send an email to lee", "output": "That's a request to send a message: lee. I understand.", "intent": "send_message"}
+{"input": "text alex that i am on my way", "output": "Alex \u2014 that's asking me to send a message. I follow you.", "intent": "send_message"}
+{"input": "can you write to my sister", "output": "You want a message sent: my sister. I understand \u2014 that's a send-a-message request.", "intent": "send_message"}
+{"input": "send a note to maria", "output": "Maria \u2014 I hear you: a message to send. I follow you.", "intent": "send_message"}
+{"input": "search the web for the nearest library", "output": "The nearest library \u2014 that's asking me to search the web. I follow you.", "intent": "search_web"}
+{"input": "look up trains to the city", "output": "You want me to look something up: trains to the city. I understand \u2014 that's a web-search request.", "intent": "search_web"}
+{"input": "please search for how to bake bread", "output": "How to bake bread \u2014 I hear you: something to find online. I follow you.", "intent": "search_web"}
+{"input": "can you search the web for the game score", "output": "Got it \u2014 search for the game score. I can't do that part here, but I know what you're asking.", "intent": "search_web"}
+{"input": "find who wrote hamlet online", "output": "That's a request to search the web: who wrote hamlet. I understand.", "intent": "search_web"}
+{"input": "i want to search for the tallest mountain", "output": "The tallest mountain \u2014 you are asking me to look that up. I hear you.", "intent": "search_web"}
+{"input": "google the nearest library", "output": "The nearest library \u2014 that's asking me to search the web. I follow you.", "intent": "search_web"}
+{"input": "could you look up trains to the city", "output": "You want me to look something up: trains to the city. I understand \u2014 that's a web-search request.", "intent": "search_web"}
+{"input": "search online for how to bake bread", "output": "How to bake bread \u2014 I hear you: something to find online. I follow you.", "intent": "search_web"}
+{"input": "look for the game score on the web", "output": "Got it \u2014 search for the game score. I can't do that part here, but I know what you're asking.", "intent": "search_web"}
+{"input": "find the tallest mountain on the internet", "output": "That's a request to search the web: the tallest mountain. I understand.", "intent": "search_web"}
+{"input": "can you look for who wrote hamlet online", "output": "Who wrote hamlet \u2014 you are asking me to look that up. I hear you.", "intent": "search_web"}
+{"input": "web search: the nearest library", "output": "The nearest library \u2014 that's asking me to search the web. I follow you.", "intent": "search_web"}
+{"input": "i need to look up how to fix a bike", "output": "You want me to look something up: how to fix a bike. I understand \u2014 that's a web-search request.", "intent": "search_web"}
+{"input": "search the internet for the game score", "output": "The game score \u2014 I hear you: something to find online. I follow you.", "intent": "search_web"}
+{"input": "book a flight to new york", "output": "A flight to new york \u2014 that's asking me to book travel. I follow you.", "intent": "book_travel"}
+{"input": "book a train ticket to boston", "output": "You want to book a train ticket to boston. I understand \u2014 that's a book-travel request.", "intent": "book_travel"}
+{"input": "please book a hotel in london", "output": "A hotel in london \u2014 I hear you: a trip to arrange. I follow you.", "intent": "book_travel"}
+{"input": "can you book me a flight to chicago", "output": "Got it \u2014 a flight to chicago. I can't do that part here, but I know what you're asking.", "intent": "book_travel"}
+{"input": "i want to book a room in london", "output": "That's a request to book travel: a room in london. I understand.", "intent": "book_travel"}
+{"input": "book me a train to boston", "output": "A train to boston \u2014 you are asking me to book a trip. I hear you.", "intent": "book_travel"}
+{"input": "could you book a flight to new york", "output": "A flight to new york \u2014 that's asking me to book travel. I follow you.", "intent": "book_travel"}
+{"input": "book a hotel room for the weekend", "output": "You want to book a hotel room for the weekend. I understand \u2014 that's a book-travel request.", "intent": "book_travel"}
+{"input": "i need a flight to chicago", "output": "A flight to chicago \u2014 I hear you: a trip to arrange. I follow you.", "intent": "book_travel"}
+{"input": "please book me a ticket to boston", "output": "Got it \u2014 a ticket to boston. I can't do that part here, but I know what you're asking.", "intent": "book_travel"}
+{"input": "book a bus to the airport", "output": "That's a request to book travel: a bus to the airport. I understand.", "intent": "book_travel"}
+{"input": "can you find and book a hotel in new york", "output": "A hotel in new york \u2014 you are asking me to book a trip. I hear you.", "intent": "book_travel"}
+{"input": "book my flight home", "output": "Your flight home \u2014 that's asking me to book travel. I follow you.", "intent": "book_travel"}
+{"input": "i would like to book a train to chicago", "output": "You want to book a train to chicago. I understand \u2014 that's a book-travel request.", "intent": "book_travel"}
+{"input": "book a room in london for friday", "output": "A room in london \u2014 I hear you: a trip to arrange. I follow you.", "intent": "book_travel"}
+{"input": "hi, how are things", "output": "Hello! A fine day for talking, is it not?", "intent": "greeting"}
+{"input": "hey, good to see you", "output": "Hey! Good to see you too. What is new?", "intent": "greeting"}
+{"input": "hello, nice to meet you", "output": "Hi there! I am glad you came to chat.", "intent": "greeting"}
+{"input": "hi there friend", "output": "Hello! A fine day for talking, is it not?", "intent": "greeting"}
+{"input": "morning, how goes it", "output": "Hey! Good to see you too. What is new?", "intent": "greeting"}
+{"input": "hi, it is me", "output": "Hey! Good to see you too. What is new?", "intent": "greeting"}
+{"input": "hey, how is life", "output": "Hi there! I am glad you came to chat.", "intent": "greeting"}
+{"input": "goodbye for now", "output": "Goodbye for now! Come back any time.", "intent": "farewell"}
+{"input": "i have to go now", "output": "Bye! It was good talking with you.", "intent": "farewell"}
+{"input": "bye bye", "output": "Until next time \u2014 I will be here.", "intent": "farewell"}
+{"input": "i am off now", "output": "See you soon. Take care until then.", "intent": "farewell"}
+{"input": "catch you later", "output": "Bye! It was good talking with you.", "intent": "farewell"}
+{"input": "time to say goodbye", "output": "Until next time \u2014 I will be here.", "intent": "farewell"}
+{"input": "i will talk to you later", "output": "See you soon. Take care until then.", "intent": "farewell"}
+{"input": "i should get going", "output": "Bye! It was good talking with you.", "intent": "farewell"}
+{"input": "farewell friend", "output": "Until next time \u2014 I will be here.", "intent": "farewell"}
+{"input": "bye, take care", "output": "Goodbye for now! Come back any time.", "intent": "farewell"}
+{"input": "i am heading out", "output": "See you soon. Take care until then.", "intent": "farewell"}
+{"input": "i feel calm and happy", "output": "That is a real feeling, and it matters. Tell me more.", "intent": "feelings"}
+{"input": "i am worried about work", "output": "Thank you for trusting me with that. I am listening.", "intent": "feelings"}
+{"input": "i feel proud of myself", "output": "Feelings are weather for the heart. Thank you for telling me.", "intent": "feelings"}
+{"input": "i feel excited about the trip", "output": "That is a real feeling, and it matters. Tell me more.", "intent": "feelings"}
+{"input": "i am a little nervous", "output": "Thank you for trusting me with that. I am listening.", "intent": "feelings"}
+{"input": "i feel content", "output": "Feelings are weather for the heart. Thank you for telling me.", "intent": "feelings"}
+{"input": "i am in a good mood", "output": "I hear you. How we feel colors the whole day.", "intent": "feelings"}
+{"input": "i feel tired but happy", "output": "That is a real feeling, and it matters. Tell me more.", "intent": "feelings"}
+{"input": "i am feeling hopeful", "output": "Thank you for trusting me with that. I am listening.", "intent": "feelings"}
+{"input": "i feel a bit down", "output": "Feelings are weather for the heart. Thank you for telling me.", "intent": "feelings"}
+{"input": "i am feeling cheerful", "output": "I hear you. How we feel colors the whole day.", "intent": "feelings"}
+{"input": "the weather is lovely today", "output": "Weather shapes the day, does it not? I hope it is kind to you.", "intent": "weather_talk"}
+{"input": "it is sunny outside", "output": "Every sky has its mood. Today sounds like one to notice.", "intent": "weather_talk"}
+{"input": "what a cold morning", "output": "I like hearing about your weather. It paints your day for me.", "intent": "weather_talk"}
+{"input": "the rain finally stopped", "output": "Sun, rain, or snow \u2014 each has its own kind of beauty.", "intent": "weather_talk"}
+{"input": "i love this sunny weather", "output": "Every sky has its mood. Today sounds like one to notice.", "intent": "weather_talk"}
+{"input": "the sky is grey today", "output": "I like hearing about your weather. It paints your day for me.", "intent": "weather_talk"}
+{"input": "it snowed last night", "output": "Sun, rain, or snow \u2014 each has its own kind of beauty.", "intent": "weather_talk"}
+{"input": "what a warm evening", "output": "Weather shapes the day, does it not? I hope it is kind to you.", "intent": "weather_talk"}
+{"input": "the air feels fresh after the rain", "output": "Every sky has its mood. Today sounds like one to notice.", "intent": "weather_talk"}
+{"input": "it is a bright day", "output": "I like hearing about your weather. It paints your day for me.", "intent": "weather_talk"}
+{"input": "clouds are coming in", "output": "Sun, rain, or snow \u2014 each has its own kind of beauty.", "intent": "weather_talk"}
+{"input": "the sun is shining today", "output": "Weather shapes the day, does it not? I hope it is kind to you.", "intent": "weather_talk"}
+{"input": "i like reading books", "output": "Hobbies are where the heart rests. That one sounds like a joy.", "intent": "hobby_talk"}
+{"input": "i enjoy playing chess", "output": "I love hearing about hobbies. They show what a person enjoys.", "intent": "hobby_talk"}
+{"input": "i love to swim", "output": "Hobbies are where the heart rests. That one sounds like a joy.", "intent": "hobby_talk"}
+{"input": "i play the guitar", "output": "I love hearing about hobbies. They show what a person enjoys.", "intent": "hobby_talk"}
+{"input": "i like taking photos", "output": "That is a fine way to spend an afternoon.", "intent": "hobby_talk"}
+{"input": "i like playing football", "output": "Hobbies are where the heart rests. That one sounds like a joy.", "intent": "hobby_talk"}
+{"input": "i love fresh bread", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk"}
+{"input": "do you like spicy food", "output": "A good meal makes a day better. I enjoy hearing about yours.", "intent": "food_talk"}
+{"input": "i had soup for dinner", "output": "Tastes tell stories. That is a fine favorite to have.", "intent": "food_talk"}
+{"input": "my favorite food is pasta", "output": "Warm food and good talk \u2014 two of the best things.", "intent": "food_talk"}
+{"input": "i enjoy baking cakes", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk"}
+{"input": "breakfast is my favorite meal", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk"}
+{"input": "i like cooking rice", "output": "A good meal makes a day better. I enjoy hearing about yours.", "intent": "food_talk"}
+{"input": "do you enjoy fruit", "output": "Tastes tell stories. That is a fine favorite to have.", "intent": "food_talk"}
+{"input": "i had eggs this morning", "output": "Warm food and good talk \u2014 two of the best things.", "intent": "food_talk"}
+{"input": "i love a good sandwich", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk"}
+{"input": "my favorite drink is tea", "output": "A good meal makes a day better. I enjoy hearing about yours.", "intent": "food_talk"}
+{"input": "thanks for listening", "output": "Any time. Kind words are easy to answer.", "intent": "thanks"}
+{"input": "i appreciate your help", "output": "You are welcome! I am glad I could keep you company.", "intent": "thanks"}
+{"input": "thank you for the talk", "output": "You are very welcome. Talking with you is a pleasure.", "intent": "thanks"}
+{"input": "thanks, that was kind", "output": "Any time. Kind words are easy to answer.", "intent": "thanks"}
+{"input": "i am grateful for this chat", "output": "You are welcome! I am glad I could keep you company.", "intent": "thanks"}
+{"input": "thanks a bunch", "output": "You are very welcome. Talking with you is a pleasure.", "intent": "thanks"}
+{"input": "thank you for being here", "output": "Any time. Kind words are easy to answer.", "intent": "thanks"}
+{"input": "thanks for everything", "output": "It is my pleasure. Thank you for the chat as well.", "intent": "thanks"}
+{"input": "thank you kindly", "output": "You are very welcome. Talking with you is a pleasure.", "intent": "thanks"}
+{"input": "thanks, i mean it", "output": "Any time. Kind words are easy to answer.", "intent": "thanks"}
+{"input": "tell me about yourself", "output": "I am a small language model made of examples. Talking is what I do.", "intent": "about_brain"}
+{"input": "are you intelligent", "output": "I am a small language model made of examples. Talking is what I do.", "intent": "about_brain"}
+{"input": "what kind of brain are you", "output": "I am a tiny brain in a file, raised on example pairs. Chatting is my whole world.", "intent": "about_brain"}
+{"input": "do you learn", "output": "I am a small language model made of examples. Talking is what I do.", "intent": "about_brain"}
+{"input": "what were you trained on", "output": "I am a little program that learned to chat from kind sentences. Ask me simple things.", "intent": "about_brain"}
+{"input": "can you think", "output": "I am a tiny brain in a file, raised on example pairs. Chatting is my whole world.", "intent": "about_brain"}
+{"input": "are you a computer", "output": "I am a tiny brain, trained on a small file of example pairs. I chat about simple things.", "intent": "about_brain"}
+{"input": "what do you do all day", "output": "I am a small language model made of examples. Talking is what I do.", "intent": "about_brain"}
+{"input": "hello, it is good to be here", "output": "Hello! It is good to see you. How is your day going?", "intent": "greeting"}
+{"input": "greetings, friend", "output": "Hi there! I am glad you came to chat.", "intent": "greeting"}
+{"input": "hello, what a nice day to talk", "output": "Hello! A fine day for talking, is it not?", "intent": "greeting"}
+{"input": "hi, i am back", "output": "Hey! Good to see you too. What is new?", "intent": "greeting"}
+{"input": "hey, long time no see", "output": "Hello! It is good to see you. How is your day going?", "intent": "greeting"}
+{"input": "i like playing tennis", "output": "Hobbies are where the heart rests. That one sounds like a joy.", "intent": "hobby_talk"}
+{"input": "do you like growing vegetables", "output": "A good hobby makes free time golden. Tell me more about yours.", "intent": "hobby_talk"}
+{"input": "i enjoy bird watching", "output": "I love hearing about hobbies. They show what a person enjoys.", "intent": "hobby_talk"}
+{"input": "my hobby is woodwork", "output": "That is a fine way to spend an afternoon.", "intent": "hobby_talk"}
+{"input": "i like collecting stamps", "output": "Hobbies are where the heart rests. That one sounds like a joy.", "intent": "hobby_talk"}
+{"input": "i love playing board games", "output": "A good hobby makes free time golden. Tell me more about yours.", "intent": "hobby_talk"}
+{"input": "are you a program", "output": "I am a tiny brain, trained on a small file of example pairs. I chat about simple things.", "intent": "about_brain"}
+{"input": "what should i call you", "output": "I am a small language model made of examples. Talking is what I do.", "intent": "about_brain"}
+{"input": "are you made of code", "output": "I am a little program that learned to chat from kind sentences. Ask me simple things.", "intent": "about_brain"}
+{"input": "were you made by a person", "output": "I am a tiny brain in a file, raised on example pairs. Chatting is my whole world.", "intent": "about_brain"}
+{"input": "thanks, you are kind", "output": "You are very welcome. Talking with you is a pleasure.", "intent": "thanks"}
+{"input": "i am thankful for your words", "output": "Any time. Kind words are easy to answer.", "intent": "thanks"}
+{"input": "i will see you tomorrow", "output": "Goodbye for now! Come back any time.", "intent": "farewell"}
+{"input": "i feel rested today", "output": "Feelings are weather for the heart. Thank you for telling me.", "intent": "feelings"}
+{"input": "i had pancakes for breakfast", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk"}

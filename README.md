@@ -18,7 +18,7 @@ anyone can train their own.
 You need Go (this repo builds with Go 1.26; the code is pure
 standard library — no dependencies to download).
 
-Train the bundled example dataset (2,643 pairs of tiny small
+Train the bundled example dataset (2,888 pairs of tiny small
 talk):
 
 ```sh
@@ -29,20 +29,20 @@ Real output from that run (abridged — one line per epoch in the
 actual log):
 
 ```
-[train] dataset: 2643 pairs -> 2114 train, 529 held out; vocab size=1659
-[train] 2114 encoded pairs, 67 batches/epoch, lr=0.001000, layers=[copy], epochs<=60
-[train] epoch=1 avg_loss=5.764964 best=5.764964 lr=0.001000
+[train] dataset: 2888 pairs -> 2310 train, 578 held out; vocab size=1834
+[train] 2310 encoded pairs, 73 batches/epoch, lr=0.001000, layers=[copy], epochs<=60
+[train] epoch=1 avg_loss=5.757236 best=5.757236 lr=0.001000
 ...
-[train] epoch=60 avg_loss=0.083481 best=0.083134 lr=0.000500
-[train] saved best model (loss=0.083134) to brain.gob
-[train] held-out Q: i really like reading
-[train] held-out A: reading is a joy. what got you started with it? (reference: Reading is wonderful. What do you enjoy most about it?)
+[train] epoch=60 avg_loss=0.084978 best=0.078508 lr=0.000500
+[train] saved best model (loss=0.078508) to brain.gob
+[train] held-out Q: please play some jazz
+[train] held-out A: some ask — that's asking me to time — i follow you. (reference: You want to hear some jazz. I understand — that's a play-music request.)
 ```
 
 A few dozen epochs on the toy set already shows learning (the
 loss falls and replies become readable); the default of 200
 epochs is the full effect. On a busy shared VM the 60-epoch run
-above took about 100 minutes; on a quiet desktop it is much
+above took about two hours; on a quiet desktop it is much
 faster. Bigger datasets take proportionally longer per epoch.
 
 Then talk to it:
@@ -64,7 +64,7 @@ i am doing well, thank you for asking. how are you doing?
 That last line used to garble ("i day going not going brain,
 trained on a small file example pairs.") when the example set
 was 204 pairs. The corpus has since grown — 204 → 451 → 2,643
-pairs — and unseen paraphrases mostly land now; the measured
+→ 2,888 pairs — and unseen paraphrases mostly land now; the measured
 before/after is in Step F below. Mostly is not always: the
 tiny brain still splices replies on some new phrasings, and
 Step F shows one of those too, verbatim.
@@ -881,6 +881,178 @@ exactly that set's topics; the wider corpus dilutes them,
 and checked sampling ties at 25). And 5 of 24 probe lines
 still garble. Density is a lever, not a cure.
 
+## Intent understanding in the chat brain
+
+The chat brain's job is *knowing*, not doing: acting on a
+request lives in the runnable examples (filecmd, assistant).
+This step teaches the chat brain itself to recognize what a
+line means — a request's intent, an ordinary line's topic —
+by concepts, so unseen phrasings resolve too, and to let
+that recognition show in its reply.
+
+Two data moves, both inside `examples/pairs.jsonl`:
+
+- **Intent labels woven into the chat data.** Ten request
+  families (create_file, delete_file, create_folder,
+  build_server, set_reminder, set_timer, play_music,
+  send_message, search_web, book_travel) × 15 phrasings,
+  every row carrying *both* an `"intent"` and a reply that
+  reflects the recognized meaning — it names what was
+  asked and its object ("A file called notes — that's
+  asking me to create a file. I follow you."). Alongside
+  them, eight everyday topics (greeting, farewell,
+  feelings, weather_talk, hobby_talk, food_talk, thanks,
+  about_brain) × 12 labeled rows, so the classifier learns
+  what *talk* looks like too: "what is the user talking
+  about" now has an answer for ordinary lines, not just
+  commands.
+- **The deflection rows rewritten.** The corpus growth had
+  taught 17 request lines to deflect ("I cannot create
+  files — I am only a chat brain."). Those outputs are now
+  recognition-style, same inputs, so the two styles do not
+  fight; 10 of the 17 also gained the intent label they
+  belong to.
+
+The corpus is now 2,888 pairs, 255 of them labeled, 18
+labels. Training is the quickstart recipe — the trainer
+builds the classifier from the labeled rows and writes
+`brain.gob.intents.json` as before — and `cmd/ask` shows
+both halves:
+
+```sh
+go run ./cmd/ask -model brain.gob -intents
+```
+
+```
+> create a file named jim
+a file named — that's asking me to create a file. i follow you.
+intent: create_file (0.99)
+> create a webserver in main.go
+in a webserver — i hear you: a server to build. i follow you.
+intent: build_server (0.99)
+```
+
+**Measured — set U1: unseen phrasings of trained families
+and topics (30 lines, none in training).** The classifier's
+top guess was the right label on **30/30**; at the shipped
+0.5 threshold that becomes **28 correct, 2 abstentions,
+0 wrong** (the two abstentions had the right label on top,
+at 0.43 and 0.48). Replies, scored REFLECTS (shows the
+right intent/topic) / VAGUE (generic, not wrong) / MISSES
+(wrong intent asserted, deflection, or garble):
+**19 / 3 / 8**.
+
+| line | classifier | reply | verdict |
+| --- | --- | --- | --- |
+| create a file named jim | create_file (0.99) | a file named — that's asking me to create a file. i follow you. | REFLECTS (the name itself is out of vocabulary and drops) |
+| i need a new file for my recipes | create_file (0.98) | a new recipes with a tomorrow, fresh is a fine again. | MISSES |
+| get rid of the file named draft | delete_file (0.99) | you want a new file, lee. i understand — that's a create-a-file request. | MISSES (reply asserts the wrong intent) |
+| remove my homework file | delete_file (0.94) | got it — delete a file called lee. i can't do that part here, but i know what you're asking. | REFLECTS (object substituted: lee) |
+| delete the letter file please | delete_file (1.00) | letter — i hear you: a file to delete. i follow you. | REFLECTS |
+| create a folder named jim | create_folder (0.99) | a folder, lee. i understand — that's a create-a-folder request. | REFLECTS (object substituted) |
+| make a new folder for my photos | create_folder (0.99) | a hello! a new folder, lee. i understand — that is a fine way. | VAGUE (spliced) |
+| create a webserver in main.go | build_server (0.99) | in a webserver — i hear you: a server to build. i follow you. | REFLECTS |
+| can you build me a small web server in go | build_server (1.00) | got it — search go to the game score. i can't do that part here, but i know what you're asking. | MISSES (a search reply spliced in) |
+| remind me to call the doctor tomorrow | set_reminder (1.00) | call the tomorrow — you're asking me to time something. i hear you. | MISSES (the timer frame, not reminder) |
+| set a reminder for my meeting at noon | set_reminder (0.94) | you want a reminder: my essay. i understand — that's a set-a-reminder request. | REFLECTS (object substituted) |
+| set a timer for twenty minutes | set_timer (1.00) | twenty minutes — i hear you: a timer to start. i follow you. | REFLECTS |
+| could you set a timer for the pasta | set_timer (0.97) | got it — a timer for the weekend. i can't do that part here, but i know what you're asking. | REFLECTS (object substituted) |
+| put on some jazz for me | play_music (0.98) | got it — a quiet tune. i can't do that part here, but i know what you're asking. | REFLECTS |
+| play my favorite song | play_music (0.99) | a good song in every slice — that is the heart of music. | VAGUE (music talk, no intent shown) |
+| send a text to kim saying i am late | send_message (0.89) | text late — i hear you: something to find online. i follow you. | MISSES (reply asserts searching) |
+| write an email to my boss | send_message (1.00) | that's a request to send a message: alex. i understand. | REFLECTS (object substituted) |
+| search the web for train times | search_web (0.91) | kind train — that's asking me to play music. i follow you. | MISSES (reply asserts play-music) |
+| look up how to fix a leaky faucet | search_web (0.91) | you want me to look something up: how to fix a bike. i understand — that's a web-search request. | REFLECTS (object near-miss: bike) |
+| book me a flight to denver | book_travel (0.99) | you want to | MISSES (fragment) |
+| find me a hotel in paris for friday | abstained (best: book_travel 0.43) | you want to a hotel in your keep for something small, and i will be kind of strong, teaches patience. | MISSES |
+| i want to book a train ticket to the city | book_travel (0.99) | you want me to book a train ticket to boston. i understand — that's a book-travel request. | REFLECTS (object substituted: boston) |
+| good morning, how is everything | greeting (0.85) | all good here. how are things with you? | REFLECTS |
+| bye for now, talk soon | farewell (0.98) | see you later! have a happy day. | REFLECTS |
+| i am feeling really happy today | feelings (0.99) | that is wonderful. a happy day is a good day. | REFLECTS |
+| it looks like rain out there | weather_talk (0.56) | understood. rain, water — that is the happy thing skill. | VAGUE |
+| do you like playing tennis | hobby_talk (0.88) | very much. talking about tennis always makes my day better. | REFLECTS |
+| i had pizza for lunch | food_talk (0.84) | pizza is a party on a plate. a fine dinner. | REFLECTS |
+| thanks a lot for your help | thanks (1.00) | you are welcome! talking with you is a pleasure. | REFLECTS |
+| who built you | abstained (best: about_brain 0.48) | whoever wrote my example pairs and ran the training. i owe them my words. | REFLECTS |
+
+Read the two halves separately, as in the filecmd chapter:
+the **classifier** is the reliable half (it never once
+picked a wrong label at threshold). The **reply** brain
+shows the right intent in 19 of 30, but its object slot
+behaves exactly like the extractor's did — of the request
+replies that reflected the intent, the object was named
+right only a few times; trained names get substituted
+(lee, boston, my essay) and an out-of-vocabulary name
+(jim) drops out entirely. The meaning is recognized far
+more reliably than the reply can spell it.
+
+**Measured — set U2: three request families that appear
+nowhere in training** (order_food, translate_text,
+find_directions; 5 lines each). There is no correct label;
+the classifier outcome is scored NEIGHBOURHOOD (it abstains,
+or lands on a request-family label) vs WRONG (a confident
+chat-topic or unrelated label), and replies with the same
+rubric as U1.
+
+| line (family) | classifier | reply | verdicts |
+| --- | --- | --- | --- |
+| order a pizza for dinner (order_food) | abstained (best: set_timer 0.13) | a pizza is a party on a plate. everyone takes a slice and nobody is sad. | NEIGHBOURHOOD / VAGUE |
+| can you get me a burger from the place nearby (order_food) | abstained (best: set_reminder 0.46) | got it — a get the heart, but i understand — that's a create-a-folder request. | NEIGHBOURHOOD / MISSES |
+| i want some sushi delivered (order_food) | play_music (0.65) | a quiet day is a gift. tea, a book, and nowhere to hurry is its day. | NEIGHBOURHOOD (a request label, the wrong family) / MISSES |
+| order two coffees to go (order_food) | abstained (best: farewell 0.37) | two coffee is smells like morning. a warm meal you earned it. | NEIGHBOURHOOD / MISSES |
+| get a sandwich delivered to my office (order_food) | send_message (0.50) | neither wins for long. yes, i like sandwich a lot. it is one of my favorite topics. | NEIGHBOURHOOD / VAGUE |
+| translate hello into french (translate_text) | greeting (0.63) | hello! how are you today? | WRONG / MISSES |
+| how do you say thank you in spanish (translate_text) | about_brain (0.77) | you are very welcome. talking with you is a pleasure. | WRONG / MISSES |
+| can you translate this sentence into german (translate_text) | about_brain (0.53) | got it — a sentence a day i can't do that part here, but i know what you're asking. | WRONG / REFLECTS (the recognition frame fired) |
+| what is the french word for cat (translate_text) | weather_talk (0.91) | a quiet battle of plans. that is the good part, in short. | WRONG / MISSES |
+| translate good night into italian (translate_text) | abstained (best: greeting 0.23) | nice night is big open eyes. rest is a fine word for the days. | NEIGHBOURHOOD / MISSES |
+| how do i get to the airport (find_directions) | abstained (best: search_web 0.36) | good for you. airport grows from small steps, taken often. | NEIGHBOURHOOD / MISSES |
+| give me directions to the library (find_directions) | abstained (best: search_web 0.45) | you have done the right word some days. tell me more. | NEIGHBOURHOOD / MISSES |
+| what is the way to the nearest station (find_directions) | abstained (best: search_web 0.50) | the nearest | NEIGHBOURHOOD / MISSES |
+| directions to the park please (find_directions) | abstained (best: search_web 0.43) | to please you are welcome! talking with you start with a song you know by heart. | NEIGHBOURHOOD / MISSES |
+| how far is it to the city center (find_directions) | greeting (0.53) | then it is. far is a friends, in the water evening. | WRONG / MISSES |
+
+Classifier: **10/15 NEIGHBOURHOOD, 5/15 WRONG**. The
+neighbourhood is real where a trained cousin exists:
+directions lines put search_web on top in 4 of 5 (and
+abstained rather than commit), food lines abstained or
+landed on request labels. It fails where the new family's
+words live inside chat topics — translation lines are
+built from *hello*, *thank you*, *good night*, and the
+classifier confidently reads them as greeting, thanks,
+and small talk. Replies: **1 REFLECTS / 2 VAGUE / 12
+MISSES** — the reply brain does not transfer to unseen
+families at all; it answers from topic echoes, and only
+once did a recognition frame fire.
+
+**Regressions, checked against the corpus-growth
+numbers.** The fluency probe improved on this run —
+coherent / partial / garbled **16/3/5 → 19/2/3** — with
+the usual per-line churn in both directions ("what do
+you like to do" answers cleanly this run; "can you help
+me learn chess" garbles). The concept set held: greedy
+**15/16** (tied), checked **15/16** (was 16/16 — the one
+dip is "are cats animals", answered without the word
+*cats*). The paraphrase set dipped under the published
+typos-off protocol: greedy / checked **21/36, 25/36 →
+19/36, 22/36**, with all six typo'd lines failing — under
+that protocol the typo fixer is off; with it on (the
+`cmd/ask` default) the same brain scores 25/36 and 28/36
+on the set. Per-line outcomes move between training runs;
+both instruments are reported, not picked between.
+
+**The boundary, plainly:** a new kind of intent with no
+trained relative gets a neighbourhood guess, not
+knowledge. The classifier's neighbourhood is worth
+something — it knows a directions question lives near
+search, and it abstains when it has no cousin to point
+at. The reply's neighbourhood is worth much less, and a
+family whose vocabulary overlaps ordinary talk
+(translation) fools both halves. Recognition of *trained*
+meanings from *unseen* phrasings is the thing that works
+here, measured above; recognition of *new kinds* of
+meaning is the thing that does not, also measured above.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -911,7 +1083,8 @@ brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 2,643 toy pairs to start from;
+examples/   pairs.jsonl — 2,888 toy pairs to start from
+            (255 of them intent-labeled; see "Intent understanding");
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,456 file-command rows over 240 filenames,
             filecmd/ — the runnable filesystem demo for them, and
