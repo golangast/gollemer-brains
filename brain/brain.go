@@ -13,10 +13,12 @@ import (
 	"fmt"
 	"hash/fnv"
 	"math/rand"
+	"os"
 	"regexp"
 	"strings"
 
 	"github.com/golangast/gollemer-brains/data"
+	"github.com/golangast/gollemer-brains/intent"
 	"github.com/golangast/gollemer-brains/seq2seq"
 	"github.com/golangast/gollemer-brains/tokenizer"
 	"github.com/golangast/gollemer-brains/vocab"
@@ -122,7 +124,22 @@ func TidyDecode(s string) string {
 // Brain is a trained layers model ready to answer lines.
 type Brain struct {
 	Model *seq2seq.LayersModel
-	tok   *tokenizer.Tokenizer
+	// Intents is the intent classifier trained alongside the
+	// model (nil when the training data carried no "intent"
+	// fields). It predicts the MEANING of a line — a label
+	// the user defined — separately from the reply.
+	Intents *intent.Classifier
+	tok     *tokenizer.Tokenizer
+}
+
+// intentsPathFor returns the intent classifier's sidecar
+// path for a brain file: <model>.intents.json. The
+// classifier travels as a sidecar rather than inside the
+// .gob so brains trained before intents existed load
+// unchanged, and a brain without intents simply has no
+// sidecar.
+func intentsPathFor(modelPath string) string {
+	return modelPath + ".intents.json"
 }
 
 // LoadBrain reads a .gob written by Train (or by the model's
@@ -146,7 +163,19 @@ func LoadBrain(path string) (*Brain, error) {
 		return nil, err
 	}
 	m.Base.Tokenizer = tok
-	return &Brain{Model: m, tok: tok}, nil
+	br := &Brain{Model: m, tok: tok}
+	// The intent sidecar is optional — most brains have
+	// none — but when it is present it must load: a corrupt
+	// sidecar is an error, never a silently dropped
+	// classifier.
+	if _, err := os.Stat(intentsPathFor(path)); err == nil {
+		clf, err := intent.Load(intentsPathFor(path))
+		if err != nil {
+			return nil, err
+		}
+		br.Intents = clf
+	}
+	return br, nil
 }
 
 // encodeLine turns a raw line into the ids + surfaces the

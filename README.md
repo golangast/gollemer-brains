@@ -94,6 +94,11 @@ that appear only in held-out pairs stay unknown: the held-out
 set is a real yardstick, and the trainer prints a few held-out
 predictions next to their references when it finishes.
 
+Rows may also carry an `"intent"` field — a meaning label of
+your own — and an intent row may omit `"output"` entirely.
+That is the command mechanism; see "Tie sentences to
+commands" below.
+
 ## Checkpoint-resume (train like you mean it)
 
 Real training runs get killed — laptops close, VMs reboot.
@@ -234,6 +239,104 @@ least one of the line's content words (`brain.ReplyCarries`).
 The check guarantees the topic is present, not that the
 sentence is good; a rescued reply can still be rough.
 
+## Tie sentences to commands
+
+A reply is not always what you want from a line — sometimes
+you want to KNOW WHAT IT MEANS and act on it. Add an
+`"intent"` field to a row: a meaning label you define.
+
+```json
+{"input": "turn off the lights", "intent": "lights_off"}
+{"input": "lights out", "intent": "lights_off"}
+{"input": "turn the lights off please", "output": "Turning the lights off.", "intent": "lights_off"}
+```
+
+Most rows in a command set are **label-only** — an input and
+an intent, no output. A command set should not need chat
+replies invented for it. The brain's trainer skips
+label-only rows (there is no reply to learn); the intent
+classifier trains on every row that carries an intent, with
+or without an output. `examples/commands.jsonl` is a working
+demo: 6 meanings (lights_on, lights_off, play_music, stop,
+set_timer, weather_ask) × 10 phrasings, most of them
+label-only.
+
+Training states plainly what it picked up:
+
+```
+[train] dataset: 18 pairs -> 14 train, 4 held out; vocab size=53
+[train] 42 of the 60 rows are label-only (intent, no output): skipped for the brain, used by the intent classifier
+[train] intents: 6 labels from 60 rows -> brain.gob.intents.json
+[train] intent lights_off       10 rows
+...
+```
+
+The classifier — a small bag-of-words softmax in the
+`intent` package — is written next to the brain as
+`<model>.intents.json` and loaded automatically by
+`LoadBrain` when present. Your program switches on the
+label and runs whatever it binds to that meaning:
+
+```go
+b, err := brain.LoadBrain("brain.gob")
+if err != nil {
+	log.Fatal(err)
+}
+line := "turn off the lights"
+if b.Intents != nil {
+	switch label, _ := b.Intents.Predict(line); label {
+	case "lights_off":
+		hallwayLight.Off()
+	case "lights_on":
+		hallwayLight.On()
+	case "":
+		// abstained — no confident meaning, do nothing
+	}
+}
+```
+
+**The abstention rule:** below a confidence of 0.5 (the
+default threshold, configurable), `Predict` returns no
+label at all — and a line that shares no words with any
+training row gets none either. That is deliberate: a
+program that acts on predictions will be handed sentences
+the classifier barely understands, and a wrong command is
+worse than none.
+
+`cmd/ask -intents` shows the mechanism:
+
+```
+> turn off the lights
+the lights off.
+intent: lights_off (1.00)
+> tell me a joke
+cannot started. see here sky tell but i hope weather is kind.
+intent: set_timer (0.50)
+```
+
+Measured on the demo set's classifier against 24 held-out
+lines — 18 unseen phrasings of the six meanings, plus 6
+lines that belong to no meaning:
+
+| held-out lines | result |
+| --- | --- |
+| 18 meaning lines | **12 correct**, 4 wrong, 2 abstained |
+| 6 no-meaning lines | 2 abstained, **4 false-fired** |
+
+Verbatim, one of each: "could you switch on the lights" →
+`lights_on (1.00)`, correct. "no more music please" →
+`play_music (0.98)`, wrong — it means stop, but a
+bag-of-words cannot see the "no"; the words *music please*
+are the strongest evidence it knows. "how about a tune" →
+abstained (best guess 0.36). And the honest weak spot: the
+no-meaning lines false-fired more often than they
+abstained — "what is your name" → `weather_ask (0.70)`,
+because *what is* is all the evidence the classifier has
+and in training those words only ever meant weather. More
+rows per meaning, with more varied wording, is the lever;
+the classifier itself is exactly as smart as a bag of
+words gets.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -258,11 +361,14 @@ tokenizer/  word tokenization, in sync with the trainer's splitter
 seq2seq/    the model: encoder/decoder, BPTT training, layers
             (copy/char/frame/...), gob save/load, prediction
 data/       the JSONL pairs loader and the 80/20 split
+intent/     the meaning classifier: bag-of-words softmax
+            over "intent" labels, with confidence abstention
 brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 204 toy pairs to start from
+examples/   pairs.jsonl — 204 toy pairs to start from;
+            commands.jsonl — 60 command rows with intents
 ```
 
 ## Provenance

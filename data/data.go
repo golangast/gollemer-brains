@@ -5,6 +5,19 @@
 //
 //	{"input": "hello", "output": "Hi! How are you?"}
 //
+// A row may also carry an "intent" field — a meaning label
+// the user defines (see the intent package):
+//
+//	{"input": "turn off the lights", "intent": "lights_off"}
+//
+// An intent row does not need an "output": a row with an
+// input and an intent but no output is a LABEL-ONLY row, a
+// pure command example. The seq2seq trainer skips label-only
+// rows (there is no reply to learn); the intent classifier
+// trains on every row that carries an intent, with or
+// without an output. A row with neither an output nor an
+// intent teaches nothing and is rejected as malformed.
+//
 // Extra fields (for example "domain", which Gollemer's own
 // dataset carries) are ignored, so a Gollemer chat_pairs.jsonl
 // file drops in unchanged.
@@ -20,16 +33,22 @@ import (
 )
 
 // Pair is one training example: a line the brain may be given,
-// and the reply it should learn to produce.
+// and the reply it should learn to produce. Intent is an
+// optional meaning label (the intent package's classifier
+// trains on it); a Pair with an Intent but no Output is a
+// label-only command example.
 type Pair struct {
 	Input  string `json:"input"`
 	Output string `json:"output"`
+	Intent string `json:"intent,omitempty"`
 }
 
 // LoadPairs reads a JSONL pairs file. Blank lines are skipped.
-// A malformed line, an empty input, or an empty output is an
-// error that names the line number — a data file you cannot
-// debug is a data file you will not fix.
+// A malformed line or an empty input is an error that names
+// the line number — a data file you cannot debug is a data
+// file you will not fix. An empty output is an error too,
+// unless the row carries an intent: then it is a label-only
+// command example and loads fine.
 func LoadPairs(path string) ([]Pair, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -57,8 +76,9 @@ func LoadPairs(path string) ([]Pair, error) {
 		if strings.TrimSpace(p.Input) == "" {
 			return nil, fmt.Errorf("%s line %d: empty \"input\"", path, lineNo)
 		}
-		if strings.TrimSpace(p.Output) == "" {
-			return nil, fmt.Errorf("%s line %d: empty \"output\"", path, lineNo)
+		p.Intent = strings.TrimSpace(p.Intent)
+		if strings.TrimSpace(p.Output) == "" && p.Intent == "" {
+			return nil, fmt.Errorf("%s line %d: empty \"output\" (a row needs an output, or an \"intent\" to be a label-only command example)", path, lineNo)
 		}
 		pairs = append(pairs, p)
 	}

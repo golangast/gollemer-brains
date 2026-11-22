@@ -10,6 +10,11 @@
 // wins (see brain.AnswerChecked). This is a demo of the
 // brain, NOT the Gollemer chat — no memory, no routing, no
 // tools.
+//
+// With -intents, each reply is followed by the meaning the
+// brain's intent classifier predicts for your line (when the
+// brain was trained on data with "intent" fields) — the
+// label a program would switch on to run a command.
 package main
 
 import (
@@ -26,12 +31,16 @@ import (
 
 func main() {
 	modelFlag := flag.String("model", "brain.gob", "path to the trained brain (.gob)")
+	intentsFlag := flag.Bool("intents", false, "after each reply, print the predicted intent (needs a brain trained on data with \"intent\" fields)")
 	flag.Parse()
 
 	b, err := brain.LoadBrain(*modelFlag)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "ask:", err)
 		os.Exit(1)
+	}
+	if *intentsFlag && b.Intents == nil {
+		fmt.Fprintln(os.Stderr, "ask: -intents given, but this brain has no intent classifier — train on data with \"intent\" fields to add one")
 	}
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 	sc := bufio.NewScanner(os.Stdin)
@@ -56,5 +65,8 @@ func main() {
 			continue
 		}
 		fmt.Println(ans)
+		if *intentsFlag && b.Intents != nil {
+			fmt.Printf("intent: %s\n", b.Intents.Describe(line))
+		}
 	}
 }

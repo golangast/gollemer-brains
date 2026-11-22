@@ -7,6 +7,12 @@
 // neighbours) whose replies stay correct — it teaches the
 // brain that meaning survives sloppy typing. Off by default.
 //
+// If the data carries "intent" fields, an intent classifier
+// is trained on those rows too (label-only rows — an intent
+// with no output — exist for exactly this) and written next
+// to the brain as <out>.intents.json; the run's output lists
+// the labels it found and the rows per label.
+//
 // The output .gob is written once, at the end, from the best
 // weights seen. While training runs, checkpoints live next to
 // it (<out>.ckpt / <out>.latest with JSON sidecars); rerun

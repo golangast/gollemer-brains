@@ -1,0 +1,60 @@
+{"input": "turn on the lights", "output": "Turning the lights on.", "intent": "lights_on"}
+{"input": "lights on please", "intent": "lights_on"}
+{"input": "switch the lights on", "intent": "lights_on"}
+{"input": "turn the lights on", "output": "Turning the lights on.", "intent": "lights_on"}
+{"input": "can you turn on the light", "intent": "lights_on"}
+{"input": "lights on", "output": "Lights on.", "intent": "lights_on"}
+{"input": "let there be light", "intent": "lights_on"}
+{"input": "it is dark in here", "intent": "lights_on"}
+{"input": "flip the lights on", "intent": "lights_on"}
+{"input": "i need some light", "intent": "lights_on"}
+{"input": "turn off the lights", "output": "Turning the lights off.", "intent": "lights_off"}
+{"input": "lights off", "intent": "lights_off"}
+{"input": "switch the lights off", "intent": "lights_off"}
+{"input": "kill the lights", "intent": "lights_off"}
+{"input": "turn the lights off please", "output": "Turning the lights off.", "intent": "lights_off"}
+{"input": "lights out", "intent": "lights_off"}
+{"input": "make it dark", "intent": "lights_off"}
+{"input": "shut the lights off", "intent": "lights_off"}
+{"input": "turn off the light", "output": "The light is off.", "intent": "lights_off"}
+{"input": "lights off now", "intent": "lights_off"}
+{"input": "play some music", "output": "Playing some music for you.", "intent": "play_music"}
+{"input": "put on music", "intent": "play_music"}
+{"input": "play music please", "intent": "play_music"}
+{"input": "i want to hear music", "output": "Here is some music.", "intent": "play_music"}
+{"input": "start the music", "intent": "play_music"}
+{"input": "play a song", "intent": "play_music"}
+{"input": "music please", "output": "Music coming up.", "intent": "play_music"}
+{"input": "put some tunes on", "intent": "play_music"}
+{"input": "can you play music", "intent": "play_music"}
+{"input": "let us hear a song", "intent": "play_music"}
+{"input": "stop", "output": "Stopped.", "intent": "stop"}
+{"input": "stop the music", "intent": "stop"}
+{"input": "that is enough", "intent": "stop"}
+{"input": "stop playing", "intent": "stop"}
+{"input": "please stop", "output": "Stopping right away.", "intent": "stop"}
+{"input": "enough music", "intent": "stop"}
+{"input": "halt", "intent": "stop"}
+{"input": "stop it", "output": "Stopped it.", "intent": "stop"}
+{"input": "quiet please", "intent": "stop"}
+{"input": "silence", "intent": "stop"}
+{"input": "set a timer", "output": "Timer set.", "intent": "set_timer"}
+{"input": "timer for ten minutes", "intent": "set_timer"}
+{"input": "set a timer for five minutes", "intent": "set_timer"}
+{"input": "start a timer", "output": "Timer started.", "intent": "set_timer"}
+{"input": "remind me in ten minutes", "intent": "set_timer"}
+{"input": "set an alarm for twenty minutes", "intent": "set_timer"}
+{"input": "timer please", "intent": "set_timer"}
+{"input": "count down ten minutes", "intent": "set_timer"}
+{"input": "set a five minute timer", "output": "Five minute timer set.", "intent": "set_timer"}
+{"input": "wake me in an hour", "intent": "set_timer"}
+{"input": "what is the weather", "output": "I cannot see the sky, but I hope your weather is kind.", "intent": "weather_ask"}
+{"input": "how is the weather today", "intent": "weather_ask"}
+{"input": "is it raining", "intent": "weather_ask"}
+{"input": "will it rain today", "intent": "weather_ask"}
+{"input": "what is the weather like", "output": "I cannot see the sky, but I hope your weather is kind.", "intent": "weather_ask"}
+{"input": "is it sunny outside", "intent": "weather_ask"}
+{"input": "weather report please", "intent": "weather_ask"}
+{"input": "how cold is it outside", "intent": "weather_ask"}
+{"input": "is it snowing", "intent": "weather_ask"}
+{"input": "tell me the weather", "output": "I cannot see the sky, but I hope your weather is kind.", "intent": "weather_ask"}

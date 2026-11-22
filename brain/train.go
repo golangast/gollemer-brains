@@ -44,6 +44,7 @@ import (
 	"strings"
 
 	"github.com/golangast/gollemer-brains/data"
+	"github.com/golangast/gollemer-brains/intent"
 	"github.com/golangast/gollemer-brains/nn"
 	"github.com/golangast/gollemer-brains/seq2seq"
 	"github.com/golangast/gollemer-brains/tokenizer"
@@ -285,16 +286,32 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	if epochs <= 0 {
 		epochs = 200
 	}
-	if len(pairs) < 10 {
-		return fmt.Errorf("need at least 10 pairs to train, have %d", len(pairs))
+
+	// Label-only rows (an intent, no output) are command
+	// examples, not chat pairs: there is no reply for the
+	// seq2seq to learn, so they stay out of its split and
+	// vocabulary. They still train the intent classifier at
+	// the end of the run (see trainIntents).
+	chatPairs := make([]data.Pair, 0, len(pairs))
+	for _, p := range pairs {
+		if strings.TrimSpace(p.Output) != "" {
+			chatPairs = append(chatPairs, p)
+		}
+	}
+	labelOnly := len(pairs) - len(chatPairs)
+	if len(chatPairs) < 10 {
+		return fmt.Errorf("need at least 10 pairs with outputs to train, have %d (label-only intent rows do not count)", len(chatPairs))
 	}
 
-	trainPairs, heldPairs := data.Split(pairs)
+	trainPairs, heldPairs := data.Split(chatPairs)
 	v, tok, err := BuildVocab(trainPairs)
 	if err != nil {
 		return err
 	}
-	log.Printf("[train] dataset: %d pairs -> %d train, %d held out; vocab size=%d", len(pairs), len(trainPairs), len(heldPairs), v.Size())
+	log.Printf("[train] dataset: %d pairs -> %d train, %d held out; vocab size=%d", len(chatPairs), len(trainPairs), len(heldPairs), v.Size())
+	if labelOnly > 0 {
+		log.Printf("[train] %d of the %d rows are label-only (intent, no output): skipped for the brain, used by the intent classifier", labelOnly, len(pairs))
+	}
 
 	encoded := make([]encodedPair, 0, len(trainPairs))
 	for _, p := range trainPairs {
@@ -522,6 +539,43 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 			continue
 		}
 		log.Printf("[train] held-out Q: %s\n[train] held-out A: %s (reference: %s)", heldPairs[i].Input, ans, heldPairs[i].Output)
+	}
+	return trainIntents(pairs, outPath)
+}
+
+// trainIntents fits the intent classifier on every row that
+// carries an intent (label-only rows included — they exist
+// for exactly this) and writes it as the brain's sidecar,
+// <out>.intents.json, where LoadBrain picks it up. When the
+// data carries no intents, any sidecar an earlier run left
+// at this path is removed: a stale classifier must never be
+// mistaken for this brain's.
+func trainIntents(pairs []data.Pair, outPath string) error {
+	sidecar := intentsPathFor(outPath)
+	counts := intent.CountByLabel(pairs)
+	if len(counts) == 0 {
+		if err := os.Remove(sidecar); err != nil && !os.IsNotExist(err) {
+			log.Printf("[train] warning: could not remove stale intent sidecar %s: %v", sidecar, err)
+		}
+		return nil
+	}
+	clf, err := intent.Train(pairs, intent.DefaultThreshold)
+	if err != nil {
+		return err
+	}
+	if err := clf.Save(sidecar); err != nil {
+		return fmt.Errorf("saving intent classifier: %w", err)
+	}
+	labels := make([]string, 0, len(counts))
+	total := 0
+	for l, n := range counts {
+		labels = append(labels, l)
+		total += n
+	}
+	sort.Strings(labels)
+	log.Printf("[train] intents: %d labels from %d rows -> %s", len(labels), total, sidecar)
+	for _, l := range labels {
+		log.Printf("[train] intent %-16s %d rows", l, counts[l])
 	}
 	return nil
 }
