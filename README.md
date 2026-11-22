@@ -148,7 +148,74 @@ not carve into a standalone brain honestly. Naming one here is
 a clear error that says so. Also left behind: the whole chat
 product itself (routing, tools, memory, receipts), the
 transformer and pointer-generator probe models, and the
-source's synonym/mutation data augmentation.
+source's synonym data augmentation. (Its mutation
+augmentation did make the trip — next section.)
+
+## Mutation augmentation
+
+People do not type like training data. `-augment` teaches
+the brain that a line's meaning survives sloppy typing:
+each epoch, every pair's input is re-rolled, and with the
+probability you set it is replaced — for that epoch only —
+by a lightly mangled variant: one non-content word dropped,
+two adjacent words swapped, one small typo in a longer word
+(a letter deleted, swapped, or duplicated, never the first
+letter), or a trailing punctuation mark or filler word
+dropped. The reply is never touched: mangled line in,
+correct reply out, so the model learns the mangling does
+not change the meaning. The stream is seeded, so runs are
+reproducible; `0` (the default) is off, and training is then
+exactly what it was before the augmentation existed.
+
+```sh
+go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 60 -layers copy -augment 0.3
+```
+
+Measured on the bundled example set (204 pairs, 60 epochs,
+`copy` layer), against 36 held-out paraphrases written for
+the test — rewordings, shortened lines, and typo'd lines
+whose phrasings appear nowhere in the corpus. Both brains
+started from identical weights (same seed, one process), so
+augmentation is the only difference. A reply carries the
+topic when it contains the line's topic word:
+
+| run | held-out, greedy | held-out, checked sampling | trained lines, checked | final avg_loss |
+| --- | --- | --- | --- | --- |
+| `-augment 0` | 11/36 | 17/36 | 9/12 | 1.338902 |
+| `-augment 0.3` | 13/36 | 18/36 | 10/12 | 1.065940 |
+
+Checked sampling is the `cmd/ask` decode policy. The
+trained-lines column is a sanity check on 12 lines taken
+verbatim from the training split: augmentation did not wreck
+what the brain had memorized. On the looser any-content-word
+rule (`brain.ReplyCarries`), checked sampling scored 24/36
+without augmentation and 28/36 with it. One caveat on the
+loss column: the augmented run's loss is averaged over
+batches that include mangled inputs, so the two loss numbers
+are not measured on identical data.
+
+Real exchanges (greedy replies, before → after):
+
+```
+> got any thoughts on cycling
+hi there! good to see you.  →  cycling is wonderful. what do you enjoy most about it?
+> gardening sounds relaxing
+i am a tiny brain, trained on a small file example pairs.  →  gardening is wonderful. what do you enjoy most about it?
+> thoughts on yoga
+hi there! good to see you.  →  yoga is wonderful. what do you enjoy most about it?
+> seen any good movies lately
+hi there! good to see you.  →  hello! how are you today?
+> tell me about cooknig
+you the mind. a trail, some, and fresh air fix many  →  (empty reply)
+```
+
+The last two are in here on purpose: augmentation is a
+nudge, not a cure. The wins are real but modest, and they
+landed on reworded and shortened lines — the six typo'd
+lines in the set put their topic word in the reply 0/6
+times for *both* brains. A typo'd topic word is an unknown
+token, and at this scale the model still cannot bridge it.
+More data remains the bigger lever.
 
 ## Generation: greedy + checked sampling
 

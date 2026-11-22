@@ -2,6 +2,11 @@
 //
 //	go run ./cmd/train -data examples/pairs.jsonl -out brain.gob -epochs 200 -layers copy
 //
+// Add -augment 0.3 to also train on lightly mangled variants
+// of the inputs (a dropped filler word, a typo, swapped
+// neighbours) whose replies stay correct — it teaches the
+// brain that meaning survives sloppy typing. Off by default.
+//
 // The output .gob is written once, at the end, from the best
 // weights seen. While training runs, checkpoints live next to
 // it (<out>.ckpt / <out>.latest with JSON sidecars); rerun
@@ -26,6 +31,7 @@ func main() {
 	epochsFlag := flag.Int("epochs", 200, "total epochs to reach")
 	layersFlag := flag.String("layers", "", "comma-separated layers to switch on (supported: char, copy)")
 	resumeFlag := flag.Bool("resume", false, "resume from the checkpoints next to -out instead of starting at epoch 1")
+	augmentFlag := flag.Float64("augment", 0, "probability that a pair's input is mutated in each epoch (0 = off, 0.3 = light)")
 	flag.Parse()
 
 	if *dataFlag == "" {
@@ -45,9 +51,10 @@ func main() {
 		}
 	}
 	if err := brain.Train(pairs, *outFlag, brain.TrainOptions{
-		Layers: layers,
-		Epochs: *epochsFlag,
-		Resume: *resumeFlag,
+		Layers:  layers,
+		Epochs:  *epochsFlag,
+		Resume:  *resumeFlag,
+		Augment: *augmentFlag,
 	}); err != nil {
 		fmt.Fprintln(os.Stderr, "train:", err)
 		os.Exit(1)

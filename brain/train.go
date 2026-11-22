@@ -23,18 +23,21 @@ package brain
 //     index shift would silently corrupt the weights;
 //   - early stop after 30 epochs without improvement.
 //
-// What the carve dropped, and why: the source's synonym/mutation
+// What the carve dropped, and why: the source's synonym
 // augmentation (chat-dataset machinery), the frame/class/turn/
 // memory layers and their corpus derivations (they are computed
 // by the chat package's fact seat and intent labeller), and the
-// session probes. The layers that carve cleanly — char and
-// copy — are supported; see SupportedLayers.
+// session probes. The source's mutation augmentation IS here,
+// simplified to a per-epoch re-roll: see mutate.go. The layers
+// that carve cleanly — char and copy — are supported; see
+// SupportedLayers.
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"sort"
@@ -84,6 +87,13 @@ type TrainOptions struct {
 	Layers []string // layer names to switch on (see SupportedLayers)
 	Epochs int      // total epochs to reach (resume counts from the checkpoint)
 	Resume bool     // continue from <out>.ckpt/.latest when usable
+	// Augment is the probability that a pair's input is
+	// replaced by a mutated variant in any given epoch (see
+	// mutate.go). 0 (the default) is off: training is exactly
+	// what it was before the augmentation existed. Each epoch
+	// re-rolls, so over a run a pair is seen both clean and
+	// mangled.
+	Augment float64
 }
 
 // ckptPathsFor returns the checkpoint paths living next to the
@@ -155,27 +165,41 @@ type encodedPair struct {
 	inputSurfs  []string
 	target      []int
 	targetSurfs []string
+	// srcInput is the pair's original input text, kept so the
+	// mutation augmentation can re-roll a mangled variant of
+	// it each epoch (mutate.go). Unused when Augment is 0.
+	srcInput string
+}
+
+// encodeInputSide encodes an input line into the ids and
+// surface forms the encoder consumes — the input half of
+// encodePair, shared with the mutation re-encode.
+func encodeInputSide(input string, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) ([]int, []string) {
+	words := TokenizeLower(seq2seq.NormalizeQuery(input))
+	ids := EncodeInput(tok, input)
+	var surfs []string
+	if len(words) == len(ids) {
+		surfs = append([]string{}, words...)
+	} else {
+		surfs = make([]string, len(ids))
+		for i, id := range ids {
+			surfs[i] = v.GetWord(id)
+		}
+	}
+	return ids, surfs
 }
 
 // encodePair encodes one pair for training. Pairs whose target
 // encodes to fewer than 2 tokens (BOS+EOS) or more than 60 are
 // skipped, exactly as in the source.
 func encodePair(p data.Pair, v *vocab.Vocabulary, tok *tokenizer.Tokenizer) (encodedPair, bool) {
-	words := TokenizeLower(seq2seq.NormalizeQuery(p.Input))
-	ids := EncodeInput(tok, p.Input)
+	ids, surfs := encodeInputSide(p.Input, v, tok)
 	tg := EncodeTarget(tok, v, p.Output)
 	if len(ids) == 0 || len(tg) < 2 || len(tg) > 60 {
 		return encodedPair{}, false
 	}
-	ep := encodedPair{target: tg}
-	if len(words) == len(ids) {
-		ep.inputSurfs = append([]string{}, words...)
-	} else {
-		ep.inputSurfs = make([]string, len(ids))
-		for i, id := range ids {
-			ep.inputSurfs[i] = v.GetWord(id)
-		}
-	}
+	ep := encodedPair{target: tg, srcInput: p.Input}
+	ep.inputSurfs = surfs
 	ep.input = ids
 	ep.targetSurfs = make([]string, len(tg))
 	for i, id := range tg {
@@ -253,6 +277,9 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 		default:
 			return fmt.Errorf("unknown layer %q (supported: %s)", name, strings.Join(SupportedLayers, ", "))
 		}
+	}
+	if opts.Augment < 0 || opts.Augment > 1 {
+		return fmt.Errorf("augment probability %v is outside [0, 1]", opts.Augment)
 	}
 	epochs := opts.Epochs
 	if epochs <= 0 {
@@ -376,13 +403,26 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 	log.Printf("[train] %d encoded pairs, %d batches/epoch, lr=%.6f, layers=%v, epochs<=%d",
 		len(encoded), len(batches), lr, opts.Layers, epochs)
 
+	// The mutation stream exists only when augmentation is
+	// on; with Augment == 0 the loop below trains on the
+	// prebuilt batches exactly as it always has.
+	var augRng *rand.Rand
+	if opts.Augment > 0 {
+		augRng = rand.New(rand.NewSource(augmentSeed))
+		log.Printf("[train] mutation augmentation on: each pair's input is re-rolled every epoch with probability %.2f (seed %d)", opts.Augment, augmentSeed)
+	}
+
 	for epoch := startEpoch; epoch <= epochs; epoch++ {
 		if epoch > 1 && (epoch-1)%40 == 0 {
 			lr *= 0.5
 			adam.SetLearningRate(lr)
 		}
+		epochBatches := batches
+		if augRng != nil {
+			epochBatches = makeBatches(mutateEncoded(encoded, augRng, opts.Augment, v, tok), batchSize, v.PaddingTokenID)
+		}
 		var epochLoss float64
-		for _, b := range batches {
+		for _, b := range epochBatches {
 			adam.ZeroGrad()
 			loss, err := model.TrainBatchLayers(b)
 			if err != nil {
@@ -392,7 +432,7 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 			adam.ClipGradients()
 			adam.Step()
 		}
-		avg := float32(epochLoss / float64(len(batches)))
+		avg := float32(epochLoss / float64(len(epochBatches)))
 
 		if math.IsNaN(float64(avg)) || math.IsInf(float64(avg), 0) || (epoch > 5 && avg > best*3) {
 			rollbacks++
