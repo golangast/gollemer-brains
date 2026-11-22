@@ -12,7 +12,7 @@
 // Train the demo brain first (see the README section
 // "Runnable example: talk to your filesystem"):
 //
-//	go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5
+//	go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe
 //	go run ./examples/filecmd -model filebrain.gob
 //
 // Everything the demo touches lives in a demo-files/ folder

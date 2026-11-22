@@ -1,36 +1,1456 @@
-{"input": "create a file called notes.txt", "output": "notes.txt", "intent": "create_file"}
-{"input": "make a file named budget.txt", "output": "budget.txt", "intent": "create_file"}
+{"input": "delete the file named cooking.md", "output": "cooking.md", "intent": "delete_file"}
+{"input": "make me a new file named health.txt", "output": "health.txt", "intent": "create_file"}
+{"input": "i want to delete draft.md", "output": "draft.md", "intent": "delete_file"}
+{"input": "remove fishing.txt from my files", "output": "fishing.txt", "intent": "delete_file"}
+{"input": "could you delete agenda.txt", "output": "agenda.txt", "intent": "delete_file"}
+{"input": "agenda.csv, make that a file", "output": "agenda.csv", "intent": "create_file"}
+{"input": "please make dance.txt", "output": "dance.txt", "intent": "create_file"}
+{"input": "make a file named todo.md", "output": "todo.md", "intent": "create_file"}
+{"input": "save this as yoga.json", "output": "yoga.json", "intent": "create_file"}
+{"input": "i want a file called cycling.csv", "output": "cycling.csv", "intent": "create_file"}
+{"input": "delete the document called homework.md", "output": "homework.md", "intent": "delete_file"}
+{"input": "i don't need calendar.txt anymore", "output": "calendar.txt", "intent": "delete_file"}
+{"input": "save this as guitar.md", "output": "guitar.md", "intent": "create_file"}
+{"input": "remove inventory.txt please", "output": "inventory.txt", "intent": "delete_file"}
+{"input": "make reading.txt for me", "output": "reading.txt", "intent": "create_file"}
+{"input": "please create a file named letter.md", "output": "letter.md", "intent": "create_file"}
+{"input": "delete baking.md", "output": "baking.md", "intent": "delete_file"}
+{"input": "could you create a file called resume.md", "output": "resume.md", "intent": "create_file"}
+{"input": "make travel.txt for me", "output": "travel.txt", "intent": "create_file"}
+{"input": "please create a file named flowers.md", "output": "flowers.md", "intent": "create_file"}
+{"input": "delete the file called bills.txt", "output": "bills.txt", "intent": "delete_file"}
+{"input": "seeds.csv, make that a file", "output": "seeds.csv", "intent": "create_file"}
+{"input": "create sketch.md", "output": "sketch.md", "intent": "create_file"}
+{"input": "please delete the file tickets.log", "output": "tickets.log", "intent": "delete_file"}
+{"input": "remove bills.txt from my files", "output": "bills.txt", "intent": "delete_file"}
+{"input": "i want to delete essay.json", "output": "essay.json", "intent": "delete_file"}
+{"input": "please create a file named story.md", "output": "story.md", "intent": "create_file"}
+{"input": "delete the file named songs.md", "output": "songs.md", "intent": "delete_file"}
+{"input": "i want a file called hotel.md", "output": "hotel.md", "intent": "create_file"}
+{"input": "delete the document called seeds.csv", "output": "seeds.csv", "intent": "delete_file"}
+{"input": "throw away study.md", "output": "study.md", "intent": "delete_file"}
+{"input": "save this as backup.md", "output": "backup.md", "intent": "create_file"}
+{"input": "delete the file called study.txt", "output": "study.txt", "intent": "delete_file"}
+{"input": "remove puzzle.txt from my files", "output": "puzzle.txt", "intent": "delete_file"}
+{"input": "delete the document called quiz.csv", "output": "quiz.csv", "intent": "delete_file"}
+{"input": "please delete minutes.txt", "output": "minutes.txt", "intent": "delete_file"}
 {"input": "start a new document called ideas.txt", "output": "ideas.txt", "intent": "create_file"}
-{"input": "could you create a file called todo.md", "output": "todo.md", "intent": "create_file"}
-{"input": "please make shopping.md", "output": "shopping.md", "intent": "create_file"}
-{"input": "create journal.md", "output": "journal.md", "intent": "create_file"}
-{"input": "make me a new file named recipes.txt", "output": "recipes.txt", "intent": "create_file"}
-{"input": "i want a file called workout.md", "output": "workout.md", "intent": "create_file"}
-{"input": "can you make a file called notes.txt please", "output": "notes.txt", "intent": "create_file"}
-{"input": "create a new file named budget.txt", "output": "budget.txt", "intent": "create_file"}
-{"input": "start a document called shopping.md", "output": "shopping.md", "intent": "create_file"}
-{"input": "please create a file named ideas.txt", "output": "ideas.txt", "intent": "create_file"}
-{"input": "delete notes.txt", "output": "notes.txt", "intent": "delete_file"}
-{"input": "delete the file called budget.txt", "output": "budget.txt", "intent": "delete_file"}
-{"input": "please remove ideas.txt", "output": "ideas.txt", "intent": "delete_file"}
-{"input": "could you delete todo.md", "output": "todo.md", "intent": "delete_file"}
-{"input": "remove the file named shopping.md", "output": "shopping.md", "intent": "delete_file"}
-{"input": "delete recipes.txt please", "output": "recipes.txt", "intent": "delete_file"}
-{"input": "i want to delete workout.md", "output": "workout.md", "intent": "delete_file"}
-{"input": "remove notes.txt from my files", "output": "notes.txt", "intent": "delete_file"}
-{"input": "please delete the file budget.txt", "output": "budget.txt", "intent": "delete_file"}
-{"input": "can you remove todo.md", "output": "todo.md", "intent": "delete_file"}
-{"input": "delete the document called recipes.txt", "output": "recipes.txt", "intent": "delete_file"}
-{"input": "remove workout.md please", "output": "workout.md", "intent": "delete_file"}
-{"input": "list my files", "intent": "list_files"}
-{"input": "list the files", "intent": "list_files"}
-{"input": "show me the files", "intent": "list_files"}
-{"input": "what files are there", "intent": "list_files"}
-{"input": "list files please", "intent": "list_files"}
-{"input": "can you list my files", "intent": "list_files"}
-{"input": "show the files in the folder", "intent": "list_files"}
-{"input": "what do i have in the folder", "intent": "list_files"}
+{"input": "could you delete car.txt", "output": "car.txt", "intent": "delete_file"}
+{"input": "please delete the file library.md", "output": "library.md", "intent": "delete_file"}
+{"input": "can you remove work.txt", "output": "work.txt", "intent": "delete_file"}
+{"input": "start a document called library.txt", "output": "library.txt", "intent": "create_file"}
+{"input": "create a new file named meeting.md", "output": "meeting.md", "intent": "create_file"}
+{"input": "create tickets.log", "output": "tickets.log", "intent": "create_file"}
+{"input": "delete the file called travel.txt", "output": "travel.txt", "intent": "delete_file"}
+{"input": "get rid of books.md", "output": "books.md", "intent": "delete_file"}
+{"input": "make me a new file named photos.txt", "output": "photos.txt", "intent": "create_file"}
+{"input": "start a document called porch.txt", "output": "porch.txt", "intent": "create_file"}
+{"input": "save this as stream.md", "output": "stream.md", "intent": "create_file"}
+{"input": "ledger.md, make that a file", "output": "ledger.md", "intent": "create_file"}
+{"input": "can you make a file called draft.txt please", "output": "draft.txt", "intent": "create_file"}
+{"input": "please make porch.txt", "output": "porch.txt", "intent": "create_file"}
+{"input": "start a new document called diary.txt", "output": "diary.txt", "intent": "create_file"}
+{"input": "can you make a file called course.txt please", "output": "course.txt", "intent": "create_file"}
+{"input": "create a file called novel.txt", "output": "novel.txt", "intent": "create_file"}
+{"input": "please delete games.txt", "output": "games.txt", "intent": "delete_file"}
+{"input": "create running.md", "output": "running.md", "intent": "create_file"}
+{"input": "i'd like a file called travel.log", "output": "travel.log", "intent": "create_file"}
+{"input": "please delete the file playlist.md", "output": "playlist.md", "intent": "delete_file"}
+{"input": "start a new document called plan.txt", "output": "plan.txt", "intent": "create_file"}
+{"input": "please delete the file letter.md", "output": "letter.md", "intent": "delete_file"}
+{"input": "start a new document called meeting.txt", "output": "meeting.txt", "intent": "create_file"}
+{"input": "delete the file named golf.md", "output": "golf.md", "intent": "delete_file"}
+{"input": "photos.md, make that a file", "output": "photos.md", "intent": "create_file"}
+{"input": "delete soccer.md", "output": "soccer.md", "intent": "delete_file"}
+{"input": "i want a file called lesson.md", "output": "lesson.md", "intent": "create_file"}
+{"input": "throw away flowers.md", "output": "flowers.md", "intent": "delete_file"}
+{"input": "throw away invoice.md", "output": "invoice.md", "intent": "delete_file"}
+{"input": "i want a file called novel.md", "output": "novel.md", "intent": "create_file"}
+{"input": "please delete the file dance.md", "output": "dance.md", "intent": "delete_file"}
+{"input": "delete the file named podcast.md", "output": "podcast.md", "intent": "delete_file"}
+{"input": "make server.txt for me", "output": "server.txt", "intent": "create_file"}
+{"input": "delete meeting.txt please", "output": "meeting.txt", "intent": "delete_file"}
+{"input": "please make flowers.txt", "output": "flowers.txt", "intent": "create_file"}
+{"input": "please create a file named puzzle.log", "output": "puzzle.log", "intent": "create_file"}
+{"input": "delete the file called letter.txt", "output": "letter.txt", "intent": "delete_file"}
+{"input": "i don't need movies.txt anymore", "output": "movies.txt", "intent": "delete_file"}
+{"input": "delete painting.txt please", "output": "painting.txt", "intent": "delete_file"}
+{"input": "start garden.txt for me", "output": "garden.txt", "intent": "create_file"}
+{"input": "i'd like a file called tennis.md", "output": "tennis.md", "intent": "create_file"}
+{"input": "create puzzle.log", "output": "puzzle.log", "intent": "create_file"}
+{"input": "create porch.log", "output": "porch.log", "intent": "create_file"}
+{"input": "make me a new file named homework.txt", "output": "homework.txt", "intent": "create_file"}
+{"input": "create fishing.md", "output": "fishing.md", "intent": "create_file"}
+{"input": "could you delete photos.txt", "output": "photos.txt", "intent": "delete_file"}
+{"input": "create a new file named family.md", "output": "family.md", "intent": "create_file"}
+{"input": "make me a new file named wishlist.txt", "output": "wishlist.txt", "intent": "create_file"}
+{"input": "delete soccer.txt please", "output": "soccer.txt", "intent": "delete_file"}
+{"input": "create a new file named minutes.md", "output": "minutes.md", "intent": "create_file"}
+{"input": "create a new file named grades.md", "output": "grades.md", "intent": "create_file"}
+{"input": "please delete the file thesis.md", "output": "thesis.md", "intent": "delete_file"}
+{"input": "could you delete music.txt", "output": "music.txt", "intent": "delete_file"}
+{"input": "make expenses.txt for me", "output": "expenses.txt", "intent": "create_file"}
+{"input": "delete the file named seeds.csv", "output": "seeds.csv", "intent": "delete_file"}
+{"input": "please make calendar.txt", "output": "calendar.txt", "intent": "create_file"}
+{"input": "i want a file called songs.md", "output": "songs.md", "intent": "create_file"}
+{"input": "please delete the file running.md", "output": "running.md", "intent": "delete_file"}
+{"input": "i don't need groceries.txt anymore", "output": "groceries.txt", "intent": "delete_file"}
+{"input": "i don't need meals.txt anymore", "output": "meals.txt", "intent": "delete_file"}
+{"input": "delete project.json", "output": "project.json", "intent": "delete_file"}
+{"input": "i need a file called camera.txt", "output": "camera.txt", "intent": "create_file"}
+{"input": "save this as grades.md", "output": "grades.md", "intent": "create_file"}
+{"input": "create a new file named diary.md", "output": "diary.md", "intent": "create_file"}
+{"input": "create a new file named contacts.md", "output": "contacts.md", "intent": "create_file"}
+{"input": "could you create a file called tools.md", "output": "tools.md", "intent": "create_file"}
+{"input": "can you make a file called yoga.txt please", "output": "yoga.txt", "intent": "create_file"}
+{"input": "start a document called invoice.txt", "output": "invoice.txt", "intent": "create_file"}
+{"input": "start stream.txt for me", "output": "stream.txt", "intent": "create_file"}
 {"input": "list everything", "intent": "list_files"}
+{"input": "throw away tennis.md", "output": "tennis.md", "intent": "delete_file"}
+{"input": "create friends.md", "output": "friends.md", "intent": "create_file"}
+{"input": "delete the document called writing.md", "output": "writing.md", "intent": "delete_file"}
+{"input": "songs.md, make that a file", "output": "songs.md", "intent": "create_file"}
+{"input": "delete the file called menu.txt", "output": "menu.txt", "intent": "delete_file"}
+{"input": "make story.txt for me", "output": "story.txt", "intent": "create_file"}
+{"input": "remove the file named receipt.md", "output": "receipt.md", "intent": "delete_file"}
+{"input": "please delete inventory.txt", "output": "inventory.txt", "intent": "delete_file"}
+{"input": "i want to delete house.md", "output": "house.md", "intent": "delete_file"}
+{"input": "start a document called calendar.txt", "output": "calendar.txt", "intent": "create_file"}
+{"input": "delete the file named taxes.csv", "output": "taxes.csv", "intent": "delete_file"}
+{"input": "camera.csv, make that a file", "output": "camera.csv", "intent": "create_file"}
+{"input": "start a document called running.txt", "output": "running.txt", "intent": "create_file"}
+{"input": "make a file named car.md", "output": "car.md", "intent": "create_file"}
+{"input": "i want a file called golf.md", "output": "golf.md", "intent": "create_file"}
+{"input": "create a new file named laundry.json", "output": "laundry.json", "intent": "create_file"}
+{"input": "create travel.log", "output": "travel.log", "intent": "create_file"}
+{"input": "please remove groceries.md", "output": "groceries.md", "intent": "delete_file"}
+{"input": "make me a new file named notes.txt", "output": "notes.txt", "intent": "create_file"}
+{"input": "remove course.txt please", "output": "course.txt", "intent": "delete_file"}
+{"input": "make a file named ledger.md", "output": "ledger.md", "intent": "create_file"}
+{"input": "could you create a file called books.md", "output": "books.md", "intent": "create_file"}
+{"input": "create a file called homework.txt", "output": "homework.txt", "intent": "create_file"}
+{"input": "i need a file called music.txt", "output": "music.txt", "intent": "create_file"}
+{"input": "throw away fishing.md", "output": "fishing.md", "intent": "delete_file"}
+{"input": "delete contacts.txt please", "output": "contacts.txt", "intent": "delete_file"}
+{"input": "gifts.md, make that a file", "output": "gifts.md", "intent": "create_file"}
+{"input": "please delete chores.txt", "output": "chores.txt", "intent": "delete_file"}
+{"input": "make me a new file named lesson.txt", "output": "lesson.txt", "intent": "create_file"}
+{"input": "throw away shopping.md", "output": "shopping.md", "intent": "delete_file"}
+{"input": "please create a file named server.log", "output": "server.log", "intent": "create_file"}
+{"input": "i'd like a file called study.md", "output": "study.md", "intent": "create_file"}
+{"input": "delete the file called journal.txt", "output": "journal.txt", "intent": "delete_file"}
+{"input": "i want a file called code.md", "output": "code.md", "intent": "create_file"}
+{"input": "i want to delete diary.md", "output": "diary.md", "intent": "delete_file"}
+{"input": "could you delete code.txt", "output": "code.txt", "intent": "delete_file"}
+{"input": "can you make a file called essay.txt please", "output": "essay.txt", "intent": "create_file"}
+{"input": "create a new file named games.md", "output": "games.md", "intent": "create_file"}
+{"input": "start a document called bills.txt", "output": "bills.txt", "intent": "create_file"}
+{"input": "make a file named cycling.csv", "output": "cycling.csv", "intent": "create_file"}
+{"input": "start diary.txt for me", "output": "diary.txt", "intent": "create_file"}
+{"input": "i don't need goals.txt anymore", "output": "goals.txt", "intent": "delete_file"}
+{"input": "create calendar.md", "output": "calendar.md", "intent": "create_file"}
+{"input": "erase novel.txt", "output": "novel.txt", "intent": "delete_file"}
+{"input": "delete the file called flowers.txt", "output": "flowers.txt", "intent": "delete_file"}
+{"input": "can you make a file called house.txt please", "output": "house.txt", "intent": "create_file"}
+{"input": "could you delete songs.txt", "output": "songs.txt", "intent": "delete_file"}
+{"input": "remove draft.txt please", "output": "draft.txt", "intent": "delete_file"}
+{"input": "please delete draft.txt", "output": "draft.txt", "intent": "delete_file"}
+{"input": "delete the file named wishlist.md", "output": "wishlist.md", "intent": "delete_file"}
+{"input": "i'd like a file called reading.log", "output": "reading.log", "intent": "create_file"}
+{"input": "remove the file named golf.md", "output": "golf.md", "intent": "delete_file"}
+{"input": "can you remove hotel.txt", "output": "hotel.txt", "intent": "delete_file"}
+{"input": "remove friends.txt from my files", "output": "friends.txt", "intent": "delete_file"}
+{"input": "delete the file named work.md", "output": "work.md", "intent": "delete_file"}
+{"input": "i want to delete games.md", "output": "games.md", "intent": "delete_file"}
+{"input": "please create a file named playlist.md", "output": "playlist.md", "intent": "create_file"}
+{"input": "throw away groceries.md", "output": "groceries.md", "intent": "delete_file"}
+{"input": "please delete the file violin.md", "output": "violin.md", "intent": "delete_file"}
+{"input": "delete books.md", "output": "books.md", "intent": "delete_file"}
+{"input": "delete notebook.md", "output": "notebook.md", "intent": "delete_file"}
+{"input": "delete the document called list.md", "output": "list.md", "intent": "delete_file"}
+{"input": "i want to delete contract.md", "output": "contract.md", "intent": "delete_file"}
+{"input": "please remove thesis.md", "output": "thesis.md", "intent": "delete_file"}
+{"input": "i need a file called cycling.txt", "output": "cycling.txt", "intent": "create_file"}
+{"input": "get rid of house.md", "output": "house.md", "intent": "delete_file"}
+{"input": "make a file named golf.md", "output": "golf.md", "intent": "create_file"}
+{"input": "i need a file called piano.txt", "output": "piano.txt", "intent": "create_file"}
+{"input": "can you make a file called plants.txt please", "output": "plants.txt", "intent": "create_file"}
+{"input": "get rid of grades.md", "output": "grades.md", "intent": "delete_file"}
+{"input": "i'd like a file called playlist.md", "output": "playlist.md", "intent": "create_file"}
+{"input": "can you make a file called comic.txt please", "output": "comic.txt", "intent": "create_file"}
+{"input": "i'd like a file called thesis.md", "output": "thesis.md", "intent": "create_file"}
+{"input": "could you create a file called essay.json", "output": "essay.json", "intent": "create_file"}
+{"input": "can you make a file called plan.txt please", "output": "plan.txt", "intent": "create_file"}
+{"input": "please create a file named fishing.md", "output": "fishing.md", "intent": "create_file"}
+{"input": "delete laundry.txt please", "output": "laundry.txt", "intent": "delete_file"}
+{"input": "delete house.txt please", "output": "house.txt", "intent": "delete_file"}
+{"input": "create a new file named tools.md", "output": "tools.md", "intent": "create_file"}
+{"input": "get rid of contacts.md", "output": "contacts.md", "intent": "delete_file"}
+{"input": "could you create a file called ideas.json", "output": "ideas.json", "intent": "create_file"}
+{"input": "i don't need recipes.txt anymore", "output": "recipes.txt", "intent": "delete_file"}
+{"input": "i'd like a file called audio.md", "output": "audio.md", "intent": "create_file"}
+{"input": "start basement.txt for me", "output": "basement.txt", "intent": "create_file"}
+{"input": "i want to delete chores.md", "output": "chores.md", "intent": "delete_file"}
+{"input": "delete house.md", "output": "house.md", "intent": "delete_file"}
+{"input": "please delete baking.txt", "output": "baking.txt", "intent": "delete_file"}
+{"input": "get rid of garden.md", "output": "garden.md", "intent": "delete_file"}
+{"input": "i don't need bills.txt anymore", "output": "bills.txt", "intent": "delete_file"}
+{"input": "make letter.txt for me", "output": "letter.txt", "intent": "create_file"}
+{"input": "delete the file named lesson.md", "output": "lesson.md", "intent": "delete_file"}
+{"input": "please remove expenses.md", "output": "expenses.md", "intent": "delete_file"}
+{"input": "i don't need study.txt anymore", "output": "study.txt", "intent": "delete_file"}
+{"input": "please remove shopping.md", "output": "shopping.md", "intent": "delete_file"}
+{"input": "i want a file called savings.md", "output": "savings.md", "intent": "create_file"}
+{"input": "please delete yoga.txt", "output": "yoga.txt", "intent": "delete_file"}
+{"input": "start project.txt for me", "output": "project.txt", "intent": "create_file"}
+{"input": "save this as painting.md", "output": "painting.md", "intent": "create_file"}
+{"input": "save this as plants.md", "output": "plants.md", "intent": "create_file"}
+{"input": "please delete guitar.txt", "output": "guitar.txt", "intent": "delete_file"}
+{"input": "could you delete writing.txt", "output": "writing.txt", "intent": "delete_file"}
+{"input": "create violin.md", "output": "violin.md", "intent": "create_file"}
+{"input": "create packing.md", "output": "packing.md", "intent": "create_file"}
+{"input": "start a new document called chores.txt", "output": "chores.txt", "intent": "create_file"}
+{"input": "please delete the file meals.md", "output": "meals.md", "intent": "delete_file"}
+{"input": "workout.md, make that a file", "output": "workout.md", "intent": "create_file"}
+{"input": "please remove sketch.md", "output": "sketch.md", "intent": "delete_file"}
+{"input": "i need a file called receipt.txt", "output": "receipt.txt", "intent": "create_file"}
+{"input": "could you create a file called plan.md", "output": "plan.md", "intent": "create_file"}
+{"input": "please delete budget.txt", "output": "budget.txt", "intent": "delete_file"}
+{"input": "create bills.md", "output": "bills.md", "intent": "create_file"}
+{"input": "get rid of budget.md", "output": "budget.md", "intent": "delete_file"}
+{"input": "please make shopping.txt", "output": "shopping.txt", "intent": "create_file"}
+{"input": "please delete the file bills.md", "output": "bills.md", "intent": "delete_file"}
+{"input": "please create a file named garage.md", "output": "garage.md", "intent": "create_file"}
+{"input": "start a new document called minutes.txt", "output": "minutes.txt", "intent": "create_file"}
+{"input": "start a new document called house.txt", "output": "house.txt", "intent": "create_file"}
+{"input": "delete the file named photos.md", "output": "photos.md", "intent": "delete_file"}
+{"input": "make a file named code.md", "output": "code.md", "intent": "create_file"}
+{"input": "please delete plan.txt", "output": "plan.txt", "intent": "delete_file"}
+{"input": "please delete painting.txt", "output": "painting.txt", "intent": "delete_file"}
+{"input": "delete tools.md", "output": "tools.md", "intent": "delete_file"}
+{"input": "i don't need story.txt anymore", "output": "story.txt", "intent": "delete_file"}
+{"input": "create a file called cleaning.txt", "output": "cleaning.txt", "intent": "create_file"}
+{"input": "could you delete todo.txt", "output": "todo.txt", "intent": "delete_file"}
+{"input": "start a new document called garden.txt", "output": "garden.txt", "intent": "create_file"}
+{"input": "create a new file named comic.md", "output": "comic.md", "intent": "create_file"}
+{"input": "create a file called golf.txt", "output": "golf.txt", "intent": "create_file"}
+{"input": "remove the file named homework.md", "output": "homework.md", "intent": "delete_file"}
+{"input": "please make sketch.txt", "output": "sketch.txt", "intent": "create_file"}
+{"input": "todo.md, make that a file", "output": "todo.md", "intent": "create_file"}
+{"input": "start a new document called painting.txt", "output": "painting.txt", "intent": "create_file"}
+{"input": "i'd like a file called meals.md", "output": "meals.md", "intent": "create_file"}
+{"input": "delete minutes.txt please", "output": "minutes.txt", "intent": "delete_file"}
+{"input": "delete ideas.txt please", "output": "ideas.txt", "intent": "delete_file"}
+{"input": "delete the file named camera.csv", "output": "camera.csv", "intent": "delete_file"}
+{"input": "start painting.txt for me", "output": "painting.txt", "intent": "create_file"}
+{"input": "i want a file called chess.md", "output": "chess.md", "intent": "create_file"}
+{"input": "start a new document called fitness.txt", "output": "fitness.txt", "intent": "create_file"}
+{"input": "can you make a file called diary.txt please", "output": "diary.txt", "intent": "create_file"}
+{"input": "can you remove seeds.txt", "output": "seeds.txt", "intent": "delete_file"}
+{"input": "remove the file named office.md", "output": "office.md", "intent": "delete_file"}
+{"input": "make me a new file named work.txt", "output": "work.txt", "intent": "create_file"}
+{"input": "create reading.log", "output": "reading.log", "intent": "create_file"}
+{"input": "delete inventory.json", "output": "inventory.json", "intent": "delete_file"}
+{"input": "please remove tennis.md", "output": "tennis.md", "intent": "delete_file"}
+{"input": "list files please", "intent": "list_files"}
+{"input": "could you create a file called meeting.md", "output": "meeting.md", "intent": "create_file"}
+{"input": "throw away journal.md", "output": "journal.md", "intent": "delete_file"}
+{"input": "i don't need friends.txt anymore", "output": "friends.txt", "intent": "delete_file"}
+{"input": "please delete the file garage.md", "output": "garage.md", "intent": "delete_file"}
+{"input": "delete contacts.md", "output": "contacts.md", "intent": "delete_file"}
+{"input": "erase savings.txt", "output": "savings.txt", "intent": "delete_file"}
+{"input": "delete guitar.txt please", "output": "guitar.txt", "intent": "delete_file"}
+{"input": "get rid of course.md", "output": "course.md", "intent": "delete_file"}
+{"input": "get rid of soccer.md", "output": "soccer.md", "intent": "delete_file"}
+{"input": "i don't need thesis.txt anymore", "output": "thesis.txt", "intent": "delete_file"}
+{"input": "start a document called meals.txt", "output": "meals.txt", "intent": "create_file"}
+{"input": "make a file named seeds.csv", "output": "seeds.csv", "intent": "create_file"}
+{"input": "could you create a file called family.md", "output": "family.md", "intent": "create_file"}
+{"input": "create a file called cooking.txt", "output": "cooking.txt", "intent": "create_file"}
+{"input": "i'd like a file called porch.log", "output": "porch.log", "intent": "create_file"}
+{"input": "please delete ideas.txt", "output": "ideas.txt", "intent": "delete_file"}
+{"input": "delete the file named piano.md", "output": "piano.md", "intent": "delete_file"}
+{"input": "create archive.md", "output": "archive.md", "intent": "create_file"}
+{"input": "get rid of baking.md", "output": "baking.md", "intent": "delete_file"}
+{"input": "throw away friends.md", "output": "friends.md", "intent": "delete_file"}
+{"input": "i want a file called camera.csv", "output": "camera.csv", "intent": "create_file"}
+{"input": "remove the file named writing.md", "output": "writing.md", "intent": "delete_file"}
+{"input": "please remove packing.md", "output": "packing.md", "intent": "delete_file"}
+{"input": "start a new document called stream.txt", "output": "stream.txt", "intent": "create_file"}
+{"input": "delete yoga.txt please", "output": "yoga.txt", "intent": "delete_file"}
+{"input": "delete the file named rent.md", "output": "rent.md", "intent": "delete_file"}
+{"input": "can you remove office.txt", "output": "office.txt", "intent": "delete_file"}
+{"input": "please create a file named tennis.md", "output": "tennis.md", "intent": "create_file"}
+{"input": "remove porch.txt from my files", "output": "porch.txt", "intent": "delete_file"}
+{"input": "delete essay.txt please", "output": "essay.txt", "intent": "delete_file"}
+{"input": "remove games.txt please", "output": "games.txt", "intent": "delete_file"}
+{"input": "please make letter.txt", "output": "letter.txt", "intent": "create_file"}
+{"input": "make school.txt for me", "output": "school.txt", "intent": "create_file"}
+{"input": "delete the document called chess.md", "output": "chess.md", "intent": "delete_file"}
+{"input": "could you delete wishlist.txt", "output": "wishlist.txt", "intent": "delete_file"}
+{"input": "remove the file named songs.md", "output": "songs.md", "intent": "delete_file"}
+{"input": "please create a file named library.md", "output": "library.md", "intent": "create_file"}
+{"input": "start a document called story.txt", "output": "story.txt", "intent": "create_file"}
+{"input": "delete guitar.md", "output": "guitar.md", "intent": "delete_file"}
+{"input": "get rid of contract.md", "output": "contract.md", "intent": "delete_file"}
+{"input": "could you delete rent.txt", "output": "rent.txt", "intent": "delete_file"}
+{"input": "remove plan.txt please", "output": "plan.txt", "intent": "delete_file"}
+{"input": "could you delete receipt.txt", "output": "receipt.txt", "intent": "delete_file"}
+{"input": "get rid of chores.md", "output": "chores.md", "intent": "delete_file"}
+{"input": "make a file named music.csv", "output": "music.csv", "intent": "create_file"}
+{"input": "start essay.txt for me", "output": "essay.txt", "intent": "create_file"}
+{"input": "receipt.md, make that a file", "output": "receipt.md", "intent": "create_file"}
+{"input": "delete the file called meals.txt", "output": "meals.txt", "intent": "delete_file"}
+{"input": "please delete video.txt", "output": "video.txt", "intent": "delete_file"}
+{"input": "savings.md, make that a file", "output": "savings.md", "intent": "create_file"}
+{"input": "make tennis.txt for me", "output": "tennis.txt", "intent": "create_file"}
+{"input": "start a document called puzzle.txt", "output": "puzzle.txt", "intent": "create_file"}
+{"input": "make a file named photos.md", "output": "photos.md", "intent": "create_file"}
+{"input": "delete gym.txt please", "output": "gym.txt", "intent": "delete_file"}
+{"input": "remove the file named piano.md", "output": "piano.md", "intent": "delete_file"}
+{"input": "make me a new file named ledger.txt", "output": "ledger.txt", "intent": "create_file"}
+{"input": "remove travel.txt from my files", "output": "travel.txt", "intent": "delete_file"}
+{"input": "delete notebook.txt please", "output": "notebook.txt", "intent": "delete_file"}
+{"input": "i want a file called rent.md", "output": "rent.md", "intent": "create_file"}
+{"input": "create a new file named essay.json", "output": "essay.json", "intent": "create_file"}
+{"input": "make a file named report.csv", "output": "report.csv", "intent": "create_file"}
+{"input": "save this as budget.md", "output": "budget.md", "intent": "create_file"}
+{"input": "save this as minutes.md", "output": "minutes.md", "intent": "create_file"}
+{"input": "could you create a file called plants.md", "output": "plants.md", "intent": "create_file"}
+{"input": "throw away tickets.log", "output": "tickets.log", "intent": "delete_file"}
+{"input": "make me a new file named cycling.txt", "output": "cycling.txt", "intent": "create_file"}
+{"input": "start a document called sketch.txt", "output": "sketch.txt", "intent": "create_file"}
+{"input": "list the files", "intent": "list_files"}
+{"input": "delete the file called kitchen.txt", "output": "kitchen.txt", "intent": "delete_file"}
+{"input": "create a file called workout.txt", "output": "workout.txt", "intent": "create_file"}
+{"input": "save this as hiking.md", "output": "hiking.md", "intent": "create_file"}
+{"input": "make me a new file named office.txt", "output": "office.txt", "intent": "create_file"}
+{"input": "delete the file called invoice.txt", "output": "invoice.txt", "intent": "delete_file"}
+{"input": "delete the document called car.md", "output": "car.md", "intent": "delete_file"}
+{"input": "delete the file called tennis.txt", "output": "tennis.txt", "intent": "delete_file"}
+{"input": "erase quiz.txt", "output": "quiz.txt", "intent": "delete_file"}
+{"input": "remove journal.txt from my files", "output": "journal.txt", "intent": "delete_file"}
+{"input": "can you make a file called contacts.txt please", "output": "contacts.txt", "intent": "create_file"}
+{"input": "get rid of essay.json", "output": "essay.json", "intent": "delete_file"}
+{"input": "start a document called menu.txt", "output": "menu.txt", "intent": "create_file"}
+{"input": "get rid of project.json", "output": "project.json", "intent": "delete_file"}
+{"input": "start games.txt for me", "output": "games.txt", "intent": "create_file"}
+{"input": "erase health.txt", "output": "health.txt", "intent": "delete_file"}
 {"input": "please list the files", "intent": "list_files"}
+{"input": "i want to delete contacts.md", "output": "contacts.md", "intent": "delete_file"}
+{"input": "create a file called agenda.txt", "output": "agenda.txt", "intent": "create_file"}
+{"input": "make a file named chess.md", "output": "chess.md", "intent": "create_file"}
+{"input": "create a file called wishlist.txt", "output": "wishlist.txt", "intent": "create_file"}
+{"input": "start a new document called plants.txt", "output": "plants.txt", "intent": "create_file"}
+{"input": "remove exam.txt from my files", "output": "exam.txt", "intent": "delete_file"}
+{"input": "start a new document called tools.txt", "output": "tools.txt", "intent": "create_file"}
+{"input": "save this as house.md", "output": "house.md", "intent": "create_file"}
+{"input": "can you remove golf.txt", "output": "golf.txt", "intent": "delete_file"}
+{"input": "throw away packing.md", "output": "packing.md", "intent": "delete_file"}
+{"input": "delete the document called rent.md", "output": "rent.md", "intent": "delete_file"}
+{"input": "i'd like a file called friends.md", "output": "friends.md", "intent": "create_file"}
+{"input": "make a file named receipt.md", "output": "receipt.md", "intent": "create_file"}
+{"input": "create a new file named ideas.json", "output": "ideas.json", "intent": "create_file"}
+{"input": "remove school.txt from my files", "output": "school.txt", "intent": "delete_file"}
+{"input": "create story.md", "output": "story.md", "intent": "create_file"}
+{"input": "i want to delete stream.md", "output": "stream.md", "intent": "delete_file"}
+{"input": "delete the file called archive.txt", "output": "archive.txt", "intent": "delete_file"}
+{"input": "i'd like a file called movies.log", "output": "movies.log", "intent": "create_file"}
+{"input": "make shopping.txt for me", "output": "shopping.txt", "intent": "create_file"}
+{"input": "delete the file named cleaning.md", "output": "cleaning.md", "intent": "delete_file"}
+{"input": "start baking.txt for me", "output": "baking.txt", "intent": "create_file"}
+{"input": "make a file named songs.md", "output": "songs.md", "intent": "create_file"}
+{"input": "start gym.txt for me", "output": "gym.txt", "intent": "create_file"}
+{"input": "make fishing.txt for me", "output": "fishing.txt", "intent": "create_file"}
+{"input": "make tickets.txt for me", "output": "tickets.txt", "intent": "create_file"}
+{"input": "can you remove health.txt", "output": "health.txt", "intent": "delete_file"}
+{"input": "create menu.md", "output": "menu.md", "intent": "create_file"}
+{"input": "please create a file named travel.log", "output": "travel.log", "intent": "create_file"}
+{"input": "i'd like a file called menu.md", "output": "menu.md", "intent": "create_file"}
+{"input": "remove essay.txt please", "output": "essay.txt", "intent": "delete_file"}
+{"input": "create journal.md", "output": "journal.md", "intent": "create_file"}
+{"input": "i don't need reading.txt anymore", "output": "reading.txt", "intent": "delete_file"}
+{"input": "delete laundry.json", "output": "laundry.json", "intent": "delete_file"}
+{"input": "i need a file called golf.txt", "output": "golf.txt", "intent": "create_file"}
+{"input": "delete the file called friends.txt", "output": "friends.txt", "intent": "delete_file"}
+{"input": "remove tickets.txt from my files", "output": "tickets.txt", "intent": "delete_file"}
+{"input": "save this as notebook.md", "output": "notebook.md", "intent": "create_file"}
+{"input": "erase workout.txt", "output": "workout.txt", "intent": "delete_file"}
+{"input": "delete the file named code.md", "output": "code.md", "intent": "delete_file"}
+{"input": "remove audio.txt from my files", "output": "audio.txt", "intent": "delete_file"}
+{"input": "erase poem.txt", "output": "poem.txt", "intent": "delete_file"}
+{"input": "i'd like a file called fishing.md", "output": "fishing.md", "intent": "create_file"}
+{"input": "can you remove notes.txt", "output": "notes.txt", "intent": "delete_file"}
+{"input": "delete the document called notes.md", "output": "notes.md", "intent": "delete_file"}
+{"input": "get rid of backup.md", "output": "backup.md", "intent": "delete_file"}
+{"input": "please remove playlist.md", "output": "playlist.md", "intent": "delete_file"}
+{"input": "create school.md", "output": "school.md", "intent": "create_file"}
+{"input": "erase office.txt", "output": "office.txt", "intent": "delete_file"}
+{"input": "remove minutes.txt please", "output": "minutes.txt", "intent": "delete_file"}
+{"input": "start flights.txt for me", "output": "flights.txt", "intent": "create_file"}
+{"input": "delete baking.txt please", "output": "baking.txt", "intent": "delete_file"}
+{"input": "save this as resume.md", "output": "resume.md", "intent": "create_file"}
+{"input": "i want to delete tools.md", "output": "tools.md", "intent": "delete_file"}
+{"input": "i don't need tennis.txt anymore", "output": "tennis.txt", "intent": "delete_file"}
+{"input": "i want a file called wishlist.md", "output": "wishlist.md", "intent": "create_file"}
+{"input": "start comic.txt for me", "output": "comic.txt", "intent": "create_file"}
+{"input": "throw away garage.md", "output": "garage.md", "intent": "delete_file"}
+{"input": "could you create a file called diary.md", "output": "diary.md", "intent": "create_file"}
+{"input": "delete budget.md", "output": "budget.md", "intent": "delete_file"}
+{"input": "create recipes.md", "output": "recipes.md", "intent": "create_file"}
+{"input": "health.md, make that a file", "output": "health.md", "intent": "create_file"}
+{"input": "create pets.md", "output": "pets.md", "intent": "create_file"}
+{"input": "please remove letter.md", "output": "letter.md", "intent": "delete_file"}
+{"input": "could you delete ledger.txt", "output": "ledger.txt", "intent": "delete_file"}
+{"input": "remove the file named gifts.md", "output": "gifts.md", "intent": "delete_file"}
+{"input": "please remove bills.md", "output": "bills.md", "intent": "delete_file"}
+{"input": "throw away sketch.md", "output": "sketch.md", "intent": "delete_file"}
+{"input": "delete the file called fishing.txt", "output": "fishing.txt", "intent": "delete_file"}
+{"input": "can you remove receipt.txt", "output": "receipt.txt", "intent": "delete_file"}
+{"input": "please remove reading.log", "output": "reading.log", "intent": "delete_file"}
+{"input": "delete the document called todo.md", "output": "todo.md", "intent": "delete_file"}
+{"input": "delete the file called recipes.txt", "output": "recipes.txt", "intent": "delete_file"}
+{"input": "delete plants.md", "output": "plants.md", "intent": "delete_file"}
+{"input": "delete the file named poem.md", "output": "poem.md", "intent": "delete_file"}
+{"input": "please make study.txt", "output": "study.txt", "intent": "create_file"}
+{"input": "make me a new file named taxes.txt", "output": "taxes.txt", "intent": "create_file"}
+{"input": "hotel.md, make that a file", "output": "hotel.md", "intent": "create_file"}
+{"input": "i want to delete flights.md", "output": "flights.md", "intent": "delete_file"}
+{"input": "delete the document called wishlist.md", "output": "wishlist.md", "intent": "delete_file"}
+{"input": "please delete the file goals.md", "output": "goals.md", "intent": "delete_file"}
+{"input": "create a new file named hiking.md", "output": "hiking.md", "intent": "create_file"}
+{"input": "could you create a file called garden.md", "output": "garden.md", "intent": "create_file"}
+{"input": "can you make a file called chores.txt please", "output": "chores.txt", "intent": "create_file"}
+{"input": "could you create a file called notebook.md", "output": "notebook.md", "intent": "create_file"}
+{"input": "delete the document called piano.md", "output": "piano.md", "intent": "delete_file"}
+{"input": "create a file called pantry.txt", "output": "pantry.txt", "intent": "create_file"}
+{"input": "i need a file called rent.txt", "output": "rent.txt", "intent": "create_file"}
+{"input": "podcast.md, make that a file", "output": "podcast.md", "intent": "create_file"}
+{"input": "cycling.csv, make that a file", "output": "cycling.csv", "intent": "create_file"}
+{"input": "make me a new file named code.txt", "output": "code.txt", "intent": "create_file"}
+{"input": "make me a new file named gifts.txt", "output": "gifts.txt", "intent": "create_file"}
+{"input": "start a new document called essay.txt", "output": "essay.txt", "intent": "create_file"}
+{"input": "could you delete novel.txt", "output": "novel.txt", "intent": "delete_file"}
+{"input": "remove the file named ledger.md", "output": "ledger.md", "intent": "delete_file"}
+{"input": "remove the file named photos.md", "output": "photos.md", "intent": "delete_file"}
+{"input": "please create a file named kitchen.log", "output": "kitchen.log", "intent": "create_file"}
+{"input": "list.md, make that a file", "output": "list.md", "intent": "create_file"}
+{"input": "please make pets.txt", "output": "pets.txt", "intent": "create_file"}
+{"input": "can you make a file called project.txt please", "output": "project.txt", "intent": "create_file"}
+{"input": "start a new document called basement.txt", "output": "basement.txt", "intent": "create_file"}
+{"input": "erase attic.txt", "output": "attic.txt", "intent": "delete_file"}
+{"input": "create a file called music.txt", "output": "music.txt", "intent": "create_file"}
+{"input": "i don't need expenses.txt anymore", "output": "expenses.txt", "intent": "delete_file"}
+{"input": "remove kitchen.txt from my files", "output": "kitchen.txt", "intent": "delete_file"}
+{"input": "delete the document called cooking.md", "output": "cooking.md", "intent": "delete_file"}
+{"input": "piano.md, make that a file", "output": "piano.md", "intent": "create_file"}
+{"input": "please delete project.txt", "output": "project.txt", "intent": "delete_file"}
+{"input": "could you create a file called soccer.md", "output": "soccer.md", "intent": "create_file"}
+{"input": "make me a new file named savings.txt", "output": "savings.txt", "intent": "create_file"}
+{"input": "erase list.txt", "output": "list.txt", "intent": "delete_file"}
+{"input": "throw away audio.md", "output": "audio.md", "intent": "delete_file"}
+{"input": "start a new document called gym.txt", "output": "gym.txt", "intent": "create_file"}
+{"input": "make me a new file named quiz.txt", "output": "quiz.txt", "intent": "create_file"}
+{"input": "i don't need invoice.txt anymore", "output": "invoice.txt", "intent": "delete_file"}
+{"input": "remove flights.txt please", "output": "flights.txt", "intent": "delete_file"}
+{"input": "i need a file called savings.txt", "output": "savings.txt", "intent": "create_file"}
+{"input": "please remove server.log", "output": "server.log", "intent": "delete_file"}
+{"input": "i'd like a file called archive.md", "output": "archive.md", "intent": "create_file"}
+{"input": "show files", "intent": "list_files"}
+{"input": "please create a file named journal.md", "output": "journal.md", "intent": "create_file"}
+{"input": "make a file named agenda.csv", "output": "agenda.csv", "intent": "create_file"}
+{"input": "please delete the file pets.md", "output": "pets.md", "intent": "delete_file"}
+{"input": "start a document called server.txt", "output": "server.txt", "intent": "create_file"}
+{"input": "create flowers.md", "output": "flowers.md", "intent": "create_file"}
+{"input": "remove chores.txt please", "output": "chores.txt", "intent": "delete_file"}
+{"input": "make playlist.txt for me", "output": "playlist.txt", "intent": "create_file"}
+{"input": "what files are there", "intent": "list_files"}
+{"input": "remove menu.txt from my files", "output": "menu.txt", "intent": "delete_file"}
+{"input": "i want to delete plan.md", "output": "plan.md", "intent": "delete_file"}
+{"input": "delete the file called calendar.txt", "output": "calendar.txt", "intent": "delete_file"}
+{"input": "make me a new file named rent.txt", "output": "rent.txt", "intent": "create_file"}
+{"input": "create a new file named garden.md", "output": "garden.md", "intent": "create_file"}
+{"input": "make me a new file named cooking.txt", "output": "cooking.txt", "intent": "create_file"}
+{"input": "save this as diary.md", "output": "diary.md", "intent": "create_file"}
+{"input": "make exam.txt for me", "output": "exam.txt", "intent": "create_file"}
+{"input": "delete the document called taxes.csv", "output": "taxes.csv", "intent": "delete_file"}
+{"input": "delete project.txt please", "output": "project.txt", "intent": "delete_file"}
+{"input": "i need a file called ledger.txt", "output": "ledger.txt", "intent": "create_file"}
+{"input": "could you delete taxes.txt", "output": "taxes.txt", "intent": "delete_file"}
+{"input": "delete the document called ledger.md", "output": "ledger.md", "intent": "delete_file"}
+{"input": "create a new file named baking.md", "output": "baking.md", "intent": "create_file"}
+{"input": "start a document called reading.txt", "output": "reading.txt", "intent": "create_file"}
+{"input": "make me a new file named report.txt", "output": "report.txt", "intent": "create_file"}
+{"input": "delete family.txt please", "output": "family.txt", "intent": "delete_file"}
+{"input": "please create a file named running.md", "output": "running.md", "intent": "create_file"}
+{"input": "i don't need shopping.txt anymore", "output": "shopping.txt", "intent": "delete_file"}
+{"input": "could you create a file called video.md", "output": "video.md", "intent": "create_file"}
+{"input": "start a document called recipes.txt", "output": "recipes.txt", "intent": "create_file"}
+{"input": "please remove meals.md", "output": "meals.md", "intent": "delete_file"}
+{"input": "create a file called notes.txt", "output": "notes.txt", "intent": "create_file"}
+{"input": "please make running.txt", "output": "running.txt", "intent": "create_file"}
+{"input": "please create a file named sketch.md", "output": "sketch.md", "intent": "create_file"}
+{"input": "make a file named writing.md", "output": "writing.md", "intent": "create_file"}
+{"input": "create a new file named draft.md", "output": "draft.md", "intent": "create_file"}
+{"input": "start family.txt for me", "output": "family.txt", "intent": "create_file"}
+{"input": "save this as laundry.json", "output": "laundry.json", "intent": "create_file"}
+{"input": "get rid of fitness.md", "output": "fitness.md", "intent": "delete_file"}
+{"input": "could you delete work.txt", "output": "work.txt", "intent": "delete_file"}
+{"input": "can you remove wishlist.txt", "output": "wishlist.txt", "intent": "delete_file"}
+{"input": "remove playlist.txt from my files", "output": "playlist.txt", "intent": "delete_file"}
+{"input": "start a new document called hiking.txt", "output": "hiking.txt", "intent": "create_file"}
+{"input": "delete the file named receipt.md", "output": "receipt.md", "intent": "delete_file"}
+{"input": "please create a file named tickets.log", "output": "tickets.log", "intent": "create_file"}
+{"input": "remove the file named seeds.csv", "output": "seeds.csv", "intent": "delete_file"}
+{"input": "delete the file named cycling.csv", "output": "cycling.csv", "intent": "delete_file"}
+{"input": "can you make a file called video.txt please", "output": "video.txt", "intent": "create_file"}
+{"input": "delete the file named todo.md", "output": "todo.md", "intent": "delete_file"}
+{"input": "please remove school.md", "output": "school.md", "intent": "delete_file"}
+{"input": "make a file named cooking.md", "output": "cooking.md", "intent": "create_file"}
+{"input": "create a file called ledger.txt", "output": "ledger.txt", "intent": "create_file"}
+{"input": "create study.md", "output": "study.md", "intent": "create_file"}
+{"input": "remove basement.txt please", "output": "basement.txt", "intent": "delete_file"}
+{"input": "delete flights.txt please", "output": "flights.txt", "intent": "delete_file"}
+{"input": "i need a file called taxes.txt", "output": "taxes.txt", "intent": "create_file"}
+{"input": "please create a file named recipes.md", "output": "recipes.md", "intent": "create_file"}
+{"input": "can you make a file called fitness.txt please", "output": "fitness.txt", "intent": "create_file"}
+{"input": "i need a file called lesson.txt", "output": "lesson.txt", "intent": "create_file"}
+{"input": "make thesis.txt for me", "output": "thesis.txt", "intent": "create_file"}
+{"input": "i don't need porch.txt anymore", "output": "porch.txt", "intent": "delete_file"}
+{"input": "i want a file called ledger.md", "output": "ledger.md", "intent": "create_file"}
+{"input": "i don't need kitchen.txt anymore", "output": "kitchen.txt", "intent": "delete_file"}
+{"input": "i'd like a file called packing.md", "output": "packing.md", "intent": "create_file"}
+{"input": "create exam.md", "output": "exam.md", "intent": "create_file"}
+{"input": "i need a file called work.txt", "output": "work.txt", "intent": "create_file"}
+{"input": "delete the document called gifts.md", "output": "gifts.md", "intent": "delete_file"}
+{"input": "make a file named podcast.md", "output": "podcast.md", "intent": "create_file"}
+{"input": "i want a file called poem.md", "output": "poem.md", "intent": "create_file"}
+{"input": "delete the document called photos.md", "output": "photos.md", "intent": "delete_file"}
+{"input": "delete the document called cleaning.md", "output": "cleaning.md", "intent": "delete_file"}
+{"input": "i want a file called health.md", "output": "health.md", "intent": "create_file"}
+{"input": "start a document called violin.txt", "output": "violin.txt", "intent": "create_file"}
+{"input": "delete gym.json", "output": "gym.json", "intent": "delete_file"}
+{"input": "i need a file called quiz.txt", "output": "quiz.txt", "intent": "create_file"}
+{"input": "delete backup.md", "output": "backup.md", "intent": "delete_file"}
+{"input": "lesson.md, make that a file", "output": "lesson.md", "intent": "create_file"}
+{"input": "get rid of plan.md", "output": "plan.md", "intent": "delete_file"}
+{"input": "delete contract.md", "output": "contract.md", "intent": "delete_file"}
+{"input": "i want a file called office.md", "output": "office.md", "intent": "create_file"}
+{"input": "delete plan.md", "output": "plan.md", "intent": "delete_file"}
+{"input": "could you create a file called house.md", "output": "house.md", "intent": "create_file"}
+{"input": "can you make a file called money.txt please", "output": "money.txt", "intent": "create_file"}
+{"input": "could you delete savings.txt", "output": "savings.txt", "intent": "delete_file"}
+{"input": "can you make a file called budget.txt please", "output": "budget.txt", "intent": "create_file"}
+{"input": "i want a file called notes.md", "output": "notes.md", "intent": "create_file"}
+{"input": "poem.md, make that a file", "output": "poem.md", "intent": "create_file"}
+{"input": "could you create a file called money.json", "output": "money.json", "intent": "create_file"}
+{"input": "remove the file named workout.md", "output": "workout.md", "intent": "delete_file"}
+{"input": "delete basement.txt please", "output": "basement.txt", "intent": "delete_file"}
+{"input": "make a file named lesson.md", "output": "lesson.md", "intent": "create_file"}
+{"input": "i'd like a file called library.md", "output": "library.md", "intent": "create_file"}
+{"input": "start a document called exam.txt", "output": "exam.txt", "intent": "create_file"}
+{"input": "remove the file named hotel.md", "output": "hotel.md", "intent": "delete_file"}
+{"input": "please make archive.txt", "output": "archive.txt", "intent": "create_file"}
+{"input": "delete the file called playlist.txt", "output": "playlist.txt", "intent": "delete_file"}
+{"input": "please delete basement.txt", "output": "basement.txt", "intent": "delete_file"}
+{"input": "erase homework.txt", "output": "homework.txt", "intent": "delete_file"}
+{"input": "please make friends.txt", "output": "friends.txt", "intent": "create_file"}
+{"input": "throw away puzzle.log", "output": "puzzle.log", "intent": "delete_file"}
+{"input": "please create a file named packing.md", "output": "packing.md", "intent": "create_file"}
+{"input": "get rid of meeting.md", "output": "meeting.md", "intent": "delete_file"}
+{"input": "could you create a file called project.json", "output": "project.json", "intent": "create_file"}
+{"input": "get rid of draft.md", "output": "draft.md", "intent": "delete_file"}
+{"input": "please delete the file puzzle.log", "output": "puzzle.log", "intent": "delete_file"}
+{"input": "i want to delete books.md", "output": "books.md", "intent": "delete_file"}
+{"input": "i don't need server.txt anymore", "output": "server.txt", "intent": "delete_file"}
+{"input": "please create a file named groceries.md", "output": "groceries.md", "intent": "create_file"}
+{"input": "could you create a file called comic.md", "output": "comic.md", "intent": "create_file"}
+{"input": "i don't need flowers.txt anymore", "output": "flowers.txt", "intent": "delete_file"}
+{"input": "delete meeting.md", "output": "meeting.md", "intent": "delete_file"}
+{"input": "throw away story.md", "output": "story.md", "intent": "delete_file"}
+{"input": "save this as essay.json", "output": "essay.json", "intent": "create_file"}
+{"input": "create a new file named project.json", "output": "project.json", "intent": "create_file"}
+{"input": "make a file named design.md", "output": "design.md", "intent": "create_file"}
+{"input": "make me a new file named todo.txt", "output": "todo.txt", "intent": "create_file"}
+{"input": "get rid of family.md", "output": "family.md", "intent": "delete_file"}
+{"input": "please make tickets.txt", "output": "tickets.txt", "intent": "create_file"}
+{"input": "could you delete workout.txt", "output": "workout.txt", "intent": "delete_file"}
+{"input": "can you remove taxes.txt", "output": "taxes.txt", "intent": "delete_file"}
+{"input": "i need a file called car.txt", "output": "car.txt", "intent": "create_file"}
+{"input": "start a document called dance.txt", "output": "dance.txt", "intent": "create_file"}
+{"input": "delete the file named ledger.md", "output": "ledger.md", "intent": "delete_file"}
+{"input": "remove tennis.txt from my files", "output": "tennis.txt", "intent": "delete_file"}
+{"input": "start a new document called baking.txt", "output": "baking.txt", "intent": "create_file"}
+{"input": "i want a file called receipt.md", "output": "receipt.md", "intent": "create_file"}
+{"input": "delete hiking.txt please", "output": "hiking.txt", "intent": "delete_file"}
+{"input": "i'd like a file called dance.md", "output": "dance.md", "intent": "create_file"}
+{"input": "please delete the file calendar.md", "output": "calendar.md", "intent": "delete_file"}
+{"input": "could you create a file called games.md", "output": "games.md", "intent": "create_file"}
+{"input": "delete the file named quiz.csv", "output": "quiz.csv", "intent": "delete_file"}
+{"input": "start budget.txt for me", "output": "budget.txt", "intent": "create_file"}
+{"input": "start yoga.txt for me", "output": "yoga.txt", "intent": "create_file"}
+{"input": "could you create a file called budget.md", "output": "budget.md", "intent": "create_file"}
+{"input": "delete the file called tickets.txt", "output": "tickets.txt", "intent": "delete_file"}
+{"input": "can you make a file called basement.txt please", "output": "basement.txt", "intent": "create_file"}
+{"input": "i need a file called hotel.txt", "output": "hotel.txt", "intent": "create_file"}
+{"input": "i'd like a file called invoice.md", "output": "invoice.md", "intent": "create_file"}
+{"input": "start a document called friends.txt", "output": "friends.txt", "intent": "create_file"}
+{"input": "delete the document called office.md", "output": "office.md", "intent": "delete_file"}
+{"input": "make calendar.txt for me", "output": "calendar.txt", "intent": "create_file"}
+{"input": "erase taxes.txt", "output": "taxes.txt", "intent": "delete_file"}
+{"input": "throw away goals.md", "output": "goals.md", "intent": "delete_file"}
+{"input": "get rid of flights.md", "output": "flights.md", "intent": "delete_file"}
+{"input": "delete the file called packing.txt", "output": "packing.txt", "intent": "delete_file"}
+{"input": "delete the file named design.md", "output": "design.md", "intent": "delete_file"}
+{"input": "create a new file named course.md", "output": "course.md", "intent": "create_file"}
+{"input": "delete the document called lesson.md", "output": "lesson.md", "intent": "delete_file"}
+{"input": "i don't need playlist.txt anymore", "output": "playlist.txt", "intent": "delete_file"}
+{"input": "create a file called quiz.txt", "output": "quiz.txt", "intent": "create_file"}
+{"input": "remove pets.txt from my files", "output": "pets.txt", "intent": "delete_file"}
+{"input": "delete contract.txt please", "output": "contract.txt", "intent": "delete_file"}
+{"input": "i'd like a file called school.md", "output": "school.md", "intent": "create_file"}
+{"input": "delete chores.txt please", "output": "chores.txt", "intent": "delete_file"}
+{"input": "remove groceries.txt from my files", "output": "groceries.txt", "intent": "delete_file"}
+{"input": "delete the document called health.md", "output": "health.md", "intent": "delete_file"}
+{"input": "create a file called attic.txt", "output": "attic.txt", "intent": "create_file"}
+{"input": "start a new document called games.txt", "output": "games.txt", "intent": "create_file"}
+{"input": "delete backup.txt please", "output": "backup.txt", "intent": "delete_file"}
+{"input": "can you remove chess.txt", "output": "chess.txt", "intent": "delete_file"}
+{"input": "start a new document called comic.txt", "output": "comic.txt", "intent": "create_file"}
+{"input": "delete the document called receipt.md", "output": "receipt.md", "intent": "delete_file"}
+{"input": "get rid of plants.md", "output": "plants.md", "intent": "delete_file"}
+{"input": "remove story.txt from my files", "output": "story.txt", "intent": "delete_file"}
+{"input": "i don't need violin.txt anymore", "output": "violin.txt", "intent": "delete_file"}
+{"input": "throw away playlist.md", "output": "playlist.md", "intent": "delete_file"}
+{"input": "start a document called garage.txt", "output": "garage.txt", "intent": "create_file"}
+{"input": "remove packing.txt from my files", "output": "packing.txt", "intent": "delete_file"}
+{"input": "make a file named workout.md", "output": "workout.md", "intent": "create_file"}
+{"input": "please remove story.md", "output": "story.md", "intent": "delete_file"}
 {"input": "show me what files i have", "intent": "list_files"}
+{"input": "i'd like a file called sketch.md", "output": "sketch.md", "intent": "create_file"}
+{"input": "i need a file called songs.txt", "output": "songs.txt", "intent": "create_file"}
+{"input": "erase work.txt", "output": "work.txt", "intent": "delete_file"}
+{"input": "could you delete notes.txt", "output": "notes.txt", "intent": "delete_file"}
+{"input": "please remove study.md", "output": "study.md", "intent": "delete_file"}
+{"input": "delete the file named novel.md", "output": "novel.md", "intent": "delete_file"}
+{"input": "create invoice.md", "output": "invoice.md", "intent": "create_file"}
+{"input": "car.md, make that a file", "output": "car.md", "intent": "create_file"}
+{"input": "delete resume.md", "output": "resume.md", "intent": "delete_file"}
+{"input": "please remove journal.md", "output": "journal.md", "intent": "delete_file"}
+{"input": "please remove goals.md", "output": "goals.md", "intent": "delete_file"}
+{"input": "please delete laundry.txt", "output": "laundry.txt", "intent": "delete_file"}
+{"input": "throw away menu.md", "output": "menu.md", "intent": "delete_file"}
+{"input": "save this as comic.md", "output": "comic.md", "intent": "create_file"}
+{"input": "delete the document called work.md", "output": "work.md", "intent": "delete_file"}
+{"input": "can you remove cleaning.txt", "output": "cleaning.txt", "intent": "delete_file"}
+{"input": "can you remove lesson.txt", "output": "lesson.txt", "intent": "delete_file"}
+{"input": "start house.txt for me", "output": "house.txt", "intent": "create_file"}
+{"input": "start a new document called guitar.txt", "output": "guitar.txt", "intent": "create_file"}
+{"input": "remove the file named lesson.md", "output": "lesson.md", "intent": "delete_file"}
+{"input": "make me a new file named songs.txt", "output": "songs.txt", "intent": "create_file"}
+{"input": "please create a file named archive.md", "output": "archive.md", "intent": "create_file"}
+{"input": "i don't need travel.txt anymore", "output": "travel.txt", "intent": "delete_file"}
+{"input": "i want to delete baking.md", "output": "baking.md", "intent": "delete_file"}
+{"input": "erase seeds.txt", "output": "seeds.txt", "intent": "delete_file"}
+{"input": "please delete contract.txt", "output": "contract.txt", "intent": "delete_file"}
+{"input": "please delete stream.txt", "output": "stream.txt", "intent": "delete_file"}
+{"input": "remove the file named health.md", "output": "health.md", "intent": "delete_file"}
+{"input": "please delete books.txt", "output": "books.txt", "intent": "delete_file"}
+{"input": "i need a file called writing.txt", "output": "writing.txt", "intent": "create_file"}
+{"input": "delete the file called server.txt", "output": "server.txt", "intent": "delete_file"}
+{"input": "make garage.txt for me", "output": "garage.txt", "intent": "create_file"}
+{"input": "could you delete report.txt", "output": "report.txt", "intent": "delete_file"}
+{"input": "i want to delete yoga.json", "output": "yoga.json", "intent": "delete_file"}
+{"input": "create movies.log", "output": "movies.log", "intent": "create_file"}
+{"input": "i don't need garage.txt anymore", "output": "garage.txt", "intent": "delete_file"}
+{"input": "remove the file named podcast.md", "output": "podcast.md", "intent": "delete_file"}
+{"input": "erase report.txt", "output": "report.txt", "intent": "delete_file"}
+{"input": "remove letter.txt from my files", "output": "letter.txt", "intent": "delete_file"}
+{"input": "please delete house.txt", "output": "house.txt", "intent": "delete_file"}
+{"input": "i need a file called cleaning.txt", "output": "cleaning.txt", "intent": "create_file"}
+{"input": "delete basement.md", "output": "basement.md", "intent": "delete_file"}
+{"input": "remove server.txt from my files", "output": "server.txt", "intent": "delete_file"}
+{"input": "get rid of ideas.json", "output": "ideas.json", "intent": "delete_file"}
+{"input": "delete the file named report.csv", "output": "report.csv", "intent": "delete_file"}
+{"input": "create a new file named stream.md", "output": "stream.md", "intent": "create_file"}
+{"input": "please delete meeting.txt", "output": "meeting.txt", "intent": "delete_file"}
+{"input": "make invoice.txt for me", "output": "invoice.txt", "intent": "create_file"}
+{"input": "erase golf.txt", "output": "golf.txt", "intent": "delete_file"}
+{"input": "i want to delete guitar.md", "output": "guitar.md", "intent": "delete_file"}
+{"input": "get rid of basement.md", "output": "basement.md", "intent": "delete_file"}
+{"input": "create garage.md", "output": "garage.md", "intent": "create_file"}
+{"input": "start a new document called course.txt", "output": "course.txt", "intent": "create_file"}
+{"input": "please create a file named goals.md", "output": "goals.md", "intent": "create_file"}
+{"input": "could you create a file called painting.md", "output": "painting.md", "intent": "create_file"}
+{"input": "delete stream.txt please", "output": "stream.txt", "intent": "delete_file"}
+{"input": "start guitar.txt for me", "output": "guitar.txt", "intent": "create_file"}
+{"input": "can you remove pantry.txt", "output": "pantry.txt", "intent": "delete_file"}
+{"input": "erase design.txt", "output": "design.txt", "intent": "delete_file"}
+{"input": "i want a file called todo.md", "output": "todo.md", "intent": "create_file"}
+{"input": "i want a file called work.md", "output": "work.md", "intent": "create_file"}
+{"input": "i don't need audio.txt anymore", "output": "audio.txt", "intent": "delete_file"}
+{"input": "remove the file named code.md", "output": "code.md", "intent": "delete_file"}
+{"input": "could you delete list.txt", "output": "list.txt", "intent": "delete_file"}
+{"input": "i don't need letter.txt anymore", "output": "letter.txt", "intent": "delete_file"}
+{"input": "i want to delete minutes.md", "output": "minutes.md", "intent": "delete_file"}
+{"input": "please make packing.txt", "output": "packing.txt", "intent": "create_file"}
+{"input": "delete the file called movies.txt", "output": "movies.txt", "intent": "delete_file"}
+{"input": "please delete the file groceries.md", "output": "groceries.md", "intent": "delete_file"}
+{"input": "delete course.md", "output": "course.md", "intent": "delete_file"}
+{"input": "delete the file called goals.txt", "output": "goals.txt", "intent": "delete_file"}
+{"input": "i want to delete soccer.md", "output": "soccer.md", "intent": "delete_file"}
+{"input": "please remove dance.md", "output": "dance.md", "intent": "delete_file"}
+{"input": "please remove recipes.md", "output": "recipes.md", "intent": "delete_file"}
+{"input": "delete draft.txt please", "output": "draft.txt", "intent": "delete_file"}
+{"input": "can you make a file called grades.txt please", "output": "grades.txt", "intent": "create_file"}
+{"input": "could you create a file called backup.md", "output": "backup.md", "intent": "create_file"}
+{"input": "please delete garden.txt", "output": "garden.txt", "intent": "delete_file"}
+{"input": "delete the document called design.md", "output": "design.md", "intent": "delete_file"}
+{"input": "remove the file named car.md", "output": "car.md", "intent": "delete_file"}
+{"input": "delete the file named hotel.md", "output": "hotel.md", "intent": "delete_file"}
+{"input": "make study.txt for me", "output": "study.txt", "intent": "create_file"}
+{"input": "please make movies.txt", "output": "movies.txt", "intent": "create_file"}
+{"input": "start a document called fishing.txt", "output": "fishing.txt", "intent": "create_file"}
+{"input": "start draft.txt for me", "output": "draft.txt", "intent": "create_file"}
+{"input": "please make server.txt", "output": "server.txt", "intent": "create_file"}
+{"input": "delete course.txt please", "output": "course.txt", "intent": "delete_file"}
+{"input": "i want to delete gym.json", "output": "gym.json", "intent": "delete_file"}
+{"input": "save this as meeting.md", "output": "meeting.md", "intent": "create_file"}
+{"input": "make a file named piano.md", "output": "piano.md", "intent": "create_file"}
+{"input": "start fitness.txt for me", "output": "fitness.txt", "intent": "create_file"}
+{"input": "please remove kitchen.log", "output": "kitchen.log", "intent": "delete_file"}
+{"input": "create a new file named chores.md", "output": "chores.md", "intent": "create_file"}
+{"input": "throw away recipes.md", "output": "recipes.md", "intent": "delete_file"}
+{"input": "please delete contacts.txt", "output": "contacts.txt", "intent": "delete_file"}
+{"input": "please make goals.txt", "output": "goals.txt", "intent": "create_file"}
+{"input": "create a new file named plants.md", "output": "plants.md", "intent": "create_file"}
+{"input": "erase agenda.txt", "output": "agenda.txt", "intent": "delete_file"}
+{"input": "can you make a file called stream.txt please", "output": "stream.txt", "intent": "create_file"}
+{"input": "please delete backup.txt", "output": "backup.txt", "intent": "delete_file"}
+{"input": "could you create a file called grades.md", "output": "grades.md", "intent": "create_file"}
+{"input": "work.md, make that a file", "output": "work.md", "intent": "create_file"}
+{"input": "please make fishing.txt", "output": "fishing.txt", "intent": "create_file"}
+{"input": "make me a new file named workout.txt", "output": "workout.txt", "intent": "create_file"}
+{"input": "remove laundry.txt please", "output": "laundry.txt", "intent": "delete_file"}
+{"input": "could you create a file called chores.md", "output": "chores.md", "intent": "create_file"}
+{"input": "i want to delete painting.md", "output": "painting.md", "intent": "delete_file"}
+{"input": "could you delete gifts.txt", "output": "gifts.txt", "intent": "delete_file"}
+{"input": "make goals.txt for me", "output": "goals.txt", "intent": "create_file"}
+{"input": "save this as garden.md", "output": "garden.md", "intent": "create_file"}
+{"input": "erase lesson.txt", "output": "lesson.txt", "intent": "delete_file"}
+{"input": "create thesis.md", "output": "thesis.md", "intent": "create_file"}
+{"input": "can you remove rent.txt", "output": "rent.txt", "intent": "delete_file"}
+{"input": "create a file called piano.txt", "output": "piano.txt", "intent": "create_file"}
+{"input": "please remove porch.log", "output": "porch.log", "intent": "delete_file"}
+{"input": "create server.log", "output": "server.log", "intent": "create_file"}
+{"input": "create a new file named notebook.md", "output": "notebook.md", "intent": "create_file"}
+{"input": "start a document called groceries.txt", "output": "groceries.txt", "intent": "create_file"}
+{"input": "delete comic.md", "output": "comic.md", "intent": "delete_file"}
+{"input": "can you make a file called guitar.txt please", "output": "guitar.txt", "intent": "create_file"}
+{"input": "delete the file called running.txt", "output": "running.txt", "intent": "delete_file"}
+{"input": "start soccer.txt for me", "output": "soccer.txt", "intent": "create_file"}
+{"input": "please create a file named study.md", "output": "study.md", "intent": "create_file"}
+{"input": "can you remove car.txt", "output": "car.txt", "intent": "delete_file"}
+{"input": "please remove audio.md", "output": "audio.md", "intent": "delete_file"}
+{"input": "please create a file named thesis.md", "output": "thesis.md", "intent": "create_file"}
+{"input": "i need a file called photos.txt", "output": "photos.txt", "intent": "create_file"}
+{"input": "make meals.txt for me", "output": "meals.txt", "intent": "create_file"}
+{"input": "delete the document called hotel.md", "output": "hotel.md", "intent": "delete_file"}
+{"input": "start a document called pets.txt", "output": "pets.txt", "intent": "create_file"}
+{"input": "delete the document called songs.md", "output": "songs.md", "intent": "delete_file"}
+{"input": "delete the file named notes.md", "output": "notes.md", "intent": "delete_file"}
+{"input": "report.csv, make that a file", "output": "report.csv", "intent": "create_file"}
+{"input": "throw away kitchen.log", "output": "kitchen.log", "intent": "delete_file"}
+{"input": "start ideas.txt for me", "output": "ideas.txt", "intent": "create_file"}
+{"input": "get rid of video.md", "output": "video.md", "intent": "delete_file"}
+{"input": "get rid of painting.md", "output": "painting.md", "intent": "delete_file"}
+{"input": "could you delete lesson.txt", "output": "lesson.txt", "intent": "delete_file"}
+{"input": "start inventory.txt for me", "output": "inventory.txt", "intent": "create_file"}
+{"input": "please create a file named dance.md", "output": "dance.md", "intent": "create_file"}
+{"input": "make me a new file named car.txt", "output": "car.txt", "intent": "create_file"}
+{"input": "can you make a file called backup.txt please", "output": "backup.txt", "intent": "create_file"}
+{"input": "remove baking.txt please", "output": "baking.txt", "intent": "delete_file"}
+{"input": "delete the file named music.csv", "output": "music.csv", "intent": "delete_file"}
+{"input": "make me a new file named list.txt", "output": "list.txt", "intent": "create_file"}
+{"input": "can you remove piano.txt", "output": "piano.txt", "intent": "delete_file"}
+{"input": "i need a file called agenda.txt", "output": "agenda.txt", "intent": "create_file"}
+{"input": "delete the file called reading.txt", "output": "reading.txt", "intent": "delete_file"}
+{"input": "rent.md, make that a file", "output": "rent.md", "intent": "create_file"}
+{"input": "remove the file named agenda.csv", "output": "agenda.csv", "intent": "delete_file"}
+{"input": "save this as contacts.md", "output": "contacts.md", "intent": "create_file"}
+{"input": "i want a file called seeds.csv", "output": "seeds.csv", "intent": "create_file"}
+{"input": "make audio.txt for me", "output": "audio.txt", "intent": "create_file"}
+{"input": "start a new document called project.txt", "output": "project.txt", "intent": "create_file"}
+{"input": "delete the file named savings.md", "output": "savings.md", "intent": "delete_file"}
+{"input": "please delete resume.txt", "output": "resume.txt", "intent": "delete_file"}
+{"input": "make dance.txt for me", "output": "dance.txt", "intent": "create_file"}
+{"input": "please delete the file recipes.md", "output": "recipes.md", "intent": "delete_file"}
+{"input": "list my files", "intent": "list_files"}
+{"input": "remove the file named cooking.md", "output": "cooking.md", "intent": "delete_file"}
+{"input": "please delete tools.txt", "output": "tools.txt", "intent": "delete_file"}
+{"input": "make a file named wishlist.md", "output": "wishlist.md", "intent": "create_file"}
+{"input": "i need a file called chess.txt", "output": "chess.txt", "intent": "create_file"}
+{"input": "i want to delete grades.md", "output": "grades.md", "intent": "delete_file"}
+{"input": "erase photos.txt", "output": "photos.txt", "intent": "delete_file"}
+{"input": "make a file named rent.md", "output": "rent.md", "intent": "create_file"}
+{"input": "please make library.txt", "output": "library.txt", "intent": "create_file"}
+{"input": "please delete grades.txt", "output": "grades.txt", "intent": "delete_file"}
+{"input": "start money.txt for me", "output": "money.txt", "intent": "create_file"}
+{"input": "could you create a file called flights.md", "output": "flights.md", "intent": "create_file"}
+{"input": "create a new file named fitness.md", "output": "fitness.md", "intent": "create_file"}
+{"input": "make a file named hotel.md", "output": "hotel.md", "intent": "create_file"}
+{"input": "remove dance.txt from my files", "output": "dance.txt", "intent": "delete_file"}
+{"input": "create a new file named yoga.json", "output": "yoga.json", "intent": "create_file"}
+{"input": "i want a file called gifts.md", "output": "gifts.md", "intent": "create_file"}
+{"input": "create a file called gifts.txt", "output": "gifts.txt", "intent": "create_file"}
+{"input": "throw away calendar.md", "output": "calendar.md", "intent": "delete_file"}
+{"input": "please remove invoice.md", "output": "invoice.md", "intent": "delete_file"}
+{"input": "erase code.txt", "output": "code.txt", "intent": "delete_file"}
+{"input": "create a file called podcast.txt", "output": "podcast.txt", "intent": "create_file"}
+{"input": "start a new document called flights.txt", "output": "flights.txt", "intent": "create_file"}
+{"input": "remove the file named design.md", "output": "design.md", "intent": "delete_file"}
+{"input": "delete the file named health.md", "output": "health.md", "intent": "delete_file"}
+{"input": "delete the document called novel.md", "output": "novel.md", "intent": "delete_file"}
+{"input": "please delete plants.txt", "output": "plants.txt", "intent": "delete_file"}
+{"input": "could you delete cycling.txt", "output": "cycling.txt", "intent": "delete_file"}
 {"input": "list all my files", "intent": "list_files"}
+{"input": "can you remove savings.txt", "output": "savings.txt", "intent": "delete_file"}
+{"input": "remove meals.txt from my files", "output": "meals.txt", "intent": "delete_file"}
+{"input": "please make menu.txt", "output": "menu.txt", "intent": "create_file"}
+{"input": "delete draft.md", "output": "draft.md", "intent": "delete_file"}
+{"input": "remove flowers.txt from my files", "output": "flowers.txt", "intent": "delete_file"}
+{"input": "create a file called hotel.txt", "output": "hotel.txt", "intent": "create_file"}
+{"input": "please make reading.txt", "output": "reading.txt", "intent": "create_file"}
+{"input": "could you delete camera.txt", "output": "camera.txt", "intent": "delete_file"}
+{"input": "throw away meals.md", "output": "meals.md", "intent": "delete_file"}
+{"input": "please make journal.txt", "output": "journal.txt", "intent": "create_file"}
+{"input": "could you delete golf.txt", "output": "golf.txt", "intent": "delete_file"}
+{"input": "remove gym.txt please", "output": "gym.txt", "intent": "delete_file"}
+{"input": "please delete course.txt", "output": "course.txt", "intent": "delete_file"}
+{"input": "create a new file named soccer.md", "output": "soccer.md", "intent": "create_file"}
+{"input": "please make violin.txt", "output": "violin.txt", "intent": "create_file"}
+{"input": "please make groceries.txt", "output": "groceries.txt", "intent": "create_file"}
+{"input": "what is in the folder", "intent": "list_files"}
+{"input": "delete the file called library.txt", "output": "library.txt", "intent": "delete_file"}
+{"input": "could you create a file called fitness.md", "output": "fitness.md", "intent": "create_file"}
+{"input": "i'd like a file called violin.md", "output": "violin.md", "intent": "create_file"}
+{"input": "get rid of tools.md", "output": "tools.md", "intent": "delete_file"}
+{"input": "i want to delete money.json", "output": "money.json", "intent": "delete_file"}
+{"input": "can you remove photos.txt", "output": "photos.txt", "intent": "delete_file"}
+{"input": "can you list my files", "intent": "list_files"}
+{"input": "make me a new file named agenda.txt", "output": "agenda.txt", "intent": "create_file"}
+{"input": "save this as family.md", "output": "family.md", "intent": "create_file"}
+{"input": "make a file named office.md", "output": "office.md", "intent": "create_file"}
+{"input": "i don't need dance.txt anymore", "output": "dance.txt", "intent": "delete_file"}
+{"input": "create a file called todo.txt", "output": "todo.txt", "intent": "create_file"}
+{"input": "can you remove cycling.txt", "output": "cycling.txt", "intent": "delete_file"}
+{"input": "please delete the file travel.log", "output": "travel.log", "intent": "delete_file"}
+{"input": "remove project.txt please", "output": "project.txt", "intent": "delete_file"}
+{"input": "design.md, make that a file", "output": "design.md", "intent": "create_file"}
+{"input": "delete ideas.json", "output": "ideas.json", "intent": "delete_file"}
+{"input": "remove movies.txt from my files", "output": "movies.txt", "intent": "delete_file"}
+{"input": "remove comic.txt please", "output": "comic.txt", "intent": "delete_file"}
+{"input": "start a document called school.txt", "output": "school.txt", "intent": "create_file"}
+{"input": "writing.md, make that a file", "output": "writing.md", "intent": "create_file"}
+{"input": "start contract.txt for me", "output": "contract.txt", "intent": "create_file"}
+{"input": "could you create a file called guitar.md", "output": "guitar.md", "intent": "create_file"}
+{"input": "remove the file named pantry.md", "output": "pantry.md", "intent": "delete_file"}
+{"input": "get rid of minutes.md", "output": "minutes.md", "intent": "delete_file"}
+{"input": "please remove puzzle.log", "output": "puzzle.log", "intent": "delete_file"}
+{"input": "can you remove poem.txt", "output": "poem.txt", "intent": "delete_file"}
+{"input": "throw away school.md", "output": "school.md", "intent": "delete_file"}
+{"input": "delete the file named pantry.md", "output": "pantry.md", "intent": "delete_file"}
+{"input": "create a file called songs.txt", "output": "songs.txt", "intent": "create_file"}
+{"input": "please delete the file archive.md", "output": "archive.md", "intent": "delete_file"}
+{"input": "make a file named gifts.md", "output": "gifts.md", "intent": "create_file"}
+{"input": "quiz.csv, make that a file", "output": "quiz.csv", "intent": "create_file"}
+{"input": "i need a file called seeds.txt", "output": "seeds.txt", "intent": "create_file"}
+{"input": "remove library.txt from my files", "output": "library.txt", "intent": "delete_file"}
+{"input": "please remove exam.md", "output": "exam.md", "intent": "delete_file"}
+{"input": "delete the file called story.txt", "output": "story.txt", "intent": "delete_file"}
+{"input": "get rid of hiking.md", "output": "hiking.md", "intent": "delete_file"}
+{"input": "i'd like a file called story.md", "output": "story.md", "intent": "create_file"}
+{"input": "could you delete homework.txt", "output": "homework.txt", "intent": "delete_file"}
+{"input": "create shopping.md", "output": "shopping.md", "intent": "create_file"}
+{"input": "get rid of diary.md", "output": "diary.md", "intent": "delete_file"}
+{"input": "save this as soccer.md", "output": "soccer.md", "intent": "create_file"}
+{"input": "delete the document called cycling.csv", "output": "cycling.csv", "intent": "delete_file"}
+{"input": "please create a file named reading.log", "output": "reading.log", "intent": "create_file"}
+{"input": "please delete the file story.md", "output": "story.md", "intent": "delete_file"}
+{"input": "make me a new file named music.txt", "output": "music.txt", "intent": "create_file"}
+{"input": "start meeting.txt for me", "output": "meeting.txt", "intent": "create_file"}
+{"input": "i want a file called workout.md", "output": "workout.md", "intent": "create_file"}
+{"input": "erase wishlist.txt", "output": "wishlist.txt", "intent": "delete_file"}
+{"input": "can you make a file called contract.txt please", "output": "contract.txt", "intent": "create_file"}
+{"input": "delete the document called report.csv", "output": "report.csv", "intent": "delete_file"}
+{"input": "wishlist.md, make that a file", "output": "wishlist.md", "intent": "create_file"}
+{"input": "get rid of laundry.json", "output": "laundry.json", "intent": "delete_file"}
+{"input": "create tennis.md", "output": "tennis.md", "intent": "create_file"}
+{"input": "create a new file named plan.md", "output": "plan.md", "intent": "create_file"}
+{"input": "start a new document called resume.txt", "output": "resume.txt", "intent": "create_file"}
+{"input": "create letter.md", "output": "letter.md", "intent": "create_file"}
+{"input": "i need a file called attic.txt", "output": "attic.txt", "intent": "create_file"}
+{"input": "remove the file named wishlist.md", "output": "wishlist.md", "intent": "delete_file"}
+{"input": "create a file called list.txt", "output": "list.txt", "intent": "create_file"}
+{"input": "please remove friends.md", "output": "friends.md", "intent": "delete_file"}
+{"input": "erase gifts.txt", "output": "gifts.txt", "intent": "delete_file"}
+{"input": "i'd like a file called letter.md", "output": "letter.md", "intent": "create_file"}
+{"input": "erase piano.txt", "output": "piano.txt", "intent": "delete_file"}
+{"input": "remove the file named cycling.csv", "output": "cycling.csv", "intent": "delete_file"}
+{"input": "start chores.txt for me", "output": "chores.txt", "intent": "create_file"}
+{"input": "i need a file called report.txt", "output": "report.txt", "intent": "create_file"}
+{"input": "start grades.txt for me", "output": "grades.txt", "intent": "create_file"}
+{"input": "create a file called chess.txt", "output": "chess.txt", "intent": "create_file"}
+{"input": "remove violin.txt from my files", "output": "violin.txt", "intent": "delete_file"}
+{"input": "make puzzle.txt for me", "output": "puzzle.txt", "intent": "create_file"}
+{"input": "remove garage.txt from my files", "output": "garage.txt", "intent": "delete_file"}
+{"input": "please make invoice.txt", "output": "invoice.txt", "intent": "create_file"}
+{"input": "i want a file called homework.md", "output": "homework.md", "intent": "create_file"}
+{"input": "delete tools.txt please", "output": "tools.txt", "intent": "delete_file"}
+{"input": "create playlist.md", "output": "playlist.md", "intent": "create_file"}
+{"input": "please remove travel.log", "output": "travel.log", "intent": "delete_file"}
+{"input": "delete the file named chess.md", "output": "chess.md", "intent": "delete_file"}
+{"input": "could you create a file called hiking.md", "output": "hiking.md", "intent": "create_file"}
+{"input": "delete the file called thesis.txt", "output": "thesis.txt", "intent": "delete_file"}
+{"input": "make menu.txt for me", "output": "menu.txt", "intent": "create_file"}
+{"input": "start a new document called draft.txt", "output": "draft.txt", "intent": "create_file"}
+{"input": "throw away thesis.md", "output": "thesis.md", "intent": "delete_file"}
+{"input": "throw away library.md", "output": "library.md", "intent": "delete_file"}
+{"input": "can you remove camera.txt", "output": "camera.txt", "intent": "delete_file"}
+{"input": "remove plants.txt please", "output": "plants.txt", "intent": "delete_file"}
+{"input": "delete books.txt please", "output": "books.txt", "intent": "delete_file"}
+{"input": "please delete comic.txt", "output": "comic.txt", "intent": "delete_file"}
+{"input": "could you delete hotel.txt", "output": "hotel.txt", "intent": "delete_file"}
+{"input": "i want a file called taxes.csv", "output": "taxes.csv", "intent": "create_file"}
+{"input": "please create a file named meals.md", "output": "meals.md", "intent": "create_file"}
+{"input": "remove the file named notes.md", "output": "notes.md", "intent": "delete_file"}
+{"input": "please delete the file tennis.md", "output": "tennis.md", "intent": "delete_file"}
+{"input": "can you remove design.txt", "output": "design.txt", "intent": "delete_file"}
+{"input": "can you make a file called tools.txt please", "output": "tools.txt", "intent": "create_file"}
+{"input": "delete money.txt please", "output": "money.txt", "intent": "delete_file"}
+{"input": "i need a file called code.txt", "output": "code.txt", "intent": "create_file"}
+{"input": "make a file named health.md", "output": "health.md", "intent": "create_file"}
+{"input": "i need a file called wishlist.txt", "output": "wishlist.txt", "intent": "create_file"}
+{"input": "throw away running.md", "output": "running.md", "intent": "delete_file"}
+{"input": "make me a new file named hotel.txt", "output": "hotel.txt", "intent": "create_file"}
+{"input": "what do i have in the folder", "intent": "list_files"}
+{"input": "create goals.md", "output": "goals.md", "intent": "create_file"}
+{"input": "i need a file called design.txt", "output": "design.txt", "intent": "create_file"}
+{"input": "create a file called writing.txt", "output": "writing.txt", "intent": "create_file"}
+{"input": "create audio.md", "output": "audio.md", "intent": "create_file"}
+{"input": "please delete flights.txt", "output": "flights.txt", "intent": "delete_file"}
+{"input": "erase writing.txt", "output": "writing.txt", "intent": "delete_file"}
+{"input": "erase songs.txt", "output": "songs.txt", "intent": "delete_file"}
+{"input": "make me a new file named poem.txt", "output": "poem.txt", "intent": "create_file"}
+{"input": "remove the file named quiz.csv", "output": "quiz.csv", "intent": "delete_file"}
+{"input": "make porch.txt for me", "output": "porch.txt", "intent": "create_file"}
+{"input": "save this as chores.md", "output": "chores.md", "intent": "create_file"}
+{"input": "i want a file called music.csv", "output": "music.csv", "intent": "create_file"}
+{"input": "please create a file named violin.md", "output": "violin.md", "intent": "create_file"}
+{"input": "i'd like a file called journal.md", "output": "journal.md", "intent": "create_file"}
+{"input": "start plan.txt for me", "output": "plan.txt", "intent": "create_file"}
+{"input": "i don't need archive.txt anymore", "output": "archive.txt", "intent": "delete_file"}
+{"input": "please delete the file invoice.md", "output": "invoice.md", "intent": "delete_file"}
+{"input": "remove money.txt please", "output": "money.txt", "intent": "delete_file"}
+{"input": "save this as ideas.json", "output": "ideas.json", "intent": "create_file"}
+{"input": "please create a file named invoice.md", "output": "invoice.md", "intent": "create_file"}
+{"input": "start a document called flowers.txt", "output": "flowers.txt", "intent": "create_file"}
+{"input": "delete the file called puzzle.txt", "output": "puzzle.txt", "intent": "delete_file"}
+{"input": "can you remove gifts.txt", "output": "gifts.txt", "intent": "delete_file"}
+{"input": "please create a file named pets.md", "output": "pets.md", "intent": "create_file"}
+{"input": "i want a file called piano.md", "output": "piano.md", "intent": "create_file"}
+{"input": "create a file called office.txt", "output": "office.txt", "intent": "create_file"}
+{"input": "i'd like a file called exam.md", "output": "exam.md", "intent": "create_file"}
+{"input": "erase hotel.txt", "output": "hotel.txt", "intent": "delete_file"}
+{"input": "make a file named list.md", "output": "list.md", "intent": "create_file"}
+{"input": "could you create a file called inventory.json", "output": "inventory.json", "intent": "create_file"}
+{"input": "create a file called rent.txt", "output": "rent.txt", "intent": "create_file"}
+{"input": "throw away violin.md", "output": "violin.md", "intent": "delete_file"}
+{"input": "throw away travel.log", "output": "travel.log", "intent": "delete_file"}
+{"input": "please delete the file exam.md", "output": "exam.md", "intent": "delete_file"}
+{"input": "remove thesis.txt from my files", "output": "thesis.txt", "intent": "delete_file"}
+{"input": "delete the file named list.md", "output": "list.md", "intent": "delete_file"}
+{"input": "can you make a file called gym.txt please", "output": "gym.txt", "intent": "create_file"}
+{"input": "start a document called goals.txt", "output": "goals.txt", "intent": "create_file"}
+{"input": "create a file called code.txt", "output": "code.txt", "intent": "create_file"}
+{"input": "start resume.txt for me", "output": "resume.txt", "intent": "create_file"}
+{"input": "make archive.txt for me", "output": "archive.txt", "intent": "create_file"}
+{"input": "remove budget.txt please", "output": "budget.txt", "intent": "delete_file"}
+{"input": "novel.md, make that a file", "output": "novel.md", "intent": "create_file"}
+{"input": "make a file named taxes.csv", "output": "taxes.csv", "intent": "create_file"}
+{"input": "delete fitness.txt please", "output": "fitness.txt", "intent": "delete_file"}
+{"input": "start books.txt for me", "output": "books.txt", "intent": "create_file"}
+{"input": "could you delete piano.txt", "output": "piano.txt", "intent": "delete_file"}
+{"input": "i want a file called writing.md", "output": "writing.md", "intent": "create_file"}
+{"input": "please create a file named calendar.md", "output": "calendar.md", "intent": "create_file"}
+{"input": "delete diary.md", "output": "diary.md", "intent": "delete_file"}
+{"input": "attic.md, make that a file", "output": "attic.md", "intent": "create_file"}
+{"input": "make a file named attic.md", "output": "attic.md", "intent": "create_file"}
+{"input": "can you make a file called resume.txt please", "output": "resume.txt", "intent": "create_file"}
+{"input": "please remove garage.md", "output": "garage.md", "intent": "delete_file"}
+{"input": "remove shopping.txt from my files", "output": "shopping.txt", "intent": "delete_file"}
+{"input": "create a file called poem.txt", "output": "poem.txt", "intent": "create_file"}
+{"input": "please remove menu.md", "output": "menu.md", "intent": "delete_file"}
+{"input": "delete inventory.txt please", "output": "inventory.txt", "intent": "delete_file"}
+{"input": "throw away server.log", "output": "server.log", "intent": "delete_file"}
+{"input": "save this as tools.md", "output": "tools.md", "intent": "create_file"}
+{"input": "make a file named work.md", "output": "work.md", "intent": "create_file"}
+{"input": "can you make a file called baking.txt please", "output": "baking.txt", "intent": "create_file"}
+{"input": "i want to delete backup.md", "output": "backup.md", "intent": "delete_file"}
+{"input": "can you make a file called flights.txt please", "output": "flights.txt", "intent": "create_file"}
+{"input": "start a document called archive.txt", "output": "archive.txt", "intent": "create_file"}
+{"input": "erase cooking.txt", "output": "cooking.txt", "intent": "delete_file"}
+{"input": "i'd like a file called flowers.md", "output": "flowers.md", "intent": "create_file"}
+{"input": "i want to delete hiking.md", "output": "hiking.md", "intent": "delete_file"}
+{"input": "start a new document called money.txt", "output": "money.txt", "intent": "create_file"}
+{"input": "delete the file called groceries.txt", "output": "groceries.txt", "intent": "delete_file"}
+{"input": "remove invoice.txt from my files", "output": "invoice.txt", "intent": "delete_file"}
+{"input": "code.md, make that a file", "output": "code.md", "intent": "create_file"}
+{"input": "please remove violin.md", "output": "violin.md", "intent": "delete_file"}
+{"input": "please delete hiking.txt", "output": "hiking.txt", "intent": "delete_file"}
+{"input": "i'd like a file called goals.md", "output": "goals.md", "intent": "create_file"}
+{"input": "can you remove agenda.txt", "output": "agenda.txt", "intent": "delete_file"}
+{"input": "throw away exam.md", "output": "exam.md", "intent": "delete_file"}
+{"input": "delete the file called expenses.txt", "output": "expenses.txt", "intent": "delete_file"}
+{"input": "please delete essay.txt", "output": "essay.txt", "intent": "delete_file"}
+{"input": "please delete diary.txt", "output": "diary.txt", "intent": "delete_file"}
+{"input": "start a document called shopping.txt", "output": "shopping.txt", "intent": "create_file"}
+{"input": "remove guitar.txt please", "output": "guitar.txt", "intent": "delete_file"}
+{"input": "chess.md, make that a file", "output": "chess.md", "intent": "create_file"}
+{"input": "start a new document called contract.txt", "output": "contract.txt", "intent": "create_file"}
+{"input": "make a file named cleaning.md", "output": "cleaning.md", "intent": "create_file"}
+{"input": "create a file called health.txt", "output": "health.txt", "intent": "create_file"}
+{"input": "remove the file named todo.md", "output": "todo.md", "intent": "delete_file"}
+{"input": "create a file called work.txt", "output": "work.txt", "intent": "create_file"}
+{"input": "start a document called expenses.txt", "output": "expenses.txt", "intent": "create_file"}
+{"input": "remove resume.txt please", "output": "resume.txt", "intent": "delete_file"}
+{"input": "remove diary.txt please", "output": "diary.txt", "intent": "delete_file"}
+{"input": "please create a file named porch.log", "output": "porch.log", "intent": "create_file"}
+{"input": "delete stream.md", "output": "stream.md", "intent": "delete_file"}
+{"input": "i want a file called podcast.md", "output": "podcast.md", "intent": "create_file"}
+{"input": "i don't need fishing.txt anymore", "output": "fishing.txt", "intent": "delete_file"}
+{"input": "please delete notebook.txt", "output": "notebook.txt", "intent": "delete_file"}
+{"input": "please delete family.txt", "output": "family.txt", "intent": "delete_file"}
+{"input": "delete video.txt please", "output": "video.txt", "intent": "delete_file"}
+{"input": "could you delete cooking.txt", "output": "cooking.txt", "intent": "delete_file"}
+{"input": "cleaning.md, make that a file", "output": "cleaning.md", "intent": "create_file"}
+{"input": "delete the document called agenda.csv", "output": "agenda.csv", "intent": "delete_file"}
+{"input": "throw away expenses.md", "output": "expenses.md", "intent": "delete_file"}
+{"input": "please make exam.txt", "output": "exam.txt", "intent": "create_file"}
+{"input": "could you delete attic.txt", "output": "attic.txt", "intent": "delete_file"}
+{"input": "delete money.json", "output": "money.json", "intent": "delete_file"}
+{"input": "could you delete design.txt", "output": "design.txt", "intent": "delete_file"}
+{"input": "create a file called seeds.txt", "output": "seeds.txt", "intent": "create_file"}
+{"input": "remove the file named novel.md", "output": "novel.md", "intent": "delete_file"}
+{"input": "make pets.txt for me", "output": "pets.txt", "intent": "create_file"}
+{"input": "create a new file named guitar.md", "output": "guitar.md", "intent": "create_file"}
+{"input": "erase car.txt", "output": "car.txt", "intent": "delete_file"}
+{"input": "get rid of stream.md", "output": "stream.md", "intent": "delete_file"}
+{"input": "delete the file called dance.txt", "output": "dance.txt", "intent": "delete_file"}
+{"input": "delete the document called camera.csv", "output": "camera.csv", "intent": "delete_file"}
+{"input": "can you remove todo.txt", "output": "todo.txt", "intent": "delete_file"}
+{"input": "start a document called packing.txt", "output": "packing.txt", "intent": "create_file"}
+{"input": "remove contacts.txt please", "output": "contacts.txt", "intent": "delete_file"}
+{"input": "office.md, make that a file", "output": "office.md", "intent": "create_file"}
+{"input": "could you create a file called contract.md", "output": "contract.md", "intent": "create_file"}
+{"input": "start contacts.txt for me", "output": "contacts.txt", "intent": "create_file"}
+{"input": "please make audio.txt", "output": "audio.txt", "intent": "create_file"}
+{"input": "remove goals.txt from my files", "output": "goals.txt", "intent": "delete_file"}
+{"input": "delete family.md", "output": "family.md", "intent": "delete_file"}
+{"input": "get rid of yoga.json", "output": "yoga.json", "intent": "delete_file"}
+{"input": "i want to delete plants.md", "output": "plants.md", "intent": "delete_file"}
+{"input": "can you remove novel.txt", "output": "novel.txt", "intent": "delete_file"}
+{"input": "remove video.txt please", "output": "video.txt", "intent": "delete_file"}
+{"input": "please make expenses.txt", "output": "expenses.txt", "intent": "create_file"}
+{"input": "save this as books.md", "output": "books.md", "intent": "create_file"}
+{"input": "create a new file named gym.json", "output": "gym.json", "intent": "create_file"}
+{"input": "i want to delete resume.md", "output": "resume.md", "intent": "delete_file"}
+{"input": "delete flights.md", "output": "flights.md", "intent": "delete_file"}
+{"input": "delete the file called exam.txt", "output": "exam.txt", "intent": "delete_file"}
+{"input": "please delete the file flowers.md", "output": "flowers.md", "intent": "delete_file"}
+{"input": "i need a file called homework.txt", "output": "homework.txt", "intent": "create_file"}
+{"input": "can you remove music.txt", "output": "music.txt", "intent": "delete_file"}
+{"input": "remove the file named savings.md", "output": "savings.md", "intent": "delete_file"}
+{"input": "start laundry.txt for me", "output": "laundry.txt", "intent": "create_file"}
+{"input": "make kitchen.txt for me", "output": "kitchen.txt", "intent": "create_file"}
+{"input": "make me a new file named design.txt", "output": "design.txt", "intent": "create_file"}
+{"input": "please make travel.txt", "output": "travel.txt", "intent": "create_file"}
+{"input": "create a new file named budget.md", "output": "budget.md", "intent": "create_file"}
+{"input": "remove the file named music.csv", "output": "music.csv", "intent": "delete_file"}
+{"input": "i'd like a file called groceries.md", "output": "groceries.md", "intent": "create_file"}
+{"input": "can you make a file called meeting.txt please", "output": "meeting.txt", "intent": "create_file"}
+{"input": "delete the file called pets.txt", "output": "pets.txt", "intent": "delete_file"}
+{"input": "make recipes.txt for me", "output": "recipes.txt", "intent": "create_file"}
+{"input": "throw away archive.md", "output": "archive.md", "intent": "delete_file"}
+{"input": "delete the file called garage.txt", "output": "garage.txt", "intent": "delete_file"}
+{"input": "remove painting.txt please", "output": "painting.txt", "intent": "delete_file"}
+{"input": "create a new file named books.md", "output": "books.md", "intent": "create_file"}
+{"input": "i need a file called notes.txt", "output": "notes.txt", "intent": "create_file"}
+{"input": "start a document called audio.txt", "output": "audio.txt", "intent": "create_file"}
+{"input": "please create a file named friends.md", "output": "friends.md", "intent": "create_file"}
+{"input": "i don't need tickets.txt anymore", "output": "tickets.txt", "intent": "delete_file"}
+{"input": "i want a file called list.md", "output": "list.md", "intent": "create_file"}
+{"input": "i want to delete project.json", "output": "project.json", "intent": "delete_file"}
+{"input": "i'd like a file called puzzle.log", "output": "puzzle.log", "intent": "create_file"}
+{"input": "can you remove workout.txt", "output": "workout.txt", "intent": "delete_file"}
+{"input": "start a new document called soccer.txt", "output": "soccer.txt", "intent": "create_file"}
+{"input": "please create a file named shopping.md", "output": "shopping.md", "intent": "create_file"}
+{"input": "please make thesis.txt", "output": "thesis.txt", "intent": "create_file"}
+{"input": "get rid of notebook.md", "output": "notebook.md", "intent": "delete_file"}
+{"input": "i want a file called agenda.csv", "output": "agenda.csv", "intent": "create_file"}
+{"input": "can you remove report.txt", "output": "report.txt", "intent": "delete_file"}
+{"input": "remove hiking.txt please", "output": "hiking.txt", "intent": "delete_file"}
+{"input": "i don't need packing.txt anymore", "output": "packing.txt", "intent": "delete_file"}
+{"input": "please make school.txt", "output": "school.txt", "intent": "create_file"}
+{"input": "make a file named pantry.md", "output": "pantry.md", "intent": "create_file"}
+{"input": "delete fitness.md", "output": "fitness.md", "intent": "delete_file"}
+{"input": "make library.txt for me", "output": "library.txt", "intent": "create_file"}
+{"input": "make journal.txt for me", "output": "journal.txt", "intent": "create_file"}
+{"input": "i want to delete budget.md", "output": "budget.md", "intent": "delete_file"}
+{"input": "could you create a file called draft.md", "output": "draft.md", "intent": "create_file"}
+{"input": "make a file named camera.csv", "output": "camera.csv", "intent": "create_file"}
+{"input": "can you remove attic.txt", "output": "attic.txt", "intent": "delete_file"}
+{"input": "create a file called savings.txt", "output": "savings.txt", "intent": "create_file"}
+{"input": "start minutes.txt for me", "output": "minutes.txt", "intent": "create_file"}
+{"input": "remove the file named cleaning.md", "output": "cleaning.md", "intent": "delete_file"}
+{"input": "please remove fishing.md", "output": "fishing.md", "intent": "delete_file"}
+{"input": "create a file called photos.txt", "output": "photos.txt", "intent": "create_file"}
+{"input": "remove study.txt from my files", "output": "study.txt", "intent": "delete_file"}
+{"input": "make sketch.txt for me", "output": "sketch.txt", "intent": "create_file"}
+{"input": "make me a new file named golf.txt", "output": "golf.txt", "intent": "create_file"}
+{"input": "please create a file named exam.md", "output": "exam.md", "intent": "create_file"}
+{"input": "could you create a file called yoga.json", "output": "yoga.json", "intent": "create_file"}
+{"input": "please make kitchen.txt", "output": "kitchen.txt", "intent": "create_file"}
+{"input": "erase rent.txt", "output": "rent.txt", "intent": "delete_file"}
+{"input": "can you make a file called soccer.txt please", "output": "soccer.txt", "intent": "create_file"}
+{"input": "please remove archive.md", "output": "archive.md", "intent": "delete_file"}
+{"input": "delete the file named workout.md", "output": "workout.md", "intent": "delete_file"}
+{"input": "please delete the file fishing.md", "output": "fishing.md", "intent": "delete_file"}
+{"input": "make movies.txt for me", "output": "movies.txt", "intent": "create_file"}
+{"input": "i want a file called car.md", "output": "car.md", "intent": "create_file"}
+{"input": "remove archive.txt from my files", "output": "archive.txt", "intent": "delete_file"}
+{"input": "i'd like a file called shopping.md", "output": "shopping.md", "intent": "create_file"}
+{"input": "taxes.csv, make that a file", "output": "taxes.csv", "intent": "create_file"}
+{"input": "i'd like a file called recipes.md", "output": "recipes.md", "intent": "create_file"}
+{"input": "pantry.md, make that a file", "output": "pantry.md", "intent": "create_file"}
+{"input": "can you remove quiz.txt", "output": "quiz.txt", "intent": "delete_file"}
+{"input": "make me a new file named attic.txt", "output": "attic.txt", "intent": "create_file"}
+{"input": "delete the file called violin.txt", "output": "violin.txt", "intent": "delete_file"}
+{"input": "i'd like a file called tickets.log", "output": "tickets.log", "intent": "create_file"}
+{"input": "please remove running.md", "output": "running.md", "intent": "delete_file"}
+{"input": "i need a file called novel.txt", "output": "novel.txt", "intent": "create_file"}
+{"input": "can you make a file called minutes.txt please", "output": "minutes.txt", "intent": "create_file"}
+{"input": "erase camera.txt", "output": "camera.txt", "intent": "delete_file"}
+{"input": "please delete the file menu.md", "output": "menu.md", "intent": "delete_file"}
+{"input": "delete games.txt please", "output": "games.txt", "intent": "delete_file"}
+{"input": "delete grades.md", "output": "grades.md", "intent": "delete_file"}
+{"input": "get rid of comic.md", "output": "comic.md", "intent": "delete_file"}
+{"input": "i'd like a file called calendar.md", "output": "calendar.md", "intent": "create_file"}
+{"input": "delete minutes.md", "output": "minutes.md", "intent": "delete_file"}
+{"input": "start a document called playlist.txt", "output": "playlist.txt", "intent": "create_file"}
+{"input": "start a new document called yoga.txt", "output": "yoga.txt", "intent": "create_file"}
+{"input": "delete games.md", "output": "games.md", "intent": "delete_file"}
+{"input": "can you make a file called painting.txt please", "output": "painting.txt", "intent": "create_file"}
+{"input": "i want a file called cooking.md", "output": "cooking.md", "intent": "create_file"}
+{"input": "please make tennis.txt", "output": "tennis.txt", "intent": "create_file"}
+{"input": "delete video.md", "output": "video.md", "intent": "delete_file"}
+{"input": "please remove movies.log", "output": "movies.log", "intent": "delete_file"}
+{"input": "remove running.txt from my files", "output": "running.txt", "intent": "delete_file"}
+{"input": "start a document called journal.txt", "output": "journal.txt", "intent": "create_file"}
+{"input": "create a file called camera.txt", "output": "camera.txt", "intent": "create_file"}
+{"input": "make bills.txt for me", "output": "bills.txt", "intent": "create_file"}
+{"input": "create a file called report.txt", "output": "report.txt", "intent": "create_file"}
+{"input": "erase cleaning.txt", "output": "cleaning.txt", "intent": "delete_file"}
+{"input": "make me a new file named camera.txt", "output": "camera.txt", "intent": "create_file"}
+{"input": "remove the file named report.csv", "output": "report.csv", "intent": "delete_file"}
+{"input": "delete the file called school.txt", "output": "school.txt", "intent": "delete_file"}
+{"input": "make packing.txt for me", "output": "packing.txt", "intent": "create_file"}
+{"input": "please make playlist.txt", "output": "playlist.txt", "intent": "create_file"}
+{"input": "i need a file called list.txt", "output": "list.txt", "intent": "create_file"}
+{"input": "can you make a file called inventory.txt please", "output": "inventory.txt", "intent": "create_file"}
+{"input": "remove sketch.txt from my files", "output": "sketch.txt", "intent": "delete_file"}
+{"input": "remove house.txt please", "output": "house.txt", "intent": "delete_file"}
+{"input": "delete the document called podcast.md", "output": "podcast.md", "intent": "delete_file"}
+{"input": "save this as video.md", "output": "video.md", "intent": "create_file"}
+{"input": "remove the file named camera.csv", "output": "camera.csv", "intent": "delete_file"}
+{"input": "make me a new file named cleaning.txt", "output": "cleaning.txt", "intent": "create_file"}
+{"input": "start notebook.txt for me", "output": "notebook.txt", "intent": "create_file"}
+{"input": "i need a file called todo.txt", "output": "todo.txt", "intent": "create_file"}
+{"input": "start video.txt for me", "output": "video.txt", "intent": "create_file"}
+{"input": "save this as plan.md", "output": "plan.md", "intent": "create_file"}
+{"input": "could you delete quiz.txt", "output": "quiz.txt", "intent": "delete_file"}
+{"input": "make a file named notes.md", "output": "notes.md", "intent": "create_file"}
+{"input": "can you remove cooking.txt", "output": "cooking.txt", "intent": "delete_file"}
+{"input": "start a new document called notebook.txt", "output": "notebook.txt", "intent": "create_file"}
+{"input": "save this as flights.md", "output": "flights.md", "intent": "create_file"}
+{"input": "create a new file named inventory.json", "output": "inventory.json", "intent": "create_file"}
+{"input": "create a new file named money.json", "output": "money.json", "intent": "create_file"}
+{"input": "i don't need school.txt anymore", "output": "school.txt", "intent": "delete_file"}
+{"input": "please delete the file expenses.md", "output": "expenses.md", "intent": "delete_file"}
+{"input": "i want to delete fitness.md", "output": "fitness.md", "intent": "delete_file"}
+{"input": "i need a file called cooking.txt", "output": "cooking.txt", "intent": "create_file"}
+{"input": "delete the document called golf.md", "output": "golf.md", "intent": "delete_file"}
+{"input": "delete chores.md", "output": "chores.md", "intent": "delete_file"}
+{"input": "please remove tickets.log", "output": "tickets.log", "intent": "delete_file"}
+{"input": "remove stream.txt please", "output": "stream.txt", "intent": "delete_file"}
+{"input": "start plants.txt for me", "output": "plants.txt", "intent": "create_file"}
+{"input": "remove grades.txt please", "output": "grades.txt", "intent": "delete_file"}
+{"input": "save this as inventory.json", "output": "inventory.json", "intent": "create_file"}
+{"input": "start backup.txt for me", "output": "backup.txt", "intent": "create_file"}
+{"input": "make me a new file named writing.txt", "output": "writing.txt", "intent": "create_file"}
+{"input": "i need a file called health.txt", "output": "health.txt", "intent": "create_file"}
+{"input": "erase pantry.txt", "output": "pantry.txt", "intent": "delete_file"}
+{"input": "i want a file called design.md", "output": "design.md", "intent": "create_file"}
+{"input": "i don't need pets.txt anymore", "output": "pets.txt", "intent": "delete_file"}
+{"input": "start tools.txt for me", "output": "tools.txt", "intent": "create_file"}
+{"input": "i want to delete inventory.json", "output": "inventory.json", "intent": "delete_file"}
+{"input": "i'd like a file called kitchen.log", "output": "kitchen.log", "intent": "create_file"}
+{"input": "start a new document called budget.txt", "output": "budget.txt", "intent": "create_file"}
+{"input": "create a file called design.txt", "output": "design.txt", "intent": "create_file"}
+{"input": "delete the file named writing.md", "output": "writing.md", "intent": "delete_file"}
+{"input": "create a file called taxes.txt", "output": "taxes.txt", "intent": "create_file"}
+{"input": "get rid of inventory.json", "output": "inventory.json", "intent": "delete_file"}
+{"input": "start a new document called video.txt", "output": "video.txt", "intent": "create_file"}
+{"input": "remove the file named rent.md", "output": "rent.md", "intent": "delete_file"}
+{"input": "can you make a file called hiking.txt please", "output": "hiking.txt", "intent": "create_file"}
+{"input": "i'd like a file called bills.md", "output": "bills.md", "intent": "create_file"}
+{"input": "start a new document called inventory.txt", "output": "inventory.txt", "intent": "create_file"}
+{"input": "create a file called receipt.txt", "output": "receipt.txt", "intent": "create_file"}
+{"input": "please create a file named bills.md", "output": "bills.md", "intent": "create_file"}
+{"input": "create a new file named basement.md", "output": "basement.md", "intent": "create_file"}
+{"input": "please make garage.txt", "output": "garage.txt", "intent": "create_file"}
+{"input": "save this as games.md", "output": "games.md", "intent": "create_file"}
+{"input": "could you create a file called stream.md", "output": "stream.md", "intent": "create_file"}
+{"input": "make flowers.txt for me", "output": "flowers.txt", "intent": "create_file"}
+{"input": "please delete the file shopping.md", "output": "shopping.md", "intent": "delete_file"}
+{"input": "i want a file called report.csv", "output": "report.csv", "intent": "create_file"}
+{"input": "please delete the file packing.md", "output": "packing.md", "intent": "delete_file"}
+{"input": "can you remove ledger.txt", "output": "ledger.txt", "intent": "delete_file"}
+{"input": "can you remove code.txt", "output": "code.txt", "intent": "delete_file"}
+{"input": "show me everything in the folder", "intent": "list_files"}
+{"input": "make a file named poem.md", "output": "poem.md", "intent": "create_file"}
+{"input": "make a file named homework.md", "output": "homework.md", "intent": "create_file"}
+{"input": "please delete the file study.md", "output": "study.md", "intent": "delete_file"}
+{"input": "erase receipt.txt", "output": "receipt.txt", "intent": "delete_file"}
+{"input": "erase cycling.txt", "output": "cycling.txt", "intent": "delete_file"}
+{"input": "please remove library.md", "output": "library.md", "intent": "delete_file"}
+{"input": "start a new document called laundry.txt", "output": "laundry.txt", "intent": "create_file"}
+{"input": "delete the file named office.md", "output": "office.md", "intent": "delete_file"}
+{"input": "remove recipes.txt from my files", "output": "recipes.txt", "intent": "delete_file"}
+{"input": "could you create a file called laundry.json", "output": "laundry.json", "intent": "create_file"}
+{"input": "please create a file named audio.md", "output": "audio.md", "intent": "create_file"}
+{"input": "delete the file called sketch.txt", "output": "sketch.txt", "intent": "delete_file"}
+{"input": "i want to delete garden.md", "output": "garden.md", "intent": "delete_file"}
+{"input": "i don't need journal.txt anymore", "output": "journal.txt", "intent": "delete_file"}
+{"input": "i'd like a file called expenses.md", "output": "expenses.md", "intent": "create_file"}
+{"input": "create a new file named house.md", "output": "house.md", "intent": "create_file"}
+{"input": "create a file called cycling.txt", "output": "cycling.txt", "intent": "create_file"}
+{"input": "please make puzzle.txt", "output": "puzzle.txt", "intent": "create_file"}
+{"input": "can you remove podcast.txt", "output": "podcast.txt", "intent": "delete_file"}
+{"input": "can you remove writing.txt", "output": "writing.txt", "intent": "delete_file"}
+{"input": "save this as project.json", "output": "project.json", "intent": "create_file"}
+{"input": "can you remove homework.txt", "output": "homework.txt", "intent": "delete_file"}
+{"input": "make me a new file named podcast.txt", "output": "podcast.txt", "intent": "create_file"}
+{"input": "list the folder", "intent": "list_files"}
+{"input": "start a new document called grades.txt", "output": "grades.txt", "intent": "create_file"}
+{"input": "could you delete podcast.txt", "output": "podcast.txt", "intent": "delete_file"}
+{"input": "remove the file named attic.md", "output": "attic.md", "intent": "delete_file"}
+{"input": "remove contract.txt please", "output": "contract.txt", "intent": "delete_file"}
+{"input": "get rid of games.md", "output": "games.md", "intent": "delete_file"}
+{"input": "delete the file named attic.md", "output": "attic.md", "intent": "delete_file"}
+{"input": "throw away letter.md", "output": "letter.md", "intent": "delete_file"}
+{"input": "i want to delete ideas.json", "output": "ideas.json", "intent": "delete_file"}
+{"input": "start course.txt for me", "output": "course.txt", "intent": "create_file"}
+{"input": "remove the file named taxes.csv", "output": "taxes.csv", "intent": "delete_file"}
+{"input": "i need a file called podcast.txt", "output": "podcast.txt", "intent": "create_file"}
+{"input": "i don't need menu.txt anymore", "output": "menu.txt", "intent": "delete_file"}
+{"input": "make me a new file named piano.txt", "output": "piano.txt", "intent": "create_file"}
+{"input": "get rid of money.json", "output": "money.json", "intent": "delete_file"}
+{"input": "remove calendar.txt from my files", "output": "calendar.txt", "intent": "delete_file"}
+{"input": "start hiking.txt for me", "output": "hiking.txt", "intent": "create_file"}
+{"input": "make friends.txt for me", "output": "friends.txt", "intent": "create_file"}
+{"input": "please create a file named expenses.md", "output": "expenses.md", "intent": "create_file"}
+{"input": "please remove pets.md", "output": "pets.md", "intent": "delete_file"}
+{"input": "i need a file called gifts.txt", "output": "gifts.txt", "intent": "create_file"}
+{"input": "save this as course.md", "output": "course.md", "intent": "create_file"}
+{"input": "delete the file called shopping.txt", "output": "shopping.txt", "intent": "delete_file"}
+{"input": "music.csv, make that a file", "output": "music.csv", "intent": "create_file"}
+{"input": "erase chess.txt", "output": "chess.txt", "intent": "delete_file"}
+{"input": "throw away bills.md", "output": "bills.md", "intent": "delete_file"}
+{"input": "make me a new file named receipt.txt", "output": "receipt.txt", "intent": "create_file"}
+{"input": "start a document called kitchen.txt", "output": "kitchen.txt", "intent": "create_file"}
+{"input": "please make meals.txt", "output": "meals.txt", "intent": "create_file"}
+{"input": "delete the document called music.csv", "output": "music.csv", "intent": "delete_file"}
+{"input": "remove yoga.txt please", "output": "yoga.txt", "intent": "delete_file"}
+{"input": "create a new file named flights.md", "output": "flights.md", "intent": "create_file"}
+{"input": "i want to delete notebook.md", "output": "notebook.md", "intent": "delete_file"}
+{"input": "please create a file named school.md", "output": "school.md", "intent": "create_file"}
+{"input": "i don't need running.txt anymore", "output": "running.txt", "intent": "delete_file"}
+{"input": "start a new document called contacts.txt", "output": "contacts.txt", "intent": "create_file"}
+{"input": "could you delete pantry.txt", "output": "pantry.txt", "intent": "delete_file"}
+{"input": "remove soccer.txt please", "output": "soccer.txt", "intent": "delete_file"}
+{"input": "i want to delete course.md", "output": "course.md", "intent": "delete_file"}
+{"input": "make violin.txt for me", "output": "violin.txt", "intent": "create_file"}
+{"input": "could you create a file called gym.json", "output": "gym.json", "intent": "create_file"}
+{"input": "delete the document called attic.md", "output": "attic.md", "intent": "delete_file"}
+{"input": "delete garden.md", "output": "garden.md", "intent": "delete_file"}
+{"input": "delete the file called porch.txt", "output": "porch.txt", "intent": "delete_file"}
+{"input": "please create a file named movies.log", "output": "movies.log", "intent": "create_file"}
+{"input": "could you create a file called contacts.md", "output": "contacts.md", "intent": "create_file"}
+{"input": "remove expenses.txt from my files", "output": "expenses.txt", "intent": "delete_file"}
+{"input": "create expenses.md", "output": "expenses.md", "intent": "create_file"}
+{"input": "can you make a file called books.txt please", "output": "books.txt", "intent": "create_file"}
+{"input": "please delete the file sketch.md", "output": "sketch.md", "intent": "delete_file"}
+{"input": "i'd like a file called garage.md", "output": "garage.md", "intent": "create_file"}
+{"input": "remove books.txt please", "output": "books.txt", "intent": "delete_file"}
+{"input": "start a new document called family.txt", "output": "family.txt", "intent": "create_file"}
+{"input": "please delete the file friends.md", "output": "friends.md", "intent": "delete_file"}
+{"input": "can you remove list.txt", "output": "list.txt", "intent": "delete_file"}
+{"input": "please delete money.txt", "output": "money.txt", "intent": "delete_file"}
+{"input": "i need a file called workout.txt", "output": "workout.txt", "intent": "create_file"}
+{"input": "remove meeting.txt please", "output": "meeting.txt", "intent": "delete_file"}
+{"input": "remove the file named work.md", "output": "work.md", "intent": "delete_file"}
+{"input": "erase ledger.txt", "output": "ledger.txt", "intent": "delete_file"}
+{"input": "i don't need puzzle.txt anymore", "output": "puzzle.txt", "intent": "delete_file"}
+{"input": "please delete the file journal.md", "output": "journal.md", "intent": "delete_file"}
+{"input": "save this as money.json", "output": "money.json", "intent": "create_file"}
+{"input": "delete resume.txt please", "output": "resume.txt", "intent": "delete_file"}
+{"input": "golf.md, make that a file", "output": "golf.md", "intent": "create_file"}
+{"input": "can you make a file called notebook.txt please", "output": "notebook.txt", "intent": "create_file"}
+{"input": "create dance.md", "output": "dance.md", "intent": "create_file"}
+{"input": "i want to delete meeting.md", "output": "meeting.md", "intent": "delete_file"}
+{"input": "can you make a file called garden.txt please", "output": "garden.txt", "intent": "create_file"}
+{"input": "could you delete seeds.txt", "output": "seeds.txt", "intent": "delete_file"}
+{"input": "create kitchen.log", "output": "kitchen.log", "intent": "create_file"}
+{"input": "create a new file named resume.md", "output": "resume.md", "intent": "create_file"}
+{"input": "make a file named savings.md", "output": "savings.md", "intent": "create_file"}
+{"input": "please delete fitness.txt", "output": "fitness.txt", "intent": "delete_file"}
+{"input": "delete comic.txt please", "output": "comic.txt", "intent": "delete_file"}
+{"input": "make me a new file named seeds.txt", "output": "seeds.txt", "intent": "create_file"}
+{"input": "delete the document called pantry.md", "output": "pantry.md", "intent": "delete_file"}
+{"input": "please delete gym.txt", "output": "gym.txt", "intent": "delete_file"}
+{"input": "create a file called lesson.txt", "output": "lesson.txt", "intent": "create_file"}
+{"input": "i don't need library.txt anymore", "output": "library.txt", "intent": "delete_file"}
+{"input": "can you make a file called laundry.txt please", "output": "laundry.txt", "intent": "create_file"}
+{"input": "please delete soccer.txt", "output": "soccer.txt", "intent": "delete_file"}
+{"input": "start a document called tennis.txt", "output": "tennis.txt", "intent": "create_file"}
+{"input": "show me the files", "intent": "list_files"}
+{"input": "can you make a file called games.txt please", "output": "games.txt", "intent": "create_file"}
+{"input": "delete the file called audio.txt", "output": "audio.txt", "intent": "delete_file"}
+{"input": "delete the document called workout.md", "output": "workout.md", "intent": "delete_file"}
+{"input": "can you make a file called ideas.txt please", "output": "ideas.txt", "intent": "create_file"}
+{"input": "throw away dance.md", "output": "dance.md", "intent": "delete_file"}
+{"input": "delete the file named car.md", "output": "car.md", "intent": "delete_file"}
+{"input": "i want a file called quiz.csv", "output": "quiz.csv", "intent": "create_file"}
+{"input": "create a file called car.txt", "output": "car.txt", "intent": "create_file"}
+{"input": "delete the document called savings.md", "output": "savings.md", "intent": "delete_file"}
+{"input": "delete essay.json", "output": "essay.json", "intent": "delete_file"}
+{"input": "get rid of resume.md", "output": "resume.md", "intent": "delete_file"}
+{"input": "i'd like a file called server.log", "output": "server.log", "intent": "create_file"}
+{"input": "please make bills.txt", "output": "bills.txt", "intent": "create_file"}
+{"input": "please remove flowers.md", "output": "flowers.md", "intent": "delete_file"}
+{"input": "i want to delete family.md", "output": "family.md", "intent": "delete_file"}
+{"input": "make me a new file named pantry.txt", "output": "pantry.txt", "intent": "create_file"}
+{"input": "i want a file called attic.md", "output": "attic.md", "intent": "create_file"}
+{"input": "remove notebook.txt please", "output": "notebook.txt", "intent": "delete_file"}
+{"input": "save this as basement.md", "output": "basement.md", "intent": "create_file"}
+{"input": "delete the document called code.md", "output": "code.md", "intent": "delete_file"}
+{"input": "start a document called thesis.txt", "output": "thesis.txt", "intent": "create_file"}
+{"input": "could you create a file called course.md", "output": "course.md", "intent": "create_file"}
+{"input": "could you delete chess.txt", "output": "chess.txt", "intent": "delete_file"}
+{"input": "could you create a file called minutes.md", "output": "minutes.md", "intent": "create_file"}
+{"input": "start a document called letter.txt", "output": "letter.txt", "intent": "create_file"}
+{"input": "i don't need sketch.txt anymore", "output": "sketch.txt", "intent": "delete_file"}
+{"input": "i need a file called pantry.txt", "output": "pantry.txt", "intent": "create_file"}
+{"input": "please make recipes.txt", "output": "recipes.txt", "intent": "create_file"}
+{"input": "i'd like a file called running.md", "output": "running.md", "intent": "create_file"}
+{"input": "save this as fitness.md", "output": "fitness.md", "intent": "create_file"}
+{"input": "i want a file called pantry.md", "output": "pantry.md", "intent": "create_file"}
+{"input": "delete the document called poem.md", "output": "poem.md", "intent": "delete_file"}
+{"input": "remove backup.txt please", "output": "backup.txt", "intent": "delete_file"}
+{"input": "i don't need exam.txt anymore", "output": "exam.txt", "intent": "delete_file"}
+{"input": "delete budget.txt please", "output": "budget.txt", "intent": "delete_file"}
+{"input": "i need a file called office.txt", "output": "office.txt", "intent": "create_file"}
+{"input": "create meals.md", "output": "meals.md", "intent": "create_file"}
+{"input": "remove fitness.txt please", "output": "fitness.txt", "intent": "delete_file"}
+{"input": "show the files in the folder", "intent": "list_files"}
+{"input": "delete diary.txt please", "output": "diary.txt", "intent": "delete_file"}
+{"input": "make running.txt for me", "output": "running.txt", "intent": "create_file"}
+{"input": "save this as baking.md", "output": "baking.md", "intent": "create_file"}
+{"input": "create a new file named video.md", "output": "video.md", "intent": "create_file"}
+{"input": "start a document called study.txt", "output": "study.txt", "intent": "create_file"}
+{"input": "remove the file named list.md", "output": "list.md", "intent": "delete_file"}
+{"input": "delete the file named homework.md", "output": "homework.md", "intent": "delete_file"}
+{"input": "delete painting.md", "output": "painting.md", "intent": "delete_file"}
+{"input": "delete grades.txt please", "output": "grades.txt", "intent": "delete_file"}
+{"input": "remove tools.txt please", "output": "tools.txt", "intent": "delete_file"}
+{"input": "please delete the file audio.md", "output": "audio.md", "intent": "delete_file"}
+{"input": "get rid of gym.json", "output": "gym.json", "intent": "delete_file"}
+{"input": "i want a file called cleaning.md", "output": "cleaning.md", "intent": "create_file"}
+{"input": "delete plants.txt please", "output": "plants.txt", "intent": "delete_file"}
+{"input": "create a new file named backup.md", "output": "backup.md", "intent": "create_file"}
+{"input": "create groceries.md", "output": "groceries.md", "intent": "create_file"}
+{"input": "throw away porch.log", "output": "porch.log", "intent": "delete_file"}
+{"input": "i want to delete laundry.json", "output": "laundry.json", "intent": "delete_file"}
+{"input": "i'd like a file called pets.md", "output": "pets.md", "intent": "create_file"}
+{"input": "make me a new file named novel.txt", "output": "novel.txt", "intent": "create_file"}
+{"input": "remove family.txt please", "output": "family.txt", "intent": "delete_file"}
+{"input": "erase todo.txt", "output": "todo.txt", "intent": "delete_file"}
+{"input": "could you create a file called basement.md", "output": "basement.md", "intent": "create_file"}
+{"input": "could you delete office.txt", "output": "office.txt", "intent": "delete_file"}
+{"input": "save this as contract.md", "output": "contract.md", "intent": "create_file"}
+{"input": "could you delete cleaning.txt", "output": "cleaning.txt", "intent": "delete_file"}
+{"input": "get rid of guitar.md", "output": "guitar.md", "intent": "delete_file"}
+{"input": "make a file named quiz.csv", "output": "quiz.csv", "intent": "create_file"}
+{"input": "start a document called tickets.txt", "output": "tickets.txt", "intent": "create_file"}
+{"input": "please create a file named menu.md", "output": "menu.md", "intent": "create_file"}
+{"input": "remove the file named poem.md", "output": "poem.md", "intent": "delete_file"}
+{"input": "could you delete poem.txt", "output": "poem.txt", "intent": "delete_file"}
+{"input": "erase podcast.txt", "output": "podcast.txt", "intent": "delete_file"}
+{"input": "remove the file named chess.md", "output": "chess.md", "intent": "delete_file"}
+{"input": "please delete the file kitchen.log", "output": "kitchen.log", "intent": "delete_file"}
+{"input": "save this as draft.md", "output": "draft.md", "intent": "create_file"}
+{"input": "throw away movies.log", "output": "movies.log", "intent": "delete_file"}
+{"input": "make me a new file named chess.txt", "output": "chess.txt", "intent": "create_file"}
+{"input": "could you delete health.txt", "output": "health.txt", "intent": "delete_file"}
+{"input": "can you make a file called family.txt please", "output": "family.txt", "intent": "create_file"}
+{"input": "remove ideas.txt please", "output": "ideas.txt", "intent": "delete_file"}
+{"input": "create a new file named contract.md", "output": "contract.md", "intent": "create_file"}
+{"input": "delete yoga.json", "output": "yoga.json", "intent": "delete_file"}
+{"input": "i want to delete basement.md", "output": "basement.md", "intent": "delete_file"}
+{"input": "please delete the file server.log", "output": "server.log", "intent": "delete_file"}
+{"input": "erase notes.txt", "output": "notes.txt", "intent": "delete_file"}
+{"input": "i need a file called poem.txt", "output": "poem.txt", "intent": "create_file"}
+{"input": "please delete the file school.md", "output": "school.md", "intent": "delete_file"}
+{"input": "i want to delete video.md", "output": "video.md", "intent": "delete_file"}
+{"input": "erase music.txt", "output": "music.txt", "intent": "delete_file"}
+{"input": "i want a file called photos.md", "output": "photos.md", "intent": "create_file"}
+{"input": "delete plan.txt please", "output": "plan.txt", "intent": "delete_file"}
+{"input": "delete hiking.md", "output": "hiking.md", "intent": "delete_file"}
+{"input": "delete garden.txt please", "output": "garden.txt", "intent": "delete_file"}
+{"input": "make groceries.txt for me", "output": "groceries.txt", "intent": "create_file"}
+{"input": "remove garden.txt please", "output": "garden.txt", "intent": "delete_file"}
+{"input": "delete the file named agenda.csv", "output": "agenda.csv", "intent": "delete_file"}
+{"input": "throw away pets.md", "output": "pets.md", "intent": "delete_file"}
+{"input": "save this as gym.json", "output": "gym.json", "intent": "create_file"}
+{"input": "make a file named novel.md", "output": "novel.md", "intent": "create_file"}
+{"input": "could you create a file called baking.md", "output": "baking.md", "intent": "create_file"}
+{"input": "please delete the file reading.log", "output": "reading.log", "intent": "delete_file"}
+{"input": "start a new document called backup.txt", "output": "backup.txt", "intent": "create_file"}
+{"input": "please make story.txt", "output": "story.txt", "intent": "create_file"}
+{"input": "create library.md", "output": "library.md", "intent": "create_file"}
+{"input": "start a new document called books.txt", "output": "books.txt", "intent": "create_file"}
+{"input": "start a document called movies.txt", "output": "movies.txt", "intent": "create_file"}
+{"input": "throw away reading.log", "output": "reading.log", "intent": "delete_file"}
+{"input": "create a new file named painting.md", "output": "painting.md", "intent": "create_file"}
+{"input": "can you remove songs.txt", "output": "songs.txt", "intent": "delete_file"}
+{"input": "delete the file named gifts.md", "output": "gifts.md", "intent": "delete_file"}
+{"input": "notes.md, make that a file", "output": "notes.md", "intent": "create_file"}
+{"input": "homework.md, make that a file", "output": "homework.md", "intent": "create_file"}
+{"input": "cooking.md, make that a file", "output": "cooking.md", "intent": "create_file"}
+{"input": "start a document called travel.txt", "output": "travel.txt", "intent": "create_file"}
+{"input": "i want to delete comic.md", "output": "comic.md", "intent": "delete_file"}
+{"input": "remove reading.txt from my files", "output": "reading.txt", "intent": "delete_file"}
+{"input": "please remove calendar.md", "output": "calendar.md", "intent": "delete_file"}
+{"input": "please delete the file movies.log", "output": "movies.log", "intent": "delete_file"}
+{"input": "please delete the file porch.log", "output": "porch.log", "intent": "delete_file"}

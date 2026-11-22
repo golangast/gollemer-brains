@@ -351,14 +351,28 @@ function per meaning, a sanitizer for the extractor's
 answer, and the safety gates. Nothing outside
 `demo-files/` is ever touched.
 
-The data is `examples/filecommands.jsonl`: three meanings
-(`create_file`, `delete_file`, `list_files`) × 12
-phrasings. The create/delete rows also carry an `"output"`
-— the bare filename in the sentence — which is what
-trains the extractor; the list rows are label-only.
+The data is `examples/filecommands.jsonl`: 1,456 rows
+over three meanings (`create_file`, `delete_file`,
+`list_files`). The filename vocabulary is 240 names —
+common file-worthy nouns in `.txt` and `.md`, a few in
+`.json`, `.csv`, and `.log` — and every name appears in
+exactly six rows: three create phrasings and three
+delete phrasings, rotated through 18 sentence shapes per
+meaning so no name and no shape dominates. The
+create/delete rows also carry an `"output"` — the bare
+filename in the sentence — which is what trains the
+extractor; the 16 list rows are label-only. Sixteen
+further names (summit, harbor, meadow, copper, …) are
+held out of the file entirely, for the novel-name
+measurement below; a test in the demo pins them out, so
+a future data edit cannot silently contaminate that
+measurement.
+
+Train with the BPE tokenizer — why is the measured
+story below:
 
 ```sh
-go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5
+go run ./cmd/train -data examples/filecommands.jsonl -out filebrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe
 go run ./examples/filecmd -model filebrain.gob
 ```
 
@@ -366,12 +380,13 @@ go run ./examples/filecmd -model filebrain.gob
 > make me a brand new file named budget.txt
 intent: create_file (1.00), file: budget.txt
 created demo-files/budget.txt
-> get rid of ideas.txt
-intent: delete_file (0.77) — not confident enough to delete (this demo wants 0.80); nothing done.
+> please remove budget.txt
+intent: delete_file (1.00), file: budget.txt
+delete budget.txt? [y/n] y
+deleted demo-files/budget.txt
 ```
 
-(Both exchanges are from the measured run below —
-including the delete the confidence gate refused.)
+(Both exchanges are from the measured run below.)
 
 The safety rules are the host's, on purpose: the
 extractor's answer is accepted only as a single plain
@@ -381,68 +396,103 @@ at least 0.80 *and* a typed yes at a prompt that names
 the file; a line with no confident meaning does nothing
 and says so.
 
-**Measured, not promised.** The try-these list below was
-run against a brain trained with exactly the command
-above; every phrasing is absent from the training file.
-Scored by what the program actually did:
+**Measured, not promised.** Three measurements, all
+against brains trained on the file above. The intent
+classifier and the extractor are scored separately,
+because they are not equally strong — and which
+tokenizer the extractor trains under turns out to
+matter more than everything else combined.
 
-| try-these lines (unseen) | right action | wrong action | abstained |
+*Set P — new phrasings, trained names.* 20 lines whose
+sentence shapes are absent from training, naming files
+that are in it:
+
+| tokenizer | intent right | extractor right | end-to-end right |
 | --- | --- | --- | --- |
-| 5 create phrasings | 2 | 3 | 0 |
-| 4 delete phrasings | 0 | 3 | 1 (the 0.80 gate) |
-| 3 list phrasings | 3 | 0 | 0 |
-| 3 lines with no meaning in the set | 1 | 2 | 0 |
-| **total, 15 lines** | **6** | **8** | **1** |
+| word | 20/20 | 2/20 | 2 (15 wrong, 3 gate-abstained) |
+| bpe | 20/20 | **20/20** | 17 (0 wrong, 3 gate-abstained) |
 
-Read the two halves separately, because they are not
-equally strong. The intent classifier landed the right
-meaning on **12 of 12** meaning lines, unseen phrasings
-included — "brand new" is a word it never trained on, and
-"make me a brand new file named budget.txt" still came
-back `create_file (1.00)` with the right file. The
-extractor is the weak half: it produced the right
-filename in 2 of 5 creates and 0 of 3 deletes it attempted
-(the fourth delete was stopped by the confidence gate
-before extraction). The trained control line made the
-point plainly — "create a file called notes.txt" was
-understood perfectly and then created **todo.md**.
+The three BPE abstentions are deletes where the
+extractor had the right name ("i want movies.txt gone"
+→ `movies.txt`) but the classifier's confidence, 0.68
+to 0.72, was under the demo's 0.80 delete bar — the
+gate doing its job, counted honestly against the
+score. Under the word tokenizer the same lines come
+back with a plausible wrong name: "would you make a
+file called budget.txt for me" → `house.md`; "please
+save this as report.csv" → `family.md`.
 
-A verification run after the fact found the extractor's
-hard boundary: "make me a brand new file named
-summit.txt" — a filename that appears nowhere in
-training — came back `create_file (1.00)` with the file
-**budget.txt**. The intent half did not care that the
-name was new; the extractor collapsed to a favourite,
-because a word-level model has no token for a word it
-never trained on, so there is literally nothing for it
-to copy. Names from the training set extract; brand-new
-names are this design's wall (the BPE chapter below is
-the piece that speaks to it).
+*Set N — trained phrasings, brand-new names.* 20 lines
+naming the 16 held-out names, in sentence shapes from
+training:
 
-Failures, verbatim from the run:
+| tokenizer | intent right | extractor right |
+| --- | --- | --- |
+| word | 20/20 | 0/20 |
+| bpe | 20/20 | 0/20 |
 
-- "please remove budget.txt" → extracted `ideas.txt`;
-  the confirmation prompt *named* ideas.txt, and the
-  scripted "y" deleted the wrong file. A person reading
-  the prompt would have caught it — that is what the
-  prompt is for — but the machine did not.
-- "tell me a joke" → `create_file (0.78)`, extracted
-  `recipes.txt`, and created it. A false-fire with a real
-  (sandboxed) side effect: the abstention threshold is a
-  floor, not a guarantee, exactly as the intent chapter
-  warns.
-- "i don't need todo.md anymore, delete it" →
-  `delete_file (0.99)`, extracted `workout.md`, which did
-  not exist, so nothing happened.
+Both tokenizers fail this completely, differently. The
+word brain cannot see the name at all — it has no token
+for it — and guesses a favourite. The BPE brain can see
+the name's pieces, spells trained names perfectly, and
+still substitutes a trained name of the right shape:
+"i need a file called harbor.md" → `hotel.md`;
+"please make copper.json" → `project.json`;
+"save this as juniper.csv" → `seeds.csv`. The extension
+is right in 19 of 20; the stem is a stand-in every
+time. BPE removed the vocabulary wall for *reading*
+the name; transcribing a stem it never trained on is a
+skill neither tokenizer's brain has at this scale.
 
-And the pair the example exists for: the trained line
-"list my files" and the never-trained "what files do i
-have" produced the identical, correct action — the same
-listing of the folder's real contents. Unseen phrasings
-of a trained meaning: yes, that works, measured above.
-A brand-new *meaning* is the boundary: it needs its first
-example rows plus one binding function in the host —
-meanings are declared, not discovered.
+*The try-these list, end to end.* The demo's original
+15 unseen lines, re-run against the expanded training
+(the names in them are trained names now — that is the
+point of the expansion):
+
+| run | right | wrong | abstained |
+| --- | --- | --- | --- |
+| original 36-row data, word | 6 | 8 | 1 |
+| expanded data, word | 4 | 11 | 0 |
+| expanded data, **bpe (shipped)** | **13** | **2** | **0** |
+
+With BPE every create and every delete lands on the
+right file — "create shopping.md for me" creates
+shopping.md; "i don't need todo.md anymore, delete it"
+deletes todo.md at the prompt. The two wrong lines are
+the classifier's known weak spot, unchanged by all of
+this: "what is the weather like today" false-fires
+`list_files (0.63)` and lists, and "tell me a joke"
+false-fires `create_file (0.99)` and creates a file
+(agenda.csv, in the sandbox). The expanded word run is
+worse than the original — with six names the extractor
+could lean on memorized favourites and occasionally be
+right; with 240 it has to copy, and under the word
+tokenizer it never learns how: on exact training lines
+it extracts 4–5 of 20. A recipe search over the word
+tokenizer (augment 0.5 vs 0, copy-only vs char+copy)
+found every configuration on the same plateau — the
+search is part of the record, not a footnote: no knob
+in the trainer teaches the word-level slot at 240
+names. Under BPE the same task is a spelling task, and
+the brain learns it to a training loss of 0.02 (a
+different unit than the word runs' 1.63–1.68 — piece tokens
+are not word tokens; the comparable numbers are the
+extraction scores above).
+
+So "it knows most of them" is now true, with the
+boundary in plain sight. Most *names*: the 240 trained
+filenames extract perfectly in phrasings never trained,
+and the meanings land 20/20 on every set — including
+sentences naming files the classifier never saw, since
+a bag of words does not care which name is in the
+sentence. Most *unseen names*: none. A filename nobody
+trained is a name the demo will get wrong while
+sounding sure of itself, which is exactly why the
+delete gate and the named-file prompt are load-bearing
+rather than decorative. A brand-new *meaning* is the
+other boundary: it needs its first example rows plus
+one binding function in the host — meanings are
+declared, not discovered.
 
 ## Improving unseen answers
 
@@ -689,7 +739,7 @@ cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
 examples/   pairs.jsonl — 204 toy pairs to start from;
             commands.jsonl — 60 command rows with intents;
-            filecommands.jsonl — 36 file-command rows, and
+            filecommands.jsonl — 1,456 file-command rows over 240 filenames, and
             filecmd/ — the runnable filesystem demo for them
 ```
 

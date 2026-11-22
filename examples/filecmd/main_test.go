@@ -59,6 +59,43 @@ func TestSandboxPathConfinement(t *testing.T) {
 	}
 }
 
+// heldOutNames are the novel-name measurement's names: they
+// must NEVER appear in the training file, or the measurement
+// that the README reports (Set N) silently stops measuring
+// novelty. If you add training data, keep these out.
+var heldOutNames = []string{
+	"summit.txt", "harbor.md", "meadow.txt", "copper.json",
+	"velvet.md", "atlas.txt", "juniper.csv", "marble.md",
+	"onyx.txt", "willow.md", "falcon.log", "ember.txt",
+	"quartz.md", "saffron.txt", "tundra.csv", "zephyr.md",
+}
+
+// TestFilecommandsDataHygiene audits the shipped training
+// file: no duplicate inputs, every extractor row's output
+// is the filename that appears in its input, and none of
+// the held-out measurement names has leaked in.
+func TestFilecommandsDataHygiene(t *testing.T) {
+	pairs, err := data.LoadPairs(filepath.Join("..", "filecommands.jsonl"))
+	if err != nil {
+		t.Fatalf("LoadPairs: %v", err)
+	}
+	seen := make(map[string]bool)
+	for _, p := range pairs {
+		if seen[p.Input] {
+			t.Errorf("duplicate training input: %q", p.Input)
+		}
+		seen[p.Input] = true
+		for _, h := range heldOutNames {
+			if strings.Contains(p.Input, h) || p.Output == h {
+				t.Errorf("held-out name %q leaked into training row %q", h, p.Input)
+			}
+		}
+		if p.Output != "" && !strings.Contains(p.Input, p.Output) {
+			t.Errorf("output %q does not appear in its input %q", p.Output, p.Input)
+		}
+	}
+}
+
 // TestDemoDrivesCreateAndDelete is the integration test: a
 // REAL intent classifier, trained on the shipped
 // filecommands.jsonl, predicts the meanings; a stub
