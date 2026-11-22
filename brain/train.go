@@ -15,9 +15,11 @@ package brain
 //   - checkpoints next to the output file: <out>.ckpt (+ .json
 //     sidecar) holds the best weights, refreshed on improvement
 //     with a 2-epoch minimum spacing; <out>.latest (+ .json) is
-//     rewritten EVERY epoch with the current weights, so a
+//     rewritten every epoch with the current weights, so a
 //     killed run resumes where it stopped instead of replaying
-//     from the last improvement;
+//     from the last improvement — TrainOptions.CheckpointEvery
+//     can space those .latest writes out (every N epochs),
+//     trading a few replayed epochs for less checkpoint I/O;
 //   - resume refuses a checkpoint whose vocabulary fingerprint
 //     or layer config differs from the current run's — a vocab
 //     index shift would silently corrupt the weights;
@@ -112,6 +114,13 @@ type TrainOptions struct {
 	// BPEMerges caps how many merges BPE learns (only used
 	// when Tokenizer is "bpe"). 0 means the default, 700.
 	BPEMerges int
+	// CheckpointEvery spaces the <out>.latest checkpoint
+	// writes: 0 or 1 (the default) rewrites it every epoch,
+	// exactly as before; N > 1 rewrites it every N epochs,
+	// so a killed run replays at most N-1 epochs on resume.
+	// The best checkpoint (<out>.ckpt) is not affected — it
+	// is already gated on improvement.
+	CheckpointEvery int
 }
 
 // ckptPathsFor returns the checkpoint paths living next to the
@@ -119,6 +128,19 @@ type TrainOptions struct {
 // JSON sidecar.
 func ckptPathsFor(out string) (ckptPath, metaPath, latestPath, latestMetaPath string) {
 	return out + ".ckpt", out + ".ckpt.json", out + ".latest", out + ".latest.json"
+}
+
+// latestDue reports whether the <out>.latest checkpoint is
+// written at this epoch under the given cadence (1 = every
+// epoch, the historical behaviour). saveCheckpoint writes
+// the weights and the sidecar together, so the pair stays
+// consistent at any cadence; a sparser cadence only means a
+// resumed run replays a few more epochs.
+func latestDue(epoch, every int) bool {
+	if every < 1 {
+		every = 1
+	}
+	return epoch%every == 0
 }
 
 func saveCheckpoint(model *seq2seq.LayersModel, meta ckptMeta, ckptPath, metaPath string) error {
@@ -450,6 +472,10 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 
 	curFP := VocabFingerprint(v)
 	ckptPath, metaPath, latestPath, latestMetaPath := ckptPathsFor(outPath)
+	latestEvery := opts.CheckpointEvery
+	if latestEvery < 1 {
+		latestEvery = 1
+	}
 
 	startEpoch := 1
 	lr := float32(baseLR)
@@ -619,20 +645,22 @@ func Train(pairs []data.Pair, outPath string, opts TrainOptions) error {
 			lastCheckpointEpoch = epoch
 			log.Printf("[train] checkpointed best model (loss=%.6f) to %s", best, ckptPath)
 		}
-		latestLCB := lastCheckpointBest
-		if math.IsInf(float64(latestLCB), 1) {
-			latestLCB = best
-		}
-		latestMeta := ckptMeta{
-			Epoch:              epoch,
-			Best:               float64(best),
-			LastCheckpointBest: float64(latestLCB),
-			LR:                 lr,
-			EpochsNoImprove:    epochsNoImprove,
-			VocabFP:            curFP,
-		}
-		if err := saveCheckpoint(model, latestMeta, latestPath, latestMetaPath); err != nil {
-			return err
+		if latestDue(epoch, latestEvery) {
+			latestLCB := lastCheckpointBest
+			if math.IsInf(float64(latestLCB), 1) {
+				latestLCB = best
+			}
+			latestMeta := ckptMeta{
+				Epoch:              epoch,
+				Best:               float64(best),
+				LastCheckpointBest: float64(latestLCB),
+				LR:                 lr,
+				EpochsNoImprove:    epochsNoImprove,
+				VocabFP:            curFP,
+			}
+			if err := saveCheckpoint(model, latestMeta, latestPath, latestMetaPath); err != nil {
+				return err
+			}
 		}
 		if epochsNoImprove >= 30 {
 			log.Printf("[train] early stopping: 30 epochs without improvement")
