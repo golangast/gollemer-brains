@@ -18,7 +18,7 @@ anyone can train their own.
 You need Go (this repo builds with Go 1.26; the code is pure
 standard library — no dependencies to download).
 
-Train the bundled example dataset (2,888 pairs of tiny small
+Train the bundled example dataset (3,044 pairs of tiny small
 talk):
 
 ```sh
@@ -1122,14 +1122,14 @@ The taxonomy applied to both shipped data files:
 
 | kind | labels in pairs.jsonl | labels in filecommands.jsonl |
 | --- | --- | --- |
-| make | create_file, create_folder, build_server | create_file |
+| make | create_file, create_folder, build_server, grocery_list | create_file |
 | remove | delete_file | delete_file |
 | show | — | list_files |
 | schedule | set_reminder, set_timer | — |
 | play | play_music | — |
 | communicate | send_message | — |
-| find | search_web | — |
-| travel | book_travel | — |
+| find | search_web, convert_units, define_word, spell_word, summarize_text, find_recipe, find_place | — |
+| travel | book_travel, reserve_table | — |
 | talk | greeting, farewell, feelings, weather_talk, hobby_talk, food_talk, thanks, about_brain | chat |
 
 The trainer derives the label→kind map from the data
@@ -1281,6 +1281,209 @@ abstention or a wrong label, and nothing in between —
 and it is less than understanding a new kind of request,
 which no measurement here shows.
 
+## Collision-zone data
+
+The kinds chapter ended with a diagnosis and a named
+cure. The diagnosis: an unseen family's words *are*
+everyday words, and everyday words belong to `talk`, so
+stranger meanings collapsed into talk — kinds went
+9 right / 22 wrong / 5 abstained on the held-out
+families, with order_food, translate_text, and
+find_directions at zero. The cure: training mass in the
+collision zones, not another mechanism. This section is
+that build. No mechanism changed — the classifier is
+the shipped word classifier, the schemes and thresholds
+untouched. Only the data grew, deliberately, in the
+zones *around* the exam families. The exam stayed
+frozen: none of the six held-out families was trained,
+in any phrasing.
+
+### What was added
+
+156 rows, all intent-labeled and kinded
+(`examples/pairs.jsonl`: 2,888 → 3,044 pairs; labeled
+rows 255 → 411; labels 18 → 26):
+
+- **Language-transform cluster** — translate_text's
+  cousins, all kind `find`, 12 phrasings each:
+  `convert_units` ("convert five miles into
+  kilometres"), `define_word` ("what does serendipity
+  mean"), `spell_word` ("how do you spell necessary"),
+  `summarize_text` ("summarize this paragraph for
+  me"). Conversions, definitions, and spellings are
+  lookups, and a lookup is what `find` already means;
+  the cluster's mass lands in one of translate's two
+  acceptable kinds on purpose.
+- **Food-request cluster** — order_food's cousins:
+  `find_recipe` ("find me a recipe for tomato soup",
+  kind `find`), `reserve_table` ("reserve a table for
+  four on friday", kind `travel` — a reservation is a
+  booking, and the collision suite already declares
+  table-booking as travel), `grocery_list` ("add milk
+  to my shopping list", kind `make`).
+- **Location cluster** — find_directions' cousin:
+  `find_place` ("where is the nearest pharmacy", "is
+  there a park near here", kind `find`). Location
+  *questions*, not directions requests — the point is
+  to teach that where/nearest shapes are `find`, not
+  talk.
+- **Statement-vs-request contrasts** — 60 past-tense
+  reports and opinions on the *same topic words* as
+  the request families, labeled as talk: "i ordered a
+  pizza last night" (food_talk), "she translated the
+  letter for me" (hobby_talk), "the airport was busy
+  this morning" (hobby_talk), "we played chess
+  yesterday" (hobby_talk). Same words, report shape →
+  talk; the request shape is what makes a request.
+
+Audit, as always: no duplicate inputs, none of the
+new lines already in the corpus, and no exam line
+(HF/WC/TY) verbatim or near it — the highest token
+overlap between any new line and any exam line is
+0.44 (Jaccard), and the closest pairs are the intended
+shared frames with different content ("what does
+serendipity mean" against the exam's "what does
+gracias mean in english", 0.43).
+
+### Held-out kinds, before and after
+
+The same suites, the same scoring, the shipped word
+classifier retrained on the enriched rows:
+
+| HF family | kinds before | kinds after |
+| --- | --- | --- |
+| order_food | 0 right / 5 wrong / 1 abstain | **0** / 5 / 1 |
+| translate_text | 0 / 6 / 0 | **5** / 1 / 0 |
+| find_directions | 0 / 5 / 1 | **3** / 2 / 1 |
+| fix_code | 3 / 3 / 0 | **1** / 3 / 2 |
+| play_game | 5 / 0 / 1 | 5 / 0 / 1 |
+| tell_story | 1 / 3 / 2 | 2 / 1 / 3 |
+| **total** | **9 / 22 / 5** | **16 / 12 / 8** |
+
+What moved, family by family:
+
+- **translate_text: 0 → 5.** The language cluster
+  worked almost exactly as aimed. "what does gracias
+  mean in english" is now answered by the cousin
+  family itself — `define_word (0.87) · kind: find
+  (0.96)` — and "translate this word into spanish for
+  me" lands on `summarize_text · find (0.99)`. The
+  one holdout is "translate good morning into german",
+  still `talk (0.98)`: *good morning* is greeting's
+  home turf, and no cousin mass was aimed at it. The
+  kinds chapter's villain line, "translate hello into
+  french", no longer draws the confident greeting
+  (0.63) it used to: live on the full brain below, the
+  label abstains and the kind is still `talk`, but at
+  0.84, down from 0.96 — *hello* still pulls it home,
+  just less surely.
+- **find_directions: 0 → 3.** "how far is the beach
+  from here" → `find (0.97)`; "how do i get downtown
+  from here" → `find (0.77)`. On "what is the fastest
+  route to the airport" the two heads now disagree:
+  the label still says weather_talk (0.76), but the
+  kind says `find (0.84)` — the kind head sees the
+  route words even when the label head doesn't.
+  Still wrong: "which way is the train station"
+  (`talk`), "show me the way to the market"
+  (`schedule`, as before).
+- **order_food: still 0, printed at 0.** Its wrongs
+  moved — three still land on talk, but two now land
+  on `find` (0.52, 0.76), pulled by the recipe mass —
+  and `find` is not in order_food's acceptable set
+  {communicate, make}. The food-request mass taught
+  *finding* food, not *ordering* it, and ordering is
+  the family that stayed unclaimed.
+- **fix_code: 3 → 1 — the regression, stated
+  plainly.** The find cluster is a strong attractor
+  for request shapes, and fix_code got no mass of its
+  own: "can you debug this code for me" now reads
+  `summarize_text (0.85) · kind: find (0.95)`, "there
+  is a bug in the server code" flipped from kind-right
+  to `find`, and "my code has a bug in it" dropped to
+  an abstention. Mass in one zone pulls on the
+  neighbours that got none.
+- **tell_story: 1 → 2**, mostly by wrongs becoming
+  abstentions; **play_game** unchanged at 5. Across
+  the suite, wrongs fell 22 → 12 while abstentions
+  rose 5 → 8: part of the gain is the classifier
+  saying less, more honestly.
+
+The label-level scores need one footnote. HF label
+neighbourhood went 30/36 → 29/36, but three of the
+seven misses are landings on the *new* labels
+(define_word, summarize_text, find_recipe) whose
+kinds are right — the neighbourhood lists were
+declared before those labels existed and cannot
+credit them. WC labels went 9/12 → 7/12 for a related
+pair of reasons: "book a table for two tonight" now
+gets its true new meaning, `reserve_table (0.93)`,
+which the frozen ok-list predates and scores as a
+miss; "hello mom" now abstains (raw top still
+greeting); and one genuine new error — "set the table
+for dinner" reads as `reserve_table (0.64)`, a dinner
+statement claimed by the booking family. Against
+that, "look up at the stars tonight" improved from a
+confident search_web to an abstention. WC *kinds*
+held at 7/9 — the same two misses, both abstentions
+("say hello to mom for me", "delete my account"). TY
+held at 9/10, same single miss ("make a foldr for my
+photos").
+
+### Fences
+
+The U1 fence is untouched: 30/30 raw, 28 correct /
+2 abstained / 0 wrong at threshold, exactly the
+baseline. The file fences are untouched (Set P intent
+20/20, small-talk 22/22 — filecommands.jsonl did not
+change). A full chat brain trained on the enriched
+corpus with the shipped recipe (the run was killed
+twice by environment restarts and finished through
+checkpoint-resume, epoch 60, best loss 0.0875) reads
+the four live lines as:
+
+```
+> translate hello into french
+hello! it is good to talk with you.
+intent: (none confident enough) · kind: talk (0.84)
+> order me a pizza please
+pizza is a party on a plate. everyone takes a slice and nobody is sad.
+intent: (none confident enough) · kind: (none confident enough)
+> how do i get to the airport
+small: one pot, one plant, water and sun. airport rewards a patient beginner.
+intent: (none confident enough) · kind: find (0.72)
+> create a file named jim
+a file — that's asking me to create a file. i follow you.
+intent: create_file (0.98) · kind: make (0.99)
+```
+
+The airport line is the two halves in one frame: the
+kind head claims it for `find` while the reply brain
+garbles it into a gardening splice — understanding
+and fluency remain separate scores. The fluency
+probe, same protocol as the intent chapter, scores
+**17 coherent / 3 partial / 4 garbled** against the
+previous brain's 19/2/3: churn in both directions
+(the rain line and the goodnight line came clean this
+run; the smile line and the weekend line garbled),
+not a collapse.
+
+### The revised boundary
+
+A stranger family can now expect more than it could —
+unevenly. Requests that *transform or look up
+language* land in `find` most of the time, and
+location questions land there half the time, because
+those zones now have mass. Ordering food still
+defaults to talk or find and stays unclaimed: no
+trained kind means *commissioning* something, and
+mass about finding food does not teach it. And the
+gravity well moved rather than vanished — `find` is
+the new strong attractor, strong enough to pull two
+fix_code lines out of `make`. Collision-zone mass is
+a lever with a direction: it buys the zones you feed,
+partly at the price of the neighbours you don't.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -1313,8 +1516,8 @@ brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 2,888 toy pairs to start from
-            (255 of them intent-labeled and kinded; see
+examples/   pairs.jsonl — 3,044 toy pairs to start from
+            (411 of them intent-labeled and kinded; see
             "Intent understanding");
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,634 rows: 1,456 file-command rows over

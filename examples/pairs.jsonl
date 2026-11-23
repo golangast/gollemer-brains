@@ -2886,3 +2886,159 @@
 {"input": "i will see you tomorrow", "output": "Goodbye for now! Come back any time.", "intent": "farewell", "kind": "talk"}
 {"input": "i feel rested today", "output": "Feelings are weather for the heart. Thank you for telling me.", "intent": "feelings", "kind": "talk"}
 {"input": "i had pancakes for breakfast", "output": "Food is one of life's simple celebrations. That sounds tasty.", "intent": "food_talk", "kind": "talk"}
+{"input": "convert five miles into kilometres", "output": "Five miles into kilometres \u2014 that's asking me to convert a measurement. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "how many kilometres are in ten miles", "output": "Ten miles in kilometres \u2014 yes, I hear you: that's a conversion request. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "what is twenty pounds in kilos", "output": "Twenty pounds in kilos \u2014 you're asking me to convert a measurement. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "can you convert 100 fahrenheit to celsius", "output": "100 fahrenheit to celsius \u2014 I hear you: a measurement to convert. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "convert three inches into centimetres please", "output": "You want three inches in centimetres. I understand \u2014 that's a conversion request.", "intent": "convert_units", "kind": "find"}
+{"input": "how many litres are in two gallons", "output": "Two gallons in litres \u2014 that's asking me to convert a measurement. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "what is six feet in metres", "output": "Six feet in metres \u2014 that's a conversion request, and I understand it.", "intent": "convert_units", "kind": "find"}
+{"input": "convert forty ounces into grams for me", "output": "Got it \u2014 forty ounces into grams. I can't do that part here, but I know what you're asking.", "intent": "convert_units", "kind": "find"}
+{"input": "how many minutes are in four hours", "output": "Four hours in minutes \u2014 I hear you: a measurement to convert. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "please convert nine kilometres into miles", "output": "Nine kilometres into miles \u2014 you're asking me to convert a measurement. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "what is fifteen celsius in fahrenheit", "output": "Fifteen celsius in fahrenheit \u2014 yes, I hear you: that's a conversion request. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "convert two kilos into pounds", "output": "Two kilos into pounds \u2014 that's asking me to convert a measurement. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "what does serendipity mean", "output": "Serendipity \u2014 you're asking me what a word means. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "what is the meaning of brisk", "output": "The meaning of brisk \u2014 yes, I hear you: that's a definition request. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "define the word courage", "output": "Courage \u2014 that's asking me to define a word. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "can you explain what seldom means", "output": "Seldom \u2014 I hear you: a word to define. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "what does the word ephemeral mean", "output": "Ephemeral \u2014 you're asking me what a word means. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "what is the meaning of humble", "output": "You want the meaning of humble. I understand \u2014 that's a definition request.", "intent": "define_word", "kind": "find"}
+{"input": "define vivid for me", "output": "Vivid \u2014 that's a definition request, and I understand it.", "intent": "define_word", "kind": "find"}
+{"input": "what does gentle mean", "output": "Gentle \u2014 that's asking me what a word means. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "can you define the word ancient", "output": "Got it \u2014 define the word ancient. I can't do that part here, but I know what you're asking.", "intent": "define_word", "kind": "find"}
+{"input": "what is the meaning of curious", "output": "The meaning of curious \u2014 you're asking me to look up what a word means. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "what does rapid mean", "output": "Rapid \u2014 I hear you: a word to define. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "explain the word honest to me", "output": "Honest \u2014 yes, I hear you: that's a definition request. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "how do you spell necessary", "output": "Necessary \u2014 that's asking me to spell a word. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "spell the word beautiful for me", "output": "Beautiful \u2014 yes, I hear you: that's a spelling request. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "can you spell tomorrow", "output": "Tomorrow \u2014 you're asking me to spell a word. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "what is the spelling of friend", "output": "The spelling of friend \u2014 I hear you: a word to spell. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "how do you spell because", "output": "You want the spelling of because. I understand \u2014 that's a spelling request.", "intent": "spell_word", "kind": "find"}
+{"input": "spell address for me please", "output": "Address \u2014 that's a spelling request, and I understand it.", "intent": "spell_word", "kind": "find"}
+{"input": "can you spell the word calendar", "output": "Calendar \u2014 that's asking me to spell a word. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "how do you spell separate", "output": "Got it \u2014 spell separate. I can't do that part here, but I know what you're asking.", "intent": "spell_word", "kind": "find"}
+{"input": "what is the spelling of library", "output": "The spelling of library \u2014 you're asking me to spell a word. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "spell really for me", "output": "Really \u2014 I hear you: a word to spell. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "how do you spell enough", "output": "Enough \u2014 yes, I hear you: that's a spelling request. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "can you spell autumn", "output": "Autumn \u2014 that's asking me to spell a word. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "summarize this paragraph for me", "output": "This paragraph \u2014 that's asking me to summarize a text. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "can you summarize this article", "output": "This article \u2014 yes, I hear you: that's a summary request. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "give me a summary of this text", "output": "A summary of this text \u2014 you're asking me to summarize something. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "summarize the page for me please", "output": "The page \u2014 I hear you: a text to summarize. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "i need a summary of this chapter", "output": "You want a summary of this chapter. I understand \u2014 that's a summary request.", "intent": "summarize_text", "kind": "find"}
+{"input": "sum up this report for me", "output": "This report \u2014 that's a summary request, and I understand it.", "intent": "summarize_text", "kind": "find"}
+{"input": "can you summarize my notes", "output": "Your notes \u2014 that's asking me to summarize a text. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "give me a short summary of this essay", "output": "Got it \u2014 a short summary of this essay. I can't do that part here, but I know what you're asking.", "intent": "summarize_text", "kind": "find"}
+{"input": "summarize this letter please", "output": "This letter \u2014 you're asking me to summarize a text. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "what is the summary of this document", "output": "This document \u2014 I hear you: a text to summarize. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "sum up the speech for me", "output": "The speech \u2014 yes, I hear you: that's a summary request. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "can you summarize this review", "output": "This review \u2014 that's asking me to summarize a text. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "find me a recipe for tomato soup", "output": "Tomato soup \u2014 that's asking me to find a recipe. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do i make lentil stew", "output": "Lentil stew \u2014 yes, I hear you: that's a recipe request. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "i need a recipe for banana bread", "output": "Banana bread \u2014 you're asking me to find a recipe. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "look up a recipe for vegetable curry", "output": "Vegetable curry \u2014 I hear you: a recipe to find. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "what is a good recipe for pancakes", "output": "You want a good recipe for pancakes. I understand \u2014 that's a recipe request.", "intent": "find_recipe", "kind": "find"}
+{"input": "find a recipe for apple pie please", "output": "Apple pie \u2014 that's a recipe request, and I understand it.", "intent": "find_recipe", "kind": "find"}
+{"input": "do you have a recipe for bean chilli", "output": "Bean chilli \u2014 that's asking me to find a recipe. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do i cook mushroom risotto", "output": "Got it \u2014 how to cook mushroom risotto. I can't do that part here, but I know what you're asking.", "intent": "find_recipe", "kind": "find"}
+{"input": "i want a recipe for lemon cake", "output": "Lemon cake \u2014 you're asking me to find a recipe. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "find me a recipe for potato salad", "output": "Potato salad \u2014 I hear you: a recipe to find. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do i make carrot soup", "output": "Carrot soup \u2014 yes, I hear you: that's a recipe request. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "look up how to make a cheese omelette", "output": "A cheese omelette \u2014 that's asking me to find a recipe. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "reserve a table for four on friday", "output": "A table for four on friday \u2014 that's asking me to reserve a table. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "can i book a table at the italian place", "output": "A table at the italian place \u2014 yes, I hear you: that's a booking request. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "i need a table for six tomorrow evening", "output": "A table for six tomorrow evening \u2014 you're asking me to reserve a table. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "reserve us a corner table for saturday", "output": "A corner table for saturday \u2014 I hear you: a table to book. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "book a table for eight next week", "output": "You want a table for eight next week. I understand \u2014 that's a booking request.", "intent": "reserve_table", "kind": "travel"}
+{"input": "reserve a table for two on saturday", "output": "A table for two on saturday \u2014 that's a booking request, and I understand it.", "intent": "reserve_table", "kind": "travel"}
+{"input": "can you reserve a table for dinner tonight", "output": "A table for dinner tonight \u2014 that's asking me to reserve a table. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "i would like to reserve a table for lunch", "output": "Got it \u2014 reserve a table for lunch. I can't do that part here, but I know what you're asking.", "intent": "reserve_table", "kind": "travel"}
+{"input": "book me a table by the window", "output": "A table by the window \u2014 you're asking me to book a table. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "reserve a table for three this friday", "output": "A table for three this friday \u2014 I hear you: a table to book. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "can i get a table for five at seven", "output": "A table for five at seven \u2014 yes, I hear you: that's a booking request. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "please reserve a quiet table for our anniversary", "output": "A quiet table for your anniversary \u2014 that's asking me to reserve a table. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "add milk to my shopping list", "output": "Milk on your shopping list \u2014 that's asking me to add something to a list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "put eggs on the grocery list", "output": "Eggs on the grocery list \u2014 yes, I hear you: that's a shopping-list request. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "add bread to the list please", "output": "Bread on the list \u2014 you're asking me to add something to your list. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "write butter on my shopping list", "output": "Butter \u2014 I hear you: an item for the list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "can you add coffee to the grocery list", "output": "You want coffee added to the grocery list. I understand \u2014 that's a shopping-list request.", "intent": "grocery_list", "kind": "make"}
+{"input": "put apples on my list", "output": "Apples on your list \u2014 that's a shopping-list request, and I understand it.", "intent": "grocery_list", "kind": "make"}
+{"input": "add cheese to the shopping list for me", "output": "Cheese on the shopping list \u2014 that's asking me to add something to a list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "i need rice on the grocery list", "output": "Got it \u2014 rice on the grocery list. I can't do that part here, but I know what you're asking.", "intent": "grocery_list", "kind": "make"}
+{"input": "add flour and sugar to the list", "output": "Flour and sugar \u2014 you're asking me to add things to your list. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "put tea on my shopping list", "output": "Tea \u2014 I hear you: an item for the list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "add potatoes to the grocery list please", "output": "Potatoes on the grocery list \u2014 yes, I hear you: that's a shopping-list request. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "write yogurt on the list", "output": "Yogurt on the list \u2014 that's asking me to add something to a list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "where is the nearest pharmacy", "output": "The nearest pharmacy \u2014 you're asking me where something is. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "is there a park near here", "output": "A park near here \u2014 yes, I hear you: that's a place-finding request. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "where can i find a bakery", "output": "A bakery \u2014 that's asking me to find a place. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "is there a bank nearby", "output": "A bank nearby \u2014 I hear you: a place to find. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "where is the closest post office", "output": "You want the closest post office. I understand \u2014 that's a place-finding request.", "intent": "find_place", "kind": "find"}
+{"input": "do you know where the cafe is", "output": "The cafe \u2014 that's a place-finding request, and I understand it.", "intent": "find_place", "kind": "find"}
+{"input": "is there a hospital near here", "output": "A hospital near here \u2014 that's asking me where something is. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "where can i find a bookshop", "output": "Got it \u2014 find a bookshop. I can't do that part here, but I know what you're asking.", "intent": "find_place", "kind": "find"}
+{"input": "where is the nearest supermarket", "output": "The nearest supermarket \u2014 you're asking me where something is. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "is there a library nearby", "output": "A library nearby \u2014 I hear you: a place to find. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "where is the closest gym", "output": "The closest gym \u2014 yes, I hear you: that's a place-finding request. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "do you know where the florist is", "output": "The florist \u2014 that's asking me where something is. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "i ordered a pizza last night", "output": "Pizza night is hard to beat. Was it a good one?", "intent": "food_talk", "kind": "talk"}
+{"input": "we had tacos for dinner yesterday", "output": "Tacos make a fine dinner. I hope they were tasty.", "intent": "food_talk", "kind": "talk"}
+{"input": "she cooked a big pot of soup on sunday", "output": "A home-cooked soup is a kind thing. Sundays suit it.", "intent": "food_talk", "kind": "talk"}
+{"input": "he ordered a sandwich at the cafe", "output": "A cafe sandwich is a simple pleasure. I hope it was fresh.", "intent": "food_talk", "kind": "talk"}
+{"input": "i ate sushi with my sister on friday", "output": "Sharing a meal with family is a good day. Was the sushi fresh?", "intent": "food_talk", "kind": "talk"}
+{"input": "we ordered breakfast before the long drive", "output": "A proper breakfast before a drive is wise. I hope it kept you going.", "intent": "food_talk", "kind": "talk"}
+{"input": "the soup we ordered was too salty", "output": "A salty soup is a disappointment. I hope the rest of the meal was better.", "intent": "food_talk", "kind": "talk"}
+{"input": "i baked bread for my neighbours yesterday", "output": "Baking for neighbours is a kind gift. Fresh bread cheers a street.", "intent": "food_talk", "kind": "talk"}
+{"input": "they served cake at the office party", "output": "Cake at a party is always welcome. I hope you had a slice.", "intent": "food_talk", "kind": "talk"}
+{"input": "my dad makes pancakes every sunday morning", "output": "A sunday pancake tradition is a lovely thing. Family rituals matter.", "intent": "food_talk", "kind": "talk"}
+{"input": "we tried the new curry place last week", "output": "Trying a new place is a small adventure. I hope it was good.", "intent": "food_talk", "kind": "talk"}
+{"input": "a salad and a coffee were my lunch today", "output": "A light lunch has its own charm. Coffee helps any afternoon.", "intent": "food_talk", "kind": "talk"}
+{"input": "we played chess yesterday", "output": "Chess is a fine game for a quiet day. Who won?", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she played the piano at the school concert", "output": "Playing in a concert takes courage. I hope it went well.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i played football with my cousins on saturday", "output": "Football with cousins sounds like a happy afternoon. Family games are the best kind.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "they played cards after dinner", "output": "Cards after dinner is a cosy tradition. I hope the game was close.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we listened to jazz all evening", "output": "An evening of jazz is time well spent. Music settles a room.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "he plays guitar in a small band", "output": "Playing in a band is a joyful hobby. I hope the music goes well.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i read a story to my daughter last night", "output": "Reading to a child is a precious habit. Stories before sleep are gifts.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she told me a story about her travels", "output": "Travel stories are the best kind. I hope hers was a good one.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "my grandfather tells wonderful stories", "output": "A grandfather's stories are treasures. Listen while you can.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we watched a film about pilots", "output": "A film night is a fine way to rest. I hope it was a good one.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i love stories with happy endings", "output": "Happy endings leave a warm feeling. Many of us feel the same.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the children played hide and seek in the garden", "output": "Garden games make happy children. Hide and seek is a classic.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she translated the letter for me", "output": "That was kind of her. Letters matter, and so does understanding them.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "my sister is learning italian this year", "output": "Learning a language is a fine project. It opens whole worlds.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i speak a little german at home", "output": "Speaking two languages at home is a gift. Keep it up.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "he translated the menu into english for us", "output": "A translated menu saves a meal. That was thoughtful of him.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we are learning french at school", "output": "French at school is a good start. Languages grow with practice.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the letter was written in spanish", "output": "A letter in another language carries its own music. I hope it brought good news.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i read the sign in portuguese", "output": "Reading signs abroad is a small victory. Travel teaches quickly.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she speaks three languages fluently", "output": "Three languages is a real achievement. That takes years of care.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the airport was busy this morning", "output": "Airports have their own weather. I hope your trip was smooth.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we visited the museum on saturday", "output": "A saturday museum visit is time well spent. I hope you saw something fine.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the station was crowded at rush hour", "output": "Rush hour crowds try everyone's patience. I hope you got home easily.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she works at the pharmacy downtown", "output": "A familiar face at the pharmacy is a comfort. Local people matter.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the market sells fresh bread every morning", "output": "Fresh bread in the morning is a neighbourhood's blessing. It smells like home.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we walked to the beach yesterday", "output": "A walk to the beach clears the head. Sea air does good work.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "the library closes at nine in the evening", "output": "Libraries keep kind hours for readers. Evening reading is a quiet joy.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "there is a park behind my house", "output": "A park behind the house is luck. Green space nearby is a gift.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "we missed our train yesterday", "output": "A missed train is a frustrating thing. I hope the next one came soon.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she booked a flight last week and flew home", "output": "Flying home is a happy errand. I hope the trip was easy.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i sent a message to kim this morning", "output": "Keeping in touch is a good habit. Small messages hold friendships together.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "he built a small server for the office", "output": "Building things for work takes patience. I hope it runs well.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "she created a folder for the photos", "output": "An organised folder is a small kindness to your future self. Photos deserve care.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i made a file for the receipts yesterday", "output": "Keeping receipts in order is dull but wise. Future you says thanks.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "it rained all day yesterday", "output": "A full day of rain makes the garden happy. I hope you stayed dry.", "intent": "weather_talk", "kind": "talk"}
+{"input": "we drove home in the fog", "output": "Fog makes for careful driving. I am glad you got home safe.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the train was late because of snow", "output": "Snow slows everything down. I hope you were not kept waiting long.", "intent": "weather_talk", "kind": "talk"}
+{"input": "it takes an hour to drive to the city", "output": "An hour's drive is a familiar rhythm. Roads become part of a life.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the fastest train leaves at noon", "output": "A noon train is a civilised hour. Midday travel is gentle.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the route to work was icy this morning", "output": "Icy roads need slow mornings. I hope you arrived safely.", "intent": "weather_talk", "kind": "talk"}
+{"input": "i feel hungry after the long walk", "output": "A long walk earns a good meal. Hunger after effort is honest.", "intent": "feelings", "kind": "talk"}
+{"input": "dinner made everyone happy", "output": "A table that makes everyone happy is a success. Food does that.", "intent": "feelings", "kind": "talk"}
+{"input": "the game made us all cheer", "output": "A game that makes everyone cheer is a good game. Joy is catching.", "intent": "feelings", "kind": "talk"}
+{"input": "i was nervous before my flight", "output": "Nerves before a flight are common. I hope it passed once you were seated.", "intent": "feelings", "kind": "talk"}
+{"input": "we were tired after the long drive home", "output": "A long drive home tires anyone. Rest is the right answer.", "intent": "feelings", "kind": "talk"}
+{"input": "she felt proud of her garden", "output": "A garden earns its pride. Growing things is slow, honest work.", "intent": "feelings", "kind": "talk"}
+{"input": "the children were excited about the trip", "output": "Children's excitement before a trip is a joy to see. It makes the packing lighter.", "intent": "feelings", "kind": "talk"}
+{"input": "i am happy with my new job", "output": "A new job that makes you happy is a fine start. I hope it treats you well.", "intent": "feelings", "kind": "talk"}
