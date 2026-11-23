@@ -10,6 +10,13 @@
 //
 //	{"input": "turn off the lights", "intent": "lights_off"}
 //
+// An intent row may further carry a "kind" field: the broad
+// family its meaning belongs to ("make", "schedule", "talk",
+// ...). Kinds give the intent classifier a neighbourhood to
+// fall back on for meanings it has never seen. A kind only
+// annotates an intent — it never replaces one, and a row
+// still needs an output or an intent to teach anything.
+//
 // An intent row does not need an "output": a row with an
 // input and an intent but no output is a LABEL-ONLY row, a
 // pure command example. The seq2seq trainer skips label-only
@@ -36,11 +43,15 @@ import (
 // and the reply it should learn to produce. Intent is an
 // optional meaning label (the intent package's classifier
 // trains on it); a Pair with an Intent but no Output is a
-// label-only command example.
+// label-only command example. Kind is the optional broad
+// family of the Intent ("make", "talk", ...): the classifier
+// learns it alongside the label, and the seq2seq trainer
+// ignores it exactly as it ignores Intent.
 type Pair struct {
 	Input  string `json:"input"`
 	Output string `json:"output"`
 	Intent string `json:"intent,omitempty"`
+	Kind   string `json:"kind,omitempty"`
 }
 
 // LoadPairs reads a JSONL pairs file. Blank lines are skipped.
@@ -77,6 +88,7 @@ func LoadPairs(path string) ([]Pair, error) {
 			return nil, fmt.Errorf("%s line %d: empty \"input\"", path, lineNo)
 		}
 		p.Intent = strings.TrimSpace(p.Intent)
+		p.Kind = strings.TrimSpace(p.Kind)
 		if strings.TrimSpace(p.Output) == "" && p.Intent == "" {
 			return nil, fmt.Errorf("%s line %d: empty \"output\" (a row needs an output, or an \"intent\" to be a label-only command example)", path, lineNo)
 		}

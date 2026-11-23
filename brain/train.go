@@ -733,6 +733,22 @@ func trainIntents(pairs []data.Pair, outPath string) error {
 	for _, l := range labels {
 		log.Printf("[train] intent %-16s %d rows", l, counts[l])
 	}
+	if clf.HasKinds() {
+		byKind := map[string][]string{}
+		for label, kind := range clf.LabelKinds() {
+			byKind[kind] = append(byKind[kind], label)
+		}
+		kinds := make([]string, 0, len(byKind))
+		for k := range byKind {
+			sort.Strings(byKind[k])
+			kinds = append(kinds, k)
+		}
+		sort.Strings(kinds)
+		log.Printf("[train] kinds: %d kinds over %d labels", len(kinds), len(clf.LabelKinds()))
+		for _, k := range kinds {
+			log.Printf("[train] kind %-16s %s", k, strings.Join(byKind[k], ", "))
+		}
+	}
 	return nil
 }
 

@@ -14,7 +14,10 @@
 // is trained on those rows too (label-only rows — an intent
 // with no output — exist for exactly this) and written next
 // to the brain as <out>.intents.json; the run's output lists
-// the labels it found and the rows per label.
+// the labels it found and the rows per label. If the intent
+// rows also carry "kind" fields (the broad family of each
+// meaning), a kind classifier is trained alongside and the
+// output lists the kinds with their labels.
 //
 // The output .gob is written once, at the end, from the best
 // weights seen. While training runs, checkpoints live next to

@@ -342,6 +342,13 @@ rows per meaning, with more varied wording, is the lever;
 the classifier itself is exactly as smart as a bag of
 words gets.
 
+Rows may also carry a `"kind"` — the broad family a
+meaning belongs to — and the classifier then predicts a
+kind alongside the label: a neighbourhood answer for
+lines whose exact meaning it cannot name. That, and the
+subword piece features tried alongside it, are measured
+in "Classifier: pieces and kinds" below.
+
 ## Runnable example: talk to your filesystem
 
 `examples/filecmd` puts the intent mechanism to work end
@@ -1089,6 +1096,191 @@ meanings from *unseen* phrasings is the thing that works
 here, measured above; recognition of *new kinds* of
 meaning is the thing that does not, also measured above.
 
+## Classifier: pieces and kinds
+
+The chapter above ends at a precise boundary: the
+classifier knows trained meanings in unseen phrasings,
+and guesses neighbourhoods for new ones. Two mechanisms
+were built to push on exactly that — **kinds**, a
+hierarchy the classifier can fall back on, and
+**pieces**, subword features so unseen words register at
+all. Both were measured against the classifier as it
+was, on suites built for the purpose. One shipped as the
+default. The other did not. This section is the record
+of both, because the numbers are the point.
+
+### Kinds (shipped)
+
+A row may carry a `"kind"` next to its `"intent"` — the
+broad family its meaning belongs to:
+
+```json
+{"input": "create a file named jim", "intent": "create_file", "kind": "make"}
+```
+
+The taxonomy applied to both shipped data files:
+
+| kind | labels in pairs.jsonl | labels in filecommands.jsonl |
+| --- | --- | --- |
+| make | create_file, create_folder, build_server | create_file |
+| remove | delete_file | delete_file |
+| show | — | list_files |
+| schedule | set_reminder, set_timer | — |
+| play | play_music | — |
+| communicate | send_message | — |
+| find | search_web | — |
+| travel | book_travel | — |
+| talk | greeting, farewell, feelings, weather_talk, hobby_talk, food_talk, thanks, about_brain | chat |
+
+The trainer derives the label→kind map from the data
+and validates it: one label claiming two kinds is a
+training error that names the label and both kinds.
+Alongside the label softmax it trains a second softmax
+over the kinds, on the same features. Kind training is
+**class-balanced** — every kind contributes the same
+total gradient weight, however many rows it has —
+because the kind model's whole job is the weak-evidence
+case, and there the biggest kind's share of the rows
+(the prior) is exactly the wrong answer. The label
+classifier keeps natural frequencies; telling meanings
+apart is its job, and there the prior is evidence too.
+
+`Predict` is unchanged. `PredictKind` is the new answer,
+`KindOf` maps a label to its kind, and `Describe` — what
+`cmd/ask -intents` prints — appends the kind when the
+brain has one, *including when the label abstains*: the
+neighbourhood is what an unseen meaning can still offer.
+Brains trained on kindless data behave and display
+exactly as before. Live, on a brain trained with the
+shipped recipe:
+
+```
+> create a file named jim
+that's a request to create a file: work. i understand.
+intent: create_file (0.99) · kind: make (0.99)
+> create a webserver in main.go
+in a webserver — i hear you: a server to build. i follow you.
+intent: build_server (0.99) · kind: make (1.00)
+```
+
+### Pieces (built, measured, not the default)
+
+The second mechanism extends the features: alongside
+each word, its subword pieces — character n-grams
+(length 3–5) in one scheme, BPE pieces (the repo's `bpe`
+package, merges trained on the intent rows' words) in
+the other. An unseen word then registers through the
+pieces it shares with trained words: "creat" is mostly
+"create". Every sidecar now records its feature scheme,
+and a sidecar written before schemes existed is
+**rejected with a retrain-to-upgrade error** rather
+than scored under a featurizer its weights never knew.
+
+### The suites
+
+Three suites were declared before any arm ran, and the
+shipped fences were re-run for every arm. **HF**: six
+request families that appear nowhere in training
+(order_food, translate_text, find_directions, fix_code,
+play_game, tell_story) × 6 lines, scored by the U2
+neighbourhood rubric for labels, and for kinds against
+acceptable-kind sets declared in the suite file before
+scoring (order_food {communicate, make}, translate_text
+{communicate, find}, find_directions {find}, fix_code
+{make}, play_game {play}, tell_story {talk}). **WC**:
+12 word-collision traps ("say hello to mom for me" must
+be send_message, "hello mom" greeting; "make me a
+sandwich" must not become create_file). **TY**: 10
+typo'd intent lines ("creat a file called notes.txt",
+"remid me to water the plants", ...). Arms: the word
+classifier as it was, words+n-grams, words+BPE — same
+rows, same training, only the features differ.
+
+Labels, at the shipped 0.5 threshold unless marked raw
+(the argmax, right or wrong):
+
+| measure | words | + n-grams | + BPE |
+| --- | --- | --- | --- |
+| TY typo lines | 9/10 (raw 9/10) | 9/10 (raw **10/10**) | 8/10 (raw 9/10) |
+| WC collision traps | **9/12** | 8/12 | 7/12 |
+| HF neighbourhood (labels) | 30/36 | 27/36 | **31/36** |
+| fence: U1 raw / at threshold | **30/30, 28/2/0** | 29/30, 28/2/0 | 29/30, 27/3/0 |
+| fence: file Set P intent | **20/20** | 17/20 | 19/20 |
+| fence: file small-talk → chat | **22/22** | 21/22 | 22/22 |
+
+Kinds (the shipped word arm; the piece arms score the
+same totals within a point): on HF, **right 9/36, wrong
+22, abstained 5** — play_game 5/6 (a game is *play*, the
+cousin of play_music), fix_code 3/6, tell_story 1/6, and
+0 for order_food, translate_text, and find_directions.
+On the WC traps' declared kinds, **7/9** — including
+"make me a sandwich", whose *label* abstains while its
+kind lands on make (0.77), and "make a file for my
+sandwich recipes" at make (1.00); the two misses are
+kinds that abstain ("say hello to mom for me",
+"delete my account"), not kinds that err.
+
+The wrong kinds are mostly one word: **talk**. Balancing
+took the prior's thumb off the scale — talk's winning
+confidences fell from the 0.74–1.00 range to 0.54–0.99 —
+but an unseen line's vocabulary *is* everyday vocabulary,
+and everyday vocabulary is what talk is made of. The
+features lean where the words live.
+
+### The verdict on pieces
+
+Each piece scheme won exactly one measure — n-grams the
+typo lines' raw top label, BPE the held-out
+neighbourhood by a single line — and lost the traps and
+the fences to do it. The mechanism is visible in one
+line: "say hello to mom for me". The word classifier
+abstains; its best guess, greeting, sits at 0.29. Stack
+n-gram pieces on and the same lean comes back greeting
+(0.91) — said with confidence. Pieces multiply the
+evidence, and multiplied evidence multiplies whatever
+lean was already there, right or wrong: "delete my
+account" goes from an abstention (best guess delete_file
+at 0.45) to delete_file at 0.78 under n-grams and 0.53
+under BPE. On the file demo's own lines the same
+inflation costs real commands ("i no longer need
+letter.md" → chat at 0.62 under n-grams; an abstention
+at 0.50 under BPE, where the word classifier says
+delete_file).
+
+So `Train` keeps whole words, and both piece schemes
+remain available through `TrainWith` (`Options{Scheme:
+...}`) for data whose own measurement disagrees. One
+part of the pieces work shipped unconditionally: the
+trainer itself. Piece feature spaces are thousands wide,
+and the old dense SGD loop scaled with the whole space;
+it now updates sparsely, with the L2 decay applied
+lazily per label — the same training, up to float
+rounding, at a cost proportional to what a line
+contains. The word classifier's fences reproduce
+history exactly under it (U1 30/30 raw, 28/2/0; Set P
+20/20; small-talk 22/22), and intent training that took
+5.8s on the chat rows and 10.4s on the file rows now
+takes well under a second and about a second.
+
+### The updated boundary
+
+What can an unseen line expect now? An unseen *phrasing*
+of a trained meaning: the label, usually at high
+confidence — unchanged, still the strong half. An unseen
+*meaning* near trained ones: a kind, usually right when
+the family has a close trained cousin (a game is play;
+fixing code is make about half the time), and sometimes
+a neighbouring label. An unseen meaning far from home:
+the kind defaults to talk or abstains — a guess about
+the neighbourhood, offered as a guess, and the label
+stays home. Certainty, never: the kind is reported with
+its confidence, and below the threshold it is not
+reported at all. That is more than this classifier
+could say before — previously a new meaning got an
+abstention or a wrong label, and nothing in between —
+and it is less than understanding a new kind of request,
+which no measurement here shows.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -1115,12 +1307,15 @@ seq2seq/    the model: encoder/decoder, BPTT training, layers
 data/       the JSONL pairs loader and the 80/20 split
 intent/     the meaning classifier: bag-of-words softmax
             over "intent" labels, with confidence abstention
+            and an optional kind level (plus optional
+            subword piece schemes)
 brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
 examples/   pairs.jsonl — 2,888 toy pairs to start from
-            (255 of them intent-labeled; see "Intent understanding");
+            (255 of them intent-labeled and kinded; see
+            "Intent understanding");
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,634 rows: 1,456 file-command rows over
             240 filenames, plus 178 label-only "chat" rows,
