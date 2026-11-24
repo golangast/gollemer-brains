@@ -18,7 +18,7 @@ anyone can train their own.
 You need Go (this repo builds with Go 1.26; the code is pure
 standard library — no dependencies to download).
 
-Train the bundled example dataset (3,044 pairs of tiny small
+Train the bundled example dataset (3,283 pairs of tiny small
 talk):
 
 ```sh
@@ -1484,6 +1484,259 @@ fix_code lines out of `make`. Collision-zone mass is
 a lever with a direction: it buys the zones you feed,
 partly at the price of the neighbours you don't.
 
+## A concept curriculum for code questions
+
+The collision chapter fed the zones around *request*
+families. This chapter feeds a different gap, found by
+hand-testing: ask the chat brain "what is go" or "what
+is a function" and it had nothing — the corpus held
+everyday topics and request families, and not one Go
+concept. The Go knowledge the author remembered lived
+in the parked Gollemer project. So this build teaches
+the chat brain the *concepts* of Go, organised the way
+the learning resources organise them.
+
+**The boundary, stated plainly:** this brain does not
+fix code and does not write code. Nothing in the new
+data teaches repairing or authoring programs — no
+corrected code, no "here is the fixed version". What
+it learns is to *recognise* a concept or a code
+question and say what it means. `fix_code` stays an
+untrained exam family precisely because acting is out
+of scope; its held-out score below measures only
+whether the guess lands in the code neighbourhood.
+
+### Concepts, kinds, phrases, words
+
+The data is built in a four-layer hierarchy, because
+that is how the guessing works:
+
+| layer | for the slice concept |
+|---|---|
+| **kind** | `find` — the category: information work |
+| **concept / intent** | `explain_code:slices` — shipped as the label `explain_slice` |
+| **phrases** | "how do slices work in go", "what does append do in go", "how is a slice different from an array", "what is a nil slice in go", "what is a slice header in go", … (8 in all) |
+| **words** | slice, append, grow, array, length, capacity, header, backing, nil, make — the vocabulary spread across the phrases and replies, not just the concept's name |
+
+Every one of the 49 new labels carries all four
+layers; an audit found seven concepts at the
+two-phrase minimum (exported names, JSON, recover,
+sorting, templates, variadic functions, waitgroups)
+and they were topped up to four phrases each before
+anything was measured.
+
+### Sources
+
+The resource index is `advocates.json` — the author's
+own Go learning links (54 topics, ~460 links), the
+same file Gollemer's guide seat used as its link
+index. One source inside it is primary:
+
+- **Go by Example** (gobyexample.com, by Mark
+  McGranaghan and Eli Bendersky, CC BY 3.0) — fetched
+  and read, ~30 topic pages. Each topic became one
+  concept meaning. Answers are short paraphrases of
+  the page's facts in this brain's voice — never
+  copied at length.
+- Also fetched and read: **Effective Go** (names and
+  exported names, formatting), **YourBasic Go**
+  (conversions, data races, files), the **golangbot**
+  tutorial series (compiled, statically typed,
+  garbage-collected), Russ Cox's **Go Data Structures:
+  Interfaces** (implicit satisfaction; an interface
+  value is a type-and-data pair), the **Go Blog** on
+  slices (the slice header), and **Go Web Examples**
+  (HTTP servers, handlers, templates).
+- Topic-only — named here honestly because they could
+  not be read as text (a JavaScript tour app, video
+  courses, paywalls, playground snippets): A Tour of
+  Go and Learn Go with Tests seeded *which* concepts
+  belong in a beginner curriculum; no content is
+  claimed from them.
+- Gollemer's own files were gap-fillers only: the
+  `go_expansion_*` files supplied the mutex, context,
+  JSON, and testing phrasings (10 rows adapted); the
+  codeintent files (8,044 rows of repo-specific file
+  Q&A) were skipped as a source, and the 36
+  fix/debug-phrased rows found in them were excluded
+  by rule, not used. Skipped in the index as not
+  concept-bearing: job boards, ssh tools, surveys,
+  frontend frameworks, Docker, databases.
+
+239 rows in all (`examples/pairs.jsonl`: 3,044 →
+3,283 pairs; labeled rows 411 → 650; labels 26 → 75):
+129 grounded in Go by Example, 76 more from the other
+advocates-indexed sources, 10 adapted from Gollemer's
+files, and 24 hand-written code-question cousins —
+`explain_error` ("what does declared and not used
+mean") and `read_code` ("what does this code do"),
+understanding only: their replies explain what an
+error *means* and what code *does*, and never repair
+anything. Replies throughout are recognition first,
+concept-first: name the concept, then the one-line
+gist ("A slice — a flexible view over an array that
+grows with append.").
+
+### The probe (headline)
+
+Declared before scoring: 25 held-out lines — 15 unseen
+phrasings of trained concepts, 6 code-question lines,
+and 4 lines in shapes never trained for any concept
+(yes/no questions, example requests, "in simple
+terms"). Kind first: `find` was guessed at threshold
+on **25 of 25**. The concept *label* is the harder
+test — each concept carries only a few training rows,
+so confidence is diluted across ~75 labels:
+
+| line | label at threshold | raw top |
+|---|---|---|
+| what is a goroutine | — abstained (0.49) | explain_goroutine ✓ |
+| what does a package do in go | explain_package (0.58) | ✓ |
+| what is an interface in go | explain_interface (0.92) | ✓ |
+| explain what a slice is | explain_slice (0.68) | ✓ |
+| what is a pointer in go | — abstained (0.40) | explain_pointer ✓ |
+| how are errors handled in go | — abstained (0.16) | explain_testing ✗ |
+| what is a struct in go | explain_struct (0.66) | ✓ |
+| what does the main function do | — abstained (0.24) | explain_main ✓ |
+| what is a map in go | — abstained (0.22) | explain_map ✓ |
+| explain channels in go | explain_channel (0.82) | ✓ |
+| what is a method in go | — abstained (0.24) | explain_method ✓ |
+| what is defer in go | — abstained (0.37) | explain_defer ✓ |
+| what is a variable in go | — abstained (0.10) | explain_string_rune ✗ |
+| how do you run a go program | — abstained (0.24) | about_brain ✗ |
+| what is an array in go | — abstained (0.33) | explain_array ✓ |
+| what does this compiler error mean | explain_error (0.99) | ✓ |
+| can you explain what this function does | read_code (0.82) | ✓ |
+| what is this code doing | read_code (0.93) | ✓ |
+| i do not understand this error message | — abstained (0.39) | explain_error ✓ |
+| walk me through what this code does | read_code (0.98) | ✓ |
+| what does undefined mean in this error | explain_error (0.99) | ✓ |
+
+Concept lines: 5/15 at threshold, 12/15 by raw top.
+Code-question lines: 5/6 at threshold, 6/6 by raw
+top — the two dense cousin families (12 rows each)
+fire confidently, which is the density lesson again:
+concepts with a handful of rows guess right but
+quietly. The four never-trained shapes: 0/4 labels at
+threshold, but by raw top two land exactly ("is a map
+like a dictionary" → explain_map; "is go a compiled
+language" → explain_code) and one lands on the
+sibling concept (channel → explain_buffered_channel);
+only the example request misses. Shape generalisation
+is partial, and is reported as such.
+
+Replies from the fully trained brain, judged strictly
+(coherent = on-topic, grammatical, actually answers):
+
+Judged strictly, the replies lag the classifier —
+the same gap the intent chapter named, wider here
+because concept explanations are longer than
+small-talk lines. Of 25: **1 coherent, 3 partial,
+21 garbled**. The one clean answer is a cousin line
+("that compiler error — the compiler is reporting
+something it could not accept, in its own terse
+wording. its message names the line and the rule the
+code ran into."). The three partials lead with the
+taught gist before trailing off: interface ("…only
+and pair the with…" — the type-and-data pair is in
+there), channel ("a channel — a typed pipe connecting
+goroutines."), and the compiled-language line ("go —
+a compiled, statically typed, and…"). The rest name
+the concept and then garble, or borrow a neighbour's
+explanation (the pointer line answers with the
+conversion text; the variable line with the boolean
+text). The classifier knows these concepts; the
+generator cannot yet say them reliably.
+
+### Held-out families and fences
+
+HF kinds (words arm): 15 right / 12 wrong / 9 abstain,
+against 16 / 12 / 8 last round — a wash in total, with
+label neighbourhood up to 34/36 (from 29/36). Per
+family: translate_text held at 5, play_game held at
+5, find_directions held at 3, tell_story 2, order_food
+still 0 (wrongs split between talk and find, neither
+acceptable for it). `fix_code`: **0 right / 4 wrong /
+2 abstain** — printed as-is. An intermediate data
+draft read 2/4/0; the final corpus reads 0/4/2, and
+the family's kind score visibly moves ±2 when a
+dozen find-kind rows are added or removed, which is
+itself the finding: the guess now lives in the
+code-question neighbourhood (all four wrongs are kind
+`find` — "this is a question about code" — and no
+line fires a wrong *meaning*), while the frozen exam
+accepts only `make` for it. Fences: U1 identical
+(raw 30/30; 28 right / 2 abstain / 0 wrong), file
+Set P 20/20, small-talk 22/22, WC labels 7/12 and WC
+kinds 7/9 (both unchanged), TY 7/10 at threshold
+against 9/10 last round — raw top still 9/10; the
+two lost lines ("serch the web for trains" 0.48,
+"send a mesage to kim" 0.45) sit a hair under the
+threshold, diluted by the new labels. Fluency probe:
+20 coherent / 2 partial / 2
+garbled of 24, against 17/3/4 last round — "what do
+you like to do" now answers cleanly, and the two
+garbles are the stars line and the sunshine line..
+
+Live, from the trained brain (the author's own
+hand-test lines):
+
+```text
+> what is go
+  go is a value an is. a can skill.
+  intent: explain_code (0.62) · kind: find (0.98)
+> what is a function
+  a function is a new animal, a fresh bread part, in time.
+  intent: (none confident enough) · kind: find (0.98)
+> how do i code
+  i am sorry today is awful. bad days end, even the long ones.
+  intent: explain_code (0.74) · kind: find (0.93)
+> where is the code
+  i is trained it when you are new line i like about a simple cake.
+  intent: find_place (0.87) · kind: find (0.95)
+> can you debug this code for me
+  i — you're asking me to code to its build. i follow you.
+  intent: (none confident enough) · kind: find (0.97)
+> translate hello into french
+  hello! how are you today?
+  intent: (none confident enough) · kind: talk (0.86)
+> create a file named jim
+  that's a request to create a file: homework. i understand.
+  intent: create_file (0.97) · kind: make (0.98)
+```
+
+Read plainly: the classifier side of the screenshot
+complaint is fixed — code questions land in the code
+neighbourhood (explain_code fires for "what is go"
+and "how do i code"; the debug line abstains on label
+with kind find, no wrong meaning fired; translate
+abstains on label and does not fire greeting —
+though its reply is still greeting-shaped small
+talk, the generator greeting where the classifier
+would not; create_file holds at
+0.97, with the reply again substituting a trained
+name, homework, for jim — the standing extraction
+limit). The reply side is not fixed: of the seven,
+only the file line answers coherently.
+
+### The revised boundary
+
+The chat brain now knows the beginner Go curriculum
+as *meanings*: ~49 concepts it can recognise from
+varied wordings and explain in a sentence or two,
+plus what error messages mean and what code does. It
+knows them at kind level essentially always, and at
+label level whenever the concept's raw guess is
+allowed to speak — at threshold, only the denser
+concepts speak. It still does not write code, fix
+code, or know anything about *your* code — there is
+no repo knowledge here, only the concepts. And the
+reply brain still lags the classifier: it can garble
+a line whose meaning it guessed correctly, as the
+probe reply table shows. More rows per concept is
+the named next lever; it is data, not mechanism,
+again.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -1516,8 +1769,8 @@ brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 3,044 toy pairs to start from
-            (411 of them intent-labeled and kinded; see
+examples/   pairs.jsonl — 3,283 toy pairs to start from
+            (650 of them intent-labeled and kinded; see
             "Intent understanding");
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,634 rows: 1,456 file-command rows over
