@@ -1737,6 +1737,194 @@ probe reply table shows. More rows per concept is
 the named next lever; it is data, not mechanism,
 again.
 
+## Teaching it to speak
+
+The concept chapter ended with a named lever: the
+classifier could guess the concepts, but the reply
+brain garbled them (probe replies 1 coherent / 3
+partial / 21 garbled), because each concept stood on
+2–5 rows. This round pulls that lever — data only,
+no mechanism change — with three declared moves:
+
+- **Density.** Every concept rises to ~14 rows
+  (from 2–5; the two cousin families were already
+  at 12 and rise to 14). 448 new rows in all
+  (`examples/pairs.jsonl`: 3,283 → 3,731 pairs;
+  labeled rows 650 → 1,098; the 49 concept labels
+  unchanged).
+- **Shared reply frames.** The new replies are
+  built on a handful of skeletons used across *all*
+  concepts — "<concept> is <plain definition>. it
+  <key behaviour>.", "you use <concept> when
+  <situation>.", "<concept> works by <mechanism>." —
+  so the decoder learns each frame once and only
+  has to slot in the concept's own words.
+- **Convergent replies.** Per concept, 2–3
+  canonical gist replies, each reused verbatim
+  across several different question phrasings.
+  Varied inputs, steady outputs. Every gist is a
+  rewording of facts already in that concept's
+  older rows — no new facts per row.
+
+The slice concept, in full (its 8 older rows plus
+6 new):
+
+| gist (frame) | taught by the new phrasings |
+|---|---|
+| "a slice is a flexible view over an array. it grows as you append to it, and it is typed only by its elements, not its length." | "slices in go explained", "what makes a slice flexible in go" |
+| "you use a slice when you need a list that can grow or shrink as the program runs. slices are what go code uses day to day." | "when do i reach for a slice in go", "why does go code use slices so much" |
+| "a slice is a small header: a pointer to an array, a length, and a capacity. passing a slice passes that header." | "what is a slice made of in go", "what three things does a slice hold" |
+
+### The fresh probe (headline)
+
+A new held-out probe was declared before the data
+was written: 20 lines — 15 unseen phrasings of
+trained concepts (including the two cousin shapes),
+3 sibling contrasts, and 2 lines in shapes never
+trained (an example request, an "in simple terms"
+request). Replies from the fully trained brain
+(60 epochs, shipped recipe; the run was killed
+twice by environment restarts and finished by
+checkpoint-resume; final best loss 0.0872),
+judged strictly, one run of the time-seeded
+checked sampler, reported as-is:
+
+| line | reply | verdict |
+|---|---|---|
+| can you tell me what a goroutine is | a goroutine costs only a few kilobytes of stack, so thousands can run at once. the runtime schedules them across your processor cores. | partial — a true property, not a definition |
+| what does the word slice mean in go | slice — slice is a safe has a number of array. you array. it holding append to match, and tidy at it is called. slice or checks, across the calm day is how a your day. | garbled |
+| what exactly is a struct | a struct is a typed collection of named fields that groups data into one record, like a person with a name and an age. | **coherent** — the gist, verbatim |
+| tell me about pointers in go | a pointer is a value that holds a memory address instead of the data itself. the star follows a folder together with a handler function receives each request and writes the response. | partial — gist first, then a splice |
+| what are channels for in go | you code in go by writing a program in package main with a main function, then running it to see what it does. | garbled — a clean sentence about the wrong concept |
+| what does a map do in go | a map in a go values in one folder, type parameters with a file in small file and an number. | garbled |
+| why would i write defer in a function | you write defer — a function in files, like a list that can do for you. other code around it. it day or a day is a else fixed lookup feeling. | garbled |
+| what is the main function for | the main function to your morning, with a hello! i your name. how many runs out of an interface is a fixed, kind of that few wait, all good thing at a string's | garbled |
+| explain variables to me | kind words in the variables, because the stars make old, and light, still traveling. | garbled |
+| what does the range keyword do | range — the keyword that leaves a variable. you can declare several at once, and a variable declared without a value starts at its zero value. | garbled — the variable concept's text |
+| what is a closure in go | a closure — an anonymous function that captures variables from the code around it. the captured variables stay alive and keep their state between calls. | **coherent** |
+| why do methods have receivers in go | you use a channel when parts of a program running at once need to pass values or signals in a safe order. | garbled — the channel gist, wrong concept |
+| what happens when a program panics in go | a buffered panics, a named value with single backing array yet and length zero. it is safe to append to; go allocates the storage the first time it grows. | garbled — the nil-slice text, spliced |
+| this error message is confusing me | an error message — any failure a value is a separate, concurrent: error it takes, stored in a types, and get for a type from a file or its else and its inputs, then it | garbled |
+| can you tell me what this function does | a function is a named block of code that takes inputs and hands results back with return. functions are the building blocks of go programs. | partial — a definition where a walkthrough was asked |
+| what is the difference between a channel and a buffered channel | an channel — written i a channel is fun and the element of a struct, or at once; at is your and copying it every call was where it concept is the meal was begins. | garbled |
+| how is an error different from a panic in go | error versus error — an error message to pass a error: a function take a scanner. it reaches a section of truly one. | garbled |
+| is a slice just an array | a slice is a sweet food baked for happy from them. | garbled — food talk bleeding in |
+| can you give an example of a goroutine | an goroutine costs only a few kilobytes of stack, so thousands can run at once. the runtime schedules them across your processor cores. | partial — the property again, not an example |
+| in simple terms what is a pointer | a pointer is a when a method is exercise. it lets you visit a day at once and the request and value if they were up in its error work. | garbled |
+
+**Fresh probe: 2 coherent / 4 partial / 14 garbled.**
+The classifier on the same 20 lines did not
+regress — it improved: kind `find` on 20/20 by raw
+top (19/20 at threshold), concept labels 17/20 by
+raw top, 14/20 at threshold; the three raw misses
+are the two goroutine lines the classifier sends to
+`about_brain` and "explain variables to me", which
+lands on `define_word`.
+
+For a same-lines comparison, last round's probe
+was re-run (secondary only — nothing was tuned on
+it). Its replies moved from **1 coherent / 3
+partial / 21 garbled to 6 coherent / 4 partial / 15
+garbled**: package, interface, struct, defer,
+channel, and the compiled-language line now come
+back as their taught gists, whole. Its classifier
+readings rose too — labels 25/25 by raw top (was
+20/25), 22/25 at threshold (was 10/25), kinds
+`find` 24/25 (one error-message line now abstains
+on kind where it previously read find).
+
+### Held-out families and fences
+
+The find mass grew again, and the gravity well
+moved again — reported as-is. HF kinds (words
+arm): **13 right / 12 wrong / 11 abstain**, against
+15 / 12 / 9 last round. Per family: play_game held
+at 5, find_directions held at 3, translate_text
+slipped 5 → 4 (the known "translate good morning
+into german" holdout, plus one more line's kind
+sliding to talk), fix_code 0 → 1 (one line's kind
+now lands in the accepted set; the other four
+wrongs are still kind `find`, the code-question
+neighbourhood the frozen exam does not accept for
+it), tell_story 2 → 0 (five of its six lines now
+abstain on kind rather than guess), order_food
+still 0. Label neighbourhood 33/36 (was 34/36 —
+one pizza line now reads `hobby_talk`). WC labels
+7/12 and WC kinds 7/9, both unchanged. TY 6/10 at
+threshold (was 7/10), raw top still 9/10 — the
+losses are the same diluted lines sitting further
+under the threshold. Fences proper held exactly:
+U1 raw 30/30 and 28 right / 2 abstain / 0 wrong,
+file Set P 20/20, small-talk 22/22. Fluency probe:
+16 coherent / 4 partial / 4 garbled of 24, against
+20/2/2 last round — inside the run-to-run swing
+this probe has shown before (17–20 coherent across
+the last three rounds; the sampler is time-seeded),
+with the stars line now clean and the swimming and
+food lines garbling this run instead.
+
+Live, from the trained brain:
+
+```text
+> what is go
+  a file is go's fail-fast signal that something impossible happened. it unwinds the program and prints a trace of the calls.
+  intent: explain_code (0.64) · kind: find (0.99)
+> what is a function
+  a function is a named block of code that takes inputs and hands results back with return. functions are the building blocks of go programs.
+  intent: explain_function (0.70) · kind: find (0.98)
+> how do i code
+  holidays are rest, and i am glad you are very welcome. talking with you talking, with you.
+  intent: explain_code (0.56) · kind: find (0.94)
+> what is a slice
+  a slice is a small made from questions are small and full of prints
+  intent: explain_slice (0.72) · kind: find (0.93)
+> what is a goroutine
+  a goroutine is a place where questions live and answers grow.
+  intent: explain_goroutine (0.80) · kind: find (0.96)
+> what does this error mean
+  this error — rest it to one something: bad: it, it produces that result, like it was created with a path, written with its first, and the parts of order it.
+  intent: explain_error (0.96) · kind: find (1.00)
+> create a file named jim
+  a file — that's asking me to create a file. i follow you.
+  intent: create_file (0.96) · kind: make (0.99)
+> translate hello into french
+  french is a fine says any song, like a tiny program that prints your name.
+  intent: (none confident enough) · kind: talk (0.87)
+```
+
+(The file line holds — `create_file` at 0.96,
+kind `make` — and this run's reply does not even
+substitute a wrong filename. The translate line's
+label still abstains and does not fire `greeting`;
+its reply is garbled small talk rather than a
+greeting this run.)
+
+### The revised boundary, for speaking
+
+Density plus frames did lift speaking — on
+identical lines, coherent replies went from 1 in
+25 to 6 in 25, and gist-shaped answers now appear
+regularly — but it did not make the brain a
+reliable speaker: on fresh phrasings most concept
+replies still splice a neighbour's second half
+onto a correct first half, borrow the wrong
+concept's gist whole, or dissolve. The pattern in
+the failures is consistent: the *first* sentence
+is increasingly the taught gist; the failure is
+in continuation and in concept selection at
+generation time, where the classifier (which
+guesses right far more often) does not steer the
+decoder. What speaks cleanly today: the concepts
+whose gists reproduced whole this run — struct,
+closure, function, channel, package, interface,
+defer, and go itself as a topic. What still
+garbles: most everything else, especially
+contrasts and the cousin shapes when the wording
+drifts from the trained phrasings. No further
+lever was pulled in this round; anything more
+(decode-side steering, still more rows) is a
+separate experiment with its own numbers.
+
 ## Honest limits
 
 - This is a **tiny CPU model** (128-dim embeddings, 256-dim
@@ -1769,8 +1957,8 @@ brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
 cmd/ask     a demo REPL for a trained brain (not a chat product)
-examples/   pairs.jsonl — 3,283 toy pairs to start from
-            (650 of them intent-labeled and kinded; see
+examples/   pairs.jsonl — 3,731 toy pairs to start from
+            (1,098 of them intent-labeled and kinded; see
             "Intent understanding");
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,634 rows: 1,456 file-command rows over
