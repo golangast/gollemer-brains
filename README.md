@@ -718,7 +718,12 @@ description and name words count half again as much as
 example-only words, and a mistyped word with exactly one
 near neighbour in the registry's vocabulary is repaired
 before scoring — at half weight, because a guess is
-weaker evidence than a word actually typed. The score is
+weaker evidence than a word actually typed. Each profile
+is also expanded with a table of synonym families
+(rename/change/retitle, folder/directory,
+photo/picture…), so a description written with one word
+matches requests phrased with its cousins, at a discount
+— measured in its own subsection below. The score is
 a coverage ratio, not a probability, and can pass 1.0.
 The best script wins only if it clears four bars — score
 at least 0.40, matched mass at least 1.2, at least two
@@ -898,15 +903,116 @@ answer is a trained stand-in, exactly the filename
 boundary from the file chapter wearing different
 clothes.
 
+**Wider words: the synonym expansion.** The matcher
+above knew only the words the registry itself used, and
+that cost real lines. In a live session, two
+description-style requests for the shipped rename-photos
+script — "the script that changes file names for me"
+and "change all the file names in birthdays" — both
+abstained with rename-photos *closest* at 0.41: right
+script, under the bar, because the description says
+"renames the photos… from camera names to dates" and
+the user said "changes file names". John's direction:
+*"expand those words so it can guess more commands."*
+
+So each profile is now expanded at registry load with a
+table of synonym families — `cmdmatch/synonyms.go`, a
+plain Go table of word groups: the verbs commands do
+(rename/change/retitle/relabel, clean/clear/delete/
+remove/erase…, move/transfer/migrate/shift,
+start/begin/run/launch/boot/fire, compress/zip/pack/
+squash/shrink/archive, sync/update/refresh/freshen…,
+fill/load/populate/seed) and the nouns they act on
+(file/document, photo/picture/image, folder/directory,
+name/title/label, website/site, data/record/dataset).
+Every cousin of every profile word joins that profile
+as an expanded word. Adding words is now a feature of
+the table, not of anyone's registry: teach the matcher
+a cousin by adding the word to its family. The families
+are kept tight and disjoint on purpose — file and photo
+are *separate* families (a file is not a photo), and
+"movie" is in no family at all. (The trainer's synonym
+table in `brain/synonyms.go` is the format's precedent;
+its words are everyday small talk, and only start/begin
+and build carry over — this table is the command
+vocabulary that one does not cover.)
+
+A cousin match borrows the profile word's evidence at
+a discount: the source word's idf × its class factor ×
+0.75. The ladder stays ordered — defining exact (×1.5)
+> defining cousin (×1.125) > example exact (×1.0) >
+example cousin (×0.75) — class dominates, exactness
+discounts within class, and a cousin never outweighs
+the word it came from. The factor was measured at both
+0.5 and 0.75: exactly one verdict in all four sets
+differed (an all-cousin line, below), wrong stayed 0
+and the talk set unmoved, so 0.75 ships — a repair's
+half weight is for a word the user did *not* type,
+while a synonym is a word they *did* type that means
+the profile word. Document frequencies and the repair
+vocabulary are still computed from the exact profiles
+only. One mechanism fix came out of the measuring: the
+typo repair runs before expansion and rewrote "pack"
+to the registry word "back" (one edit), stealing
+compress-logs' cousin before expansion could claim it
+— repair now applies only to words no profile knows
+exactly *or* by expansion. A word the table claims is
+a known cousin, not a typo.
+
+Measured, same sets as the original run plus two new
+ones, all declared before scoring:
+
+| set | before | after |
+| --- | --- | --- |
+| near-miss lines (2) | 0 right, 2 abstained (0.41) | **2 right** (0.72 each) |
+| held-out (32) | 24 / 0 / 8 | **28 / 0 / 4** |
+| talk false-fire (10) | 1 fired | 1 fired (the same line, the same 0.43) |
+| cousin lines (12, new) | 8 right, 4 abstained | **12 right** |
+
+**Wrong stayed 0 everywhere** — the property the
+original run established survives the wider net. The
+four held-out flips: "fire up the local server for my
+site" (start-dev-server's first right — *fire* is
+start's cousin, and the tie with deploy-site broke),
+"shrink the server logs to save space" (shrink is
+compress's cousin), "bring the backup mirrors up to
+date" (the *date* tie broke because *backup* is a
+cousin of update-mirrors' *copies*), and the
+seed-test-data description-only line, which now rests
+on *test* plus *records* — a cousin of its defining
+word *data* — instead of one word alone. The twelve
+cousin lines were written fresh for this round, each
+using words that appear in no registry description
+(save, picture, freshen, pack, retitle, shift, release,
+boot, reconcile, populate, dummy, erase, store…); at
+baseline eight already landed on the strength of their
+exact words, and expansion carried the four that could
+not — including "save my pictures somewhere safe",
+whose every content word is a cousin. The twelfth is a
+declared negative: "show me what's inside this
+directory" still abstains, because no list script
+exists and expansion must not invent one. No synonym
+pair produced a wrong match in any set, so the
+curation rule — a pair that fires wrong comes out —
+fired zero times; nothing was removed. Slot verdicts
+are unchanged (5 exact, 3 substituted): the extractor
+was not touched, and "migrate a database from folder
+jim to jake" still produces from=jim, to=jake and the
+same would-run line in the REPL.
+
 **Limits, plainly.**
 
-- Matching is lexical. A request that uses none of the
-  description's or examples' words cannot match:
-  "time to save my pictures again before i lose them"
-  abstains (0.20), because *pictures*, *save*, and
-  *lose* are words the backup-photos entry never uses.
-  The fix is in the user's hands and costs no training:
-  add the word to the description or the examples.
+- Matching is lexical, now at the level of word
+  families. A request that uses no word from any of a
+  script's families cannot match it. The standing
+  example got closer without landing: "time to save my
+  pictures again before i lose them" rose from 0.20 to
+  0.34 across the expansion and still abstains — *save*
+  and *pictures* are cousins now, but *time* and *lose*
+  are nobody's words, and they dilute what the cousins
+  earn. The fix is still in the user's hands and costs
+  no training: add the word to the description, the
+  examples, or its family in the table.
 - Past-tense talk on a script's own topic can fire it
   (the downloaded-movie line above). The bars bound
   this; they do not abolish it.
@@ -2223,7 +2329,8 @@ intent/     the meaning classifier: bag-of-words softmax
             subword piece schemes)
 cmdmatch/   the description matcher: a runtime registry of
             user-declared commands, matched lexically
-            against their descriptions — no training
+            against their descriptions (profiles expanded
+            with a synonym-family table) — no training
 brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume

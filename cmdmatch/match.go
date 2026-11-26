@@ -50,11 +50,45 @@ import (
 // real words sitting one edit from a registry word. Repair
 // stays, because it also carries true hits like "clear"
 // for "clean"; it just speaks more quietly now.)
+//
+// Each profile is also EXPANDED with the synonym table
+// (synonyms.go): every cousin of every profile word joins
+// the profile as an expanded word, so a description
+// written with one word matches requests phrased with its
+// cousins — "renames the photos" in the registry,
+// "change the file names" on the keyboard. A cousin match
+// borrows the profile word's evidence at a discount
+// (synonymFactor), keeping the weight ladder ordered —
+// defining exact > defining cousin > example exact >
+// example cousin: class dominates, exactness discounts
+// within class, and a cousin never outweighs the word it
+// came from. Document frequencies and the repair
+// vocabulary are computed from the exact profiles only:
+// expansion changes what a profile can match, not what
+// words are worth.
 const (
 	Threshold  = 0.40
 	massFloor  = 1.2
 	marginBars = 0.08
 	minMatched = 2
+
+	// synonymFactor is the discount on a cousin match,
+	// relative to the exact match of the word it came
+	// from (same idf, same defining/example class
+	// factor). Three quarters, NOT the typo repair's
+	// half: a repair is a guess at a word the user did
+	// not type, while a synonym is a word the user DID
+	// type that means the profile word — its only
+	// discount is that the profile never said it. At a
+	// half, a line carried entirely by typed cousins
+	// structurally could not clear the threshold (the
+	// denominator charges full idf for every word while
+	// the numerator paid half); both factors were
+	// measured, and 0.75 changed exactly one verdict —
+	// an all-cousin line landing on its script — with
+	// wrong at 0 and the talk set unmoved. The runs are
+	// on record in the README.
+	synonymFactor = 0.75
 )
 
 // stopwords are dropped from lines and profiles alike:
@@ -149,12 +183,22 @@ func contentWords(text string) []string {
 	return out
 }
 
+// expandedWord is a synonym cousin of a profile word:
+// the word it came from and that word's class, which the
+// cousin's match weight is borrowed from.
+type expandedWord struct {
+	source   string // the profile word this cousin expands
+	defining bool   // the source word's class
+}
+
 // profile is one script's matchable word set: defining
-// words (description + name parts) and example-only words.
+// words (description + name parts), example-only words,
+// and expanded words (synonym cousins of the other two).
 type profile struct {
 	decl     Declaration
-	defining map[string]bool // description and name words
-	example  map[string]bool // words appearing only in examples
+	defining map[string]bool         // description and name words
+	example  map[string]bool         // words appearing only in examples
+	expanded map[string]expandedWord // cousin -> its source word
 }
 
 func (p *profile) has(w string) (defining bool, ok bool) {
@@ -167,22 +211,41 @@ func (p *profile) has(w string) (defining bool, ok bool) {
 	return false, false
 }
 
+// expand adds the synonym cousins of one profile word to
+// the profile's expanded set. A word that is in the
+// profile exactly is never demoted to expanded status,
+// and when two source words claim the same cousin, a
+// defining source beats an example-only one (the cousin
+// borrows the stronger word's evidence).
+func (p *profile) expand(source string, defining bool) {
+	for _, c := range cousinsOf(source) {
+		if p.defining[c] || p.example[c] {
+			continue
+		}
+		if have, ok := p.expanded[c]; ok && (have.defining || !defining) {
+			continue
+		}
+		p.expanded[c] = expandedWord{source: source, defining: defining}
+	}
+}
+
 // Matcher scores lines against a registry's profiles. Build
 // one with NewMatcher; rebuild it when the registry changes
 // (it is cheap — registries are small).
 type Matcher struct {
-	profiles []profile
-	df       map[string]int // word -> number of profiles containing it
-	idfMax   float64        // idf of a word no profile contains
-	vocab    map[string]bool
+	profiles      []profile
+	df            map[string]int // word -> number of profiles containing it
+	idfMax        float64        // idf of a word no profile contains
+	vocab         map[string]bool
+	expandedVocab map[string]bool // every profile's expanded (cousin) words
 }
 
 // NewMatcher builds the profiles and document frequencies
 // of a registry.
 func NewMatcher(r *Registry) *Matcher {
-	m := &Matcher{df: map[string]int{}, vocab: map[string]bool{}}
+	m := &Matcher{df: map[string]int{}, vocab: map[string]bool{}, expandedVocab: map[string]bool{}}
 	for _, s := range r.Scripts {
-		p := profile{decl: s, defining: map[string]bool{}, example: map[string]bool{}}
+		p := profile{decl: s, defining: map[string]bool{}, example: map[string]bool{}, expanded: map[string]expandedWord{}}
 		for _, w := range contentWords(s.Description) {
 			p.defining[w] = true
 		}
@@ -196,6 +259,15 @@ func NewMatcher(r *Registry) *Matcher {
 				}
 			}
 		}
+		// Expansion comes last and only fills gaps: the
+		// exact sets are already final, and df below is
+		// counted over them alone.
+		for w := range p.defining {
+			p.expand(w, true)
+		}
+		for w := range p.example {
+			p.expand(w, false)
+		}
 		for w := range p.defining {
 			m.df[w]++
 			m.vocab[w] = true
@@ -203,6 +275,9 @@ func NewMatcher(r *Registry) *Matcher {
 		for w := range p.example {
 			m.df[w]++
 			m.vocab[w] = true
+		}
+		for w := range p.expanded {
+			m.expandedVocab[w] = true
 		}
 		m.profiles = append(m.profiles, p)
 	}
@@ -308,12 +383,18 @@ func (m *Matcher) Rank(line string) []Scored {
 	// neighbour, at half weight — a guess is weaker
 	// evidence than a word actually typed. (A word known
 	// to ANY profile is left alone, even if another
-	// profile would want it.)
+	// profile would want it.) A word the synonym table
+	// claims — a cousin of some profile word — is also
+	// left alone: it is a known cousin, not a typo, and
+	// repairing it first would steal it from the
+	// expansion that was written for it ("pack" repaired
+	// to "back" before compress could claim it as zip's
+	// cousin — measured, and the reason for this rule).
 	repaired := make([]string, len(words))
 	wasRepaired := make([]bool, len(words))
 	for i, w := range words {
 		repaired[i] = w
-		if _, known := m.df[w]; !known {
+		if _, known := m.df[w]; !known && !m.expandedVocab[w] {
 			if fix, ok := m.repair(w); ok {
 				repaired[i] = fix
 				wasRepaired[i] = true
@@ -329,15 +410,25 @@ func (m *Matcher) Rank(line string) []Scored {
 		mass := 0.0
 		matched := 0
 		for i, w := range repaired {
-			defining, ok := p.has(w)
-			if !ok {
+			weight := 0.0
+			if defining, ok := p.has(w); ok {
+				weight = m.idf(w)
+				if defining {
+					weight *= 1.5
+				}
+			} else if ex, ok := p.expanded[w]; ok {
+				// A cousin match: borrow the source
+				// word's evidence, discounted — the
+				// user's word means the profile word,
+				// but the profile never said it.
+				weight = m.idf(ex.source) * synonymFactor
+				if ex.defining {
+					weight *= 1.5
+				}
+			} else {
 				continue
 			}
 			matched++
-			weight := m.idf(w)
-			if defining {
-				weight *= 1.5
-			}
 			if wasRepaired[i] {
 				weight *= 0.5
 			}

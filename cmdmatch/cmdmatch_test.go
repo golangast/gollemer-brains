@@ -97,6 +97,127 @@ func TestStemConsistency(t *testing.T) {
 	}
 }
 
+// expansionRegistry mirrors the shipped registry entries
+// the near-miss lines were measured against, plus their
+// nearest neighbours.
+func expansionRegistry() *Registry {
+	return &Registry{Scripts: []Declaration{
+		{
+			Name:        "rename-photos",
+			Command:     "./scripts/rename-photos.sh",
+			Description: "renames the photos in a folder from camera names to dates",
+			Slots:       []string{"folder"},
+			Examples:    []string{"rename the photos in holidays", "rename the pictures in the family folder", "rename my photos", "fix the photo names in trips"},
+		},
+		{
+			Name:        "clean-downloads",
+			Command:     "./scripts/clean-downloads.sh",
+			Description: "cleans out the downloads folder and moves old files to the trash",
+			Examples:    []string{"clean out my downloads", "tidy up my downloads"},
+		},
+		{
+			Name:        "backup-photos",
+			Command:     "./scripts/backup-photos.sh",
+			Description: "backs up my photo library to the external drive",
+			Examples:    []string{"back up my photos", "copy my photos to the external drive"},
+		},
+	}}
+}
+
+func TestSynonymExpansion(t *testing.T) {
+	m := NewMatcher(expansionRegistry())
+	// The two live near-miss lines: the description says
+	// "renames the photos", the user said "changes file
+	// names" — no shared content word but "names" until
+	// change joined rename's family.
+	for _, line := range []string{
+		"the script that changes file names for me",
+		"change all the file names in birthdays",
+	} {
+		d, score, ok := m.Match(line)
+		if !ok || d.Name != "rename-photos" {
+			t.Errorf("Match(%q) = %q, %.2f, %v; want rename-photos via expansion", line, d.Name, score, ok)
+		}
+	}
+	// A cousin verb for a different script: erase is
+	// clean's cousin, and junk is nobody's word.
+	d, _, ok := m.Match("erase the junk cluttering my downloads")
+	if !ok || d.Name != "clean-downloads" {
+		t.Errorf("Match(erase line) = %q, %v; want clean-downloads", d.Name, ok)
+	}
+	// Cousins widen recall without inventing scripts:
+	// there is no list script, and folder's cousins must
+	// not conjure one — one matched word is not a match.
+	if d, score, ok := m.Match("show me what's inside this directory"); ok {
+		t.Errorf("Match(directory line) = %q (%.2f); want an abstention", d.Name, score)
+	}
+}
+
+func TestRepairDoesNotStealCousins(t *testing.T) {
+	// "pack" is one edit from the registry word "back"
+	// and a cousin of "compress". Repair must not rewrite
+	// it before expansion can claim it — with "back" in
+	// the vocabulary, the theft is there to happen.
+	reg := &Registry{Scripts: []Declaration{
+		{
+			Name:        "compress-logs",
+			Command:     "./scripts/compress-logs.sh",
+			Description: "compresses old log files into a single archive",
+			Examples:    []string{"compress the logs", "zip up the logs"},
+		},
+		{
+			Name:        "backup-photos",
+			Command:     "./scripts/backup-photos.sh",
+			Description: "backs up my photo library to the external drive",
+			Examples:    []string{"back up my photos"},
+		},
+	}}
+	m := NewMatcher(reg)
+	d, _, ok := m.Match("pack the logs into one bundle")
+	if !ok || d.Name != "compress-logs" {
+		t.Errorf("Match(pack line) = %q, %v; want compress-logs via the pack cousin", d.Name, ok)
+	}
+}
+
+func TestSynonymCountsLessThanExact(t *testing.T) {
+	m := NewMatcher(expansionRegistry())
+	scoreOf := func(line, name string) float64 {
+		for _, s := range m.Rank(line) {
+			if s.Script.Name == name {
+				return s.Score
+			}
+		}
+		return -1
+	}
+	// Same line, one word swapped for its cousin: the
+	// cousin version must score lower for the script —
+	// expansion borrows evidence, it does not mint it.
+	exact := scoreOf("rename the photos", "rename-photos")
+	cousin := scoreOf("retitle the photos", "rename-photos")
+	if !(cousin > 0 && cousin < exact) {
+		t.Errorf("cousin score %.2f should be positive and below exact %.2f", cousin, exact)
+	}
+}
+
+func TestSynonymFamiliesDisjoint(t *testing.T) {
+	owner := map[string]int{}
+	for i, fam := range synonymFamilies {
+		if len(fam) < 2 {
+			t.Errorf("family %d has fewer than two words", i)
+		}
+		for _, w := range fam {
+			s := stem(w)
+			if stopwords[w] {
+				t.Errorf("family %d contains stopword %q, which can never match", i, w)
+			}
+			if j, dup := owner[s]; dup && j != i {
+				t.Errorf("stemmed word %q (from %q) appears in families %d and %d", s, w, j, i)
+			}
+			owner[s] = i
+		}
+	}
+}
+
 func TestRegistryRoundTripAndValidation(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "commands.json")
 	r := testRegistry()
