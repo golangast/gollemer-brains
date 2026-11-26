@@ -1326,37 +1326,56 @@ the migration last — the plan still comes out sorted:
 ```
 > compress the logs, back up my photos and migrate a database from folder jim to jake
 plan: 3 steps (3 ready, 0 gaps)
-1. backup-photos [prepare · on files] — backs up my photo library to the external drive
-   runs: ./scripts/backup-photos.sh
-2. migrate-database [execute · on database] — migrates a database from jim to jake
-   runs: ./scripts/migrate-db.sh jim jake
-3. compress-logs [cleanup · on logs] — compresses old log files into a single archive
-   runs: ./scripts/compress-logs.sh
+[ ] 1. Prepare — concept: backup-photos
+    Target: files
+    preview: backs up my photo library to the external drive
+    Would run: ./scripts/backup-photos.sh
+[ ] 2. Execute — concept: migrate-database
+    Target: database
+    preview: migrates a database from jim to jake
+    Would run: ./scripts/migrate-db.sh jim jake
+[ ] 3. Cleanup — concept: compress-logs
+    Target: logs
+    preview: compresses old log files into a single archive
+    Would run: ./scripts/compress-logs.sh
 nothing has run yet.
 ```
 
-Each step carries the same preview as the single-line
-path — the description with the segment's own values
-seated — and its exact runs line. A segment no
-command knows is a **gap**, printed in place; after
-the plan, the first gap earns the same teach offer a
-lone unknown want gets, and teaching it re-renders
-the plan complete:
+The checklist's shape is deliberate: each step is a
+checkbox naming its stage and its concept, a
+**Target** line saying what the step acts on — the
+entry's `acts_on` hint with its bound values in words
+(*files in trips*, *database*) — the same preview as
+the single-line path (the description with the
+step's values seated), and its exact Would run line.
+A step whose concept removes or changes things
+carries the preview's caution line, as on the
+single-line path. A segment no command knows is a
+**gap**, printed in place as its own checkbox line;
+after the plan, the first gap earns the same teach
+offer a lone unknown want gets, and teaching it
+re-renders the plan complete:
 
 ```
 > back up my photos and water the greenhouse plants
 plan: 2 steps (1 ready, 1 gap)
-1. backup-photos [prepare · on files] — backs up my photo library to the external drive
-   runs: ./scripts/backup-photos.sh
-2. ? — no command knows this step yet: 'water the greenhouse plants'
+[ ] 1. Prepare — concept: backup-photos
+    Target: files
+    preview: backs up my photo library to the external drive
+    Would run: ./scripts/backup-photos.sh
+[ ] 2. ? — no command knows this step yet: 'water the greenhouse plants'
 nothing has run yet.
 want to teach me? what command should run when you say that — or press enter to skip: ./scripts/water-plants.sh
 learned: when you say "water the greenhouse plants", i'll run ./scripts/water-plants.sh (saved as water-plants) — it chooses it from now on, in this session and every later one. nothing was retrained.
 plan: 2 steps (2 ready, 0 gaps)
-1. backup-photos [prepare · on files] — backs up my photo library to the external drive
-   runs: ./scripts/backup-photos.sh
-2. water-plants — water the greenhouse plants
-   runs: ./scripts/water-plants.sh
+[ ] 1. Prepare — concept: backup-photos
+    Target: files
+    preview: backs up my photo library to the external drive
+    Would run: ./scripts/backup-photos.sh
+[ ] 2. Execute — concept: water-plants
+    Target: —
+    preview: water the greenhouse plants
+    Would run: ./scripts/water-plants.sh
 nothing has run yet.
 ```
 
@@ -1368,6 +1387,92 @@ but no step in this plan is gather-stats."), and a
 its own line — "verify with no execute step — nothing
 to check the result of."
 
+**Steps share context.** The steps of a job are not
+strangers to each other, and a plan's steps are not
+either. A step that is missing a value for one of its
+slots **inherits** the value an earlier step bound to
+the *same slot name* — same name only, never a
+mapping across names (a folder is not a file) — and
+the inherited value is marked "(from step N)"
+wherever it is shown, and appears in the step's
+Would run exactly as if it had been spoken there:
+
+```
+> sort the files in trips by size and rename the photos in the folder
+plan: 2 steps (2 ready, 0 gaps)
+[ ] 1. Inspect — concept: sort-by-size
+    Target: files in trips
+    preview: sorts the files in the folder trips by size, largest first
+    Would run: ls -lhS trips
+[ ] 2. Execute — concept: rename-photos
+    Target: files in trips (from step 1)
+    preview: renames the photos in the folder trips (from step 1) from camera names to dates
+    Would run: ./scripts/rename-photos.sh trips
+nothing has run yet.
+```
+
+The rename step's own words named no folder — "the
+folder" was all it said — so the folder is step 1's.
+One refinement matters here: a value counts as a
+step's own only when its segment actually *named* it.
+The extractor may offer a favourite for a segment
+that stated none (it offered "school" for the rename
+segment above, live), and such a guess loses to a
+value an earlier step grounded in the user's own
+words. What the user said outranks what the
+extractor guessed.
+
+**Each-file steps.** Some steps do not act on one
+thing but on every file of a set: *"sort the files in
+a folder by size and then delete the first line in
+the files"*. A step with a file slot its segment left
+unnamed reads as applying **per file** when its
+segment speaks of files in the plural ("the files",
+"each file", "all files", "every file"), or when the
+plan's context supplies a folder for the set to live
+in. Its Target names the set, its Would run carries
+the per-file suffix, and — the concept here deletes —
+the caution comes with it:
+
+```
+> sort the files in trips by size and then delete the first line in the files
+plan: 2 steps (2 ready, 0 gaps)
+[ ] 1. Inspect — concept: sort-by-size
+    Target: folder trips
+    preview: sorts the files in the folder trips by size, largest first
+    Would run: ls -lhS trips
+[ ] 2. Execute — concept: del
+    Target: each file in trips (from step 1)
+    preview: deletes the first line of a file
+    Would run: ./del.sh — on each file in trips
+    careful: this command removes or changes things.
+nothing has run yet.
+```
+
+(`del` is the delete command taught by declaration
+in the teach chapter; `sort-by-size` was added with
+stage `inspect`. With no sort concept declared, the
+first step of that sentence is a gap and earns the
+teach offer — a command is never invented for a step,
+here least of all one that would list a folder the
+user never named a tool for.) A step whose segment
+names one concrete file is a single target, never
+each-file: "delete the first line of the file
+cat.txt" binds cat.txt and runs on it alone.
+
+Two watch-outs belong to the descriptions, not the
+machinery, and are stated rather than built. **Sort
+direction is words**: whether a sort is
+largest-first or smallest-first lives in the
+concept's description ("…, largest first"), so teach
+it that way and the preview will say it back. And
+**an each-file step that removes or changes things
+is where the binary-file danger lives**: deleting
+line 1 corrupts images, archives and compiled files,
+so the step's caution line and its named target set
+are exactly what a gated executor would confirm
+before touching the first file.
+
 **Plan limits, plainly.** The splitting is
 punctuation-level: commas and *ands* and *thens*,
 nothing smarter, so one want phrased with an *and*
@@ -1377,10 +1482,21 @@ knows it. The ordering is only as good as the stages
 declared: unstaged commands all land at `execute` and
 keep their typed order among themselves, and an
 `after` edge can only order steps the plan actually
-contains. And a plan, like everything in this
-example, is printed, never run — its checklist is
-what a gated executor would confirm, step by step,
-against each step's preview.
+contains. Inheritance is same-name only and flows
+forward: a step can only take a value from a step
+before it in the running order, a slot nobody bound
+stays "(not heard)", and when no earlier step grounds
+a value the extractor's own offer still stands in the
+step that heard it (the favourite-value limit, as
+everywhere in this example). The each-file reading
+needs a file slot to apply to: a command that takes a
+folder, not files, is never rendered per-file, and a
+plural phrase in a step whose file slot a *later*
+step would fill does not reach backwards. And a
+plan, like everything in this example, is printed,
+never run — its checklist is what a gated executor
+would confirm, step by step, against each step's
+preview.
 
 
 ## Runnable example: sort a brain dump by intent

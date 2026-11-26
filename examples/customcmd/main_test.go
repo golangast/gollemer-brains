@@ -195,8 +195,9 @@ func TestAddFlowZeroRetrain(t *testing.T) {
 	// declared by description alone matches from the next
 	// line on — is what the step line asserts now.
 	d.handle("water the greenhouse plants and log it")
-	if !strings.Contains(out.String(), "1. water-plants — logs watering the greenhouse plants and notes the time") ||
-		!strings.Contains(out.String(), "   runs: ./scripts/water-plants.sh") {
+	if !strings.Contains(out.String(), "[ ] 1. Execute — concept: water-plants") ||
+		!strings.Contains(out.String(), "    preview: logs watering the greenhouse plants and notes the time") ||
+		!strings.Contains(out.String(), "    Would run: ./scripts/water-plants.sh") {
 		t.Errorf("freshly declared script did not match:\n%s", out.String())
 	}
 	// And the addition persisted to the registry file.

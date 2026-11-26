@@ -116,17 +116,22 @@ func TestPlanOutOfOrderSession(t *testing.T) {
 	got := out.String()
 	for _, want := range []string{
 		"plan: 3 steps (3 ready, 0 gaps)",
-		"1. backup-photos [prepare · on files] — backs up my photo library to the external drive",
-		"2. migrate-database [execute · on database] — migrates a database from jim to jake",
-		"   runs: ./scripts/migrate-db.sh jim jake",
-		"3. compress-logs [cleanup · on logs] — compresses old log files into a single archive",
+		"[ ] 1. Prepare — concept: backup-photos",
+		"    Target: files",
+		"    preview: backs up my photo library to the external drive",
+		"[ ] 2. Execute — concept: migrate-database",
+		"    Target: database",
+		"    preview: migrates a database from jim to jake",
+		"    Would run: ./scripts/migrate-db.sh jim jake",
+		"[ ] 3. Cleanup — concept: compress-logs",
+		"    Target: logs",
 		"nothing has run yet.",
 	} {
 		if !strings.Contains(got, want) {
 			t.Errorf("plan output missing %q:\n%s", want, got)
 		}
 	}
-	if strings.Index(got, "1. backup-photos") > strings.Index(got, "3. compress-logs") {
+	if strings.Index(got, "[ ] 1. Prepare") > strings.Index(got, "[ ] 3. Cleanup") {
 		t.Errorf("steps not in stage order:\n%s", got)
 	}
 }
@@ -196,8 +201,8 @@ func TestPlanVerifyWithoutExecute(t *testing.T) {
 	got := out.String()
 	for _, want := range []string{
 		"plan: 2 steps (2 ready, 0 gaps)",
-		"1. stash-photos [prepare]",
-		"2. check-tests [verify]",
+		"[ ] 1. Prepare — concept: stash-photos",
+		"[ ] 2. Verify — concept: check-tests",
 		"verify with no execute step — nothing to check the result of.",
 	} {
 		if !strings.Contains(got, want) {
@@ -227,6 +232,162 @@ func TestPlanAfterMissingNote(t *testing.T) {
 	got := out.String()
 	if !strings.Contains(got, "note: publish-report is declared after gather-stats, but no step in this plan is gather-stats.") {
 		t.Errorf("missing-after note absent:\n%s", got)
+	}
+}
+
+// stubDemo builds a demo over the given scripts (saved
+// to a temp registry) whose extractor answers by
+// substring: a segment naming cat.txt hears "cat.txt",
+// one naming trips hears "trips", one speaking of a
+// first line hears "nina", and a rename segment hears
+// "school" — the last two are favourites the segment
+// never named, the live extractor's documented habit,
+// which the context tests need in the room. Anything
+// else hears nothing. That is the control the context
+// tests need: exactly which segment stated a value is
+// known.
+func stubDemo(t *testing.T, scripts []cmdmatch.Declaration, answers []string) (*demo, *bytes.Buffer) {
+	t.Helper()
+	reg := &cmdmatch.Registry{Scripts: scripts}
+	dir := t.TempDir()
+	path := filepath.Join(dir, "commands.json")
+	if err := reg.Save(path); err != nil {
+		t.Fatal(err)
+	}
+	reg, err := cmdmatch.LoadRegistry(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var out bytes.Buffer
+	d := &demo{
+		registryPath: path,
+		reg:          reg,
+		matcher:      cmdmatch.NewMatcher(reg),
+		extract: func(line string) (string, error) {
+			switch {
+			case strings.Contains(line, "cat.txt"):
+				return "cat.txt", nil
+			case strings.Contains(line, "trips"):
+				return "trips", nil
+			case strings.Contains(line, "first line"):
+				return "nina", nil
+			case strings.Contains(line, "rename"):
+				return "school", nil
+			}
+			return "", nil
+		},
+		nextLine: func(prompt string) (string, bool) {
+			if len(answers) == 0 {
+				return "", false
+			}
+			a := answers[0]
+			answers = answers[1:]
+			return a, true
+		},
+		out: &out,
+	}
+	return d, &out
+}
+
+var sortScript = cmdmatch.Declaration{
+	Name: "sort-by-size", Command: "ls -lhS {folder}",
+	Description: "sorts the files in a folder by size, largest first",
+	Slots:       []string{"folder"}, Stage: "inspect", ActsOn: "files",
+}
+
+var delScript = cmdmatch.Declaration{
+	Name: "del", Command: "./del.sh",
+	Description: "deletes the first line of a file",
+	Slots:       []string{"file"}, Stage: "execute",
+}
+
+// TestPlanInheritsSameSlot: a step whose segment never
+// stated its folder inherits the value an earlier step
+// bound to the same slot name, marked "(from step 1)"
+// in its Target, its preview and (as if spoken) its
+// Would run. The stub extractor offers the rename
+// segment a favourite ("school") it never named: the
+// grounded value from step 1 outranks the guess.
+func TestPlanInheritsSameSlot(t *testing.T) {
+	reg := []cmdmatch.Declaration{sortScript, {
+		Name: "rename-photos", Command: "./scripts/rename-photos.sh",
+		Description: "renames the photos in a folder from camera names to dates",
+		Slots:       []string{"folder"}, Stage: "execute", ActsOn: "files",
+	}}
+	d, out := stubDemo(t, reg, nil)
+	d.handle("sort the files in trips by size and rename the photos in the folder")
+	got := out.String()
+	for _, want := range []string{
+		"[ ] 1. Inspect — concept: sort-by-size",
+		"    Target: files in trips",
+		"[ ] 2. Execute — concept: rename-photos",
+		"    Target: files in trips (from step 1)",
+		"    preview: renames the photos in the folder trips (from step 1) from camera names to dates",
+		"    Would run: ./scripts/rename-photos.sh trips",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("inheritance output missing %q:\n%s", want, got)
+		}
+	}
+}
+
+// TestPlanEachFileStep: a file-slot step whose segment
+// speaks of "the files", in a plan whose context
+// supplies a folder, applies to each file of that
+// folder — Target, Would run and (the concept deletes)
+// the caution all say so. The stub extractor offers
+// "nina" for the delete segment, a favourite it never
+// named: that is not a named target, so it neither
+// defeats the each-file reading nor rides into the
+// rendered step.
+func TestPlanEachFileStep(t *testing.T) {
+	d, out := stubDemo(t, []cmdmatch.Declaration{sortScript, delScript}, nil)
+	d.handle("sort the files in trips by size and then delete the first line in the files")
+	got := out.String()
+	for _, want := range []string{
+		"[ ] 1. Inspect — concept: sort-by-size",
+		"[ ] 2. Execute — concept: del",
+		"    Target: each file in trips (from step 1)",
+		"    Would run: ./del.sh — on each file in trips",
+		"    careful: this command removes or changes things.",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("each-file output missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "nina") {
+		t.Errorf("extractor favourite rode into the each-file step:\n%s", got)
+	}
+}
+
+// TestPlanEachFileDefeatedByNamedFile: a segment that
+// names one concrete file is a single target — no
+// each-file reading, and the file binds as itself.
+func TestPlanEachFileDefeatedByNamedFile(t *testing.T) {
+	d, out := stubDemo(t, []cmdmatch.Declaration{sortScript, delScript}, nil)
+	d.handle("sort the files in trips by size and delete the first line of the file cat.txt")
+	got := out.String()
+	for _, want := range []string{
+		"    Target: file cat.txt",
+		"    Would run: ./del.sh cat.txt",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("named-file output missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "on each file") {
+		t.Errorf("named file read as each-file:\n%s", got)
+	}
+}
+
+func TestStageLabel(t *testing.T) {
+	for stage, want := range map[string]string{
+		"": "Execute", "execute": "Execute", "inspect": "Inspect",
+		" verify ": "Verify", "CLEANUP": "Cleanup", "prepare": "Prepare",
+	} {
+		if got := stageLabel(stage); got != want {
+			t.Errorf("stageLabel(%q) = %q, want %q", stage, got, want)
+		}
 	}
 }
 

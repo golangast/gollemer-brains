@@ -34,10 +34,14 @@
 // A line carrying several wants at once is answered
 // with a PLAN (plan.go): the line is split at its commas
 // and ands, each segment is matched on its own, and the
-// steps are laid out as a numbered checklist ordered by
-// the stages and prerequisites the registry declares —
-// not by typing order — with the segments no command
-// knows shown as gaps and offered for teaching.
+// steps are laid out as a checklist ordered by the
+// stages and prerequisites the registry declares — not
+// by typing order — with the segments no command knows
+// shown as gaps and offered for teaching. Steps share
+// context as they go: a value one step binds can be
+// inherited by a later step that needs it, and a step
+// that speaks of files in the plural applies to each
+// file of the plan's folder.
 //
 // This example RUNS NOTHING. It prints the script it
 // understood, the arguments it heard, a plain-words
@@ -265,10 +269,30 @@ var (
 // heard is marked "(not heard)" in its seat or its
 // listing, never hidden.
 func previewText(decl cmdmatch.Declaration, values []string) string {
+	return previewTextProvenance(decl, values, nil)
+}
+
+// previewTextProvenance is previewText with provenance:
+// prov maps a slot name to the number of the plan step
+// its value was inherited from (the plan layer's shared
+// context, plan.go), and a value that arrived that way
+// is marked "(from step N)" where it lands — in its seat
+// or in its listing. The single-line path passes nil:
+// nothing there is inherited, and its output is exactly
+// previewText's. An empty string in values counts as not
+// heard (the extractor's Fields never yields one; the
+// plan layer's positional padding can).
+func previewTextProvenance(decl cmdmatch.Declaration, values []string, prov map[string]int) string {
+	mark := func(slot string) string {
+		if n := prov[slot]; n > 0 {
+			return fmt.Sprintf(" (from step %d)", n)
+		}
+		return ""
+	}
 	text := decl.Description
 	bound := map[string]string{}
 	for i, slot := range decl.Slots {
-		if i < len(values) {
+		if i < len(values) && values[i] != "" {
 			bound[slot] = values[i]
 		} else {
 			bound[slot] = "(not heard)"
@@ -278,20 +302,20 @@ func previewText(decl cmdmatch.Declaration, values []string) string {
 	if from, hasFrom := bound["from"]; hasFrom {
 		if to, hasTo := bound["to"]; hasTo {
 			if loc := reFromToSeat.FindStringIndex(text); loc != nil {
-				text = text[:loc[0]] + "from " + from + " to " + to + text[loc[1]:]
+				text = text[:loc[0]] + "from " + from + mark("from") + " to " + to + mark("to") + text[loc[1]:]
 				seated["from"], seated["to"] = true, true
 			}
 		}
 	}
 	if v, ok := bound["file"]; ok {
 		if loc := reFileSeat.FindStringIndex(text); loc != nil {
-			text = text[:loc[0]] + "the file " + v + text[loc[1]:]
+			text = text[:loc[0]] + "the file " + v + mark("file") + text[loc[1]:]
 			seated["file"] = true
 		}
 	}
 	if v, ok := bound["folder"]; ok {
 		if loc := reFolderSeat.FindStringIndex(text); loc != nil {
-			text = text[:loc[0]] + "the folder " + v + text[loc[1]:]
+			text = text[:loc[0]] + "the folder " + v + mark("folder") + text[loc[1]:]
 			seated["folder"] = true
 		}
 	}
@@ -303,7 +327,7 @@ func previewText(decl cmdmatch.Declaration, values []string) string {
 		if bound[slot] == "(not heard)" {
 			unseated = append(unseated, slot+": (not heard)")
 		} else {
-			unseated = append(unseated, slot+"="+bound[slot])
+			unseated = append(unseated, slot+"="+bound[slot]+mark(slot))
 		}
 	}
 	if len(unseated) > 0 {

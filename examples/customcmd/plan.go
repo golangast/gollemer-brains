@@ -22,11 +22,21 @@ import (
 // prerequisites rather than by typing order, the
 // segments no command knows are shown as gaps (with one
 // offer to teach the first of them), and the result is a
-// numbered checklist whose every step carries the same
-// preview the single-line path prints — the gate any
-// future execution step would confirm against, step by
-// step. A plan is printed, never run: execution stays
-// the separate, gated step it has always been here.
+// checklist whose every step carries the same preview
+// the single-line path prints — the gate any future
+// execution step would confirm against, step by step.
+// A plan is printed, never run: execution stays the
+// separate, gated step it has always been here.
+//
+// Steps in a plan also SHARE CONTEXT, the way the steps
+// of a job do: a step that is missing a value inherits
+// the value an earlier step bound to the same slot name
+// ("sort the files in trips … and rename the photos in
+// the folder" — the rename step's folder is trips,
+// inherited and marked "(from step 1)"), and a step
+// whose segment speaks of files in the plural, in a
+// plan that has a folder in play, applies to EACH file
+// of that folder rather than to one file it never named.
 
 // splitSegments splits a line at the punctuation-level
 // joins a multi-step request is typed with: commas,
@@ -54,12 +64,29 @@ func splitSegments(line string) []string {
 // score, and the argument values the extractor heard in
 // the segment. A step with matched false is a GAP: no
 // command knows that step yet.
+//
+// The remaining fields are filled in by shareContext
+// once the steps are ordered: eff holds the step's
+// effective slot values (its own, plus any inherited
+// from earlier steps), fromStep records which step an
+// inherited value came from, grounded records whether a
+// value was actually named in the segment that first
+// stated it (as opposed to offered by the extractor for
+// a segment that named none), and eachFile/eachFolder
+// carry the per-file reading of the step.
 type planStep struct {
 	segment string
 	decl    cmdmatch.Declaration
 	score   float64
 	values  []string
 	matched bool
+
+	eff          map[string]string
+	fromStep     map[string]int
+	grounded     map[string]bool
+	eachFile     bool
+	eachFolder   string
+	eachFolderIn int // step the each-file folder came from; 0 = this step or none
 }
 
 // stageRank orders the stages a plan is sorted by:
@@ -237,6 +264,7 @@ func planNotes(steps []planStep, cycle bool) []string {
 func (d *demo) handlePlan(line string) {
 	steps, _ := d.buildPlan(line)
 	ordered, cycle := orderSteps(steps)
+	shareContext(ordered)
 	d.printPlan(ordered, planNotes(ordered, cycle))
 
 	var firstGap *planStep
@@ -254,20 +282,337 @@ func (d *demo) handlePlan(line string) {
 	if len(d.reg.Scripts) > before {
 		if steps, ok := d.buildPlan(line); ok {
 			ordered, cycle := orderSteps(steps)
+			shareContext(ordered)
 			d.printPlan(ordered, planNotes(ordered, cycle))
 		}
 	}
 }
 
+// shareContext works out what the ordered steps share,
+// in two passes over the steps in the order they would
+// run.
+//
+// First, INHERITANCE: a step missing a value for one of
+// its slots inherits the value an earlier step bound to
+// the SAME slot name — same name only, never a mapping
+// across names (a folder is not a file). The earliest
+// step holding the value is its source, and the step
+// remembers it (fromStep) so the value can be marked
+// "(from step N)" wherever it is shown. A value a step
+// inherited can itself be inherited onward; the mark
+// still names the step that first bound it. And a value
+// the extractor merely OFFERED a step — a favourite its
+// segment never named — loses to a grounded value from
+// an earlier step: what the user actually said in step
+// 1 outranks what the extractor guessed in step 2.
+//
+// Second, the EACH-FILE reading: a step with a file
+// slot its own segment left unnamed applies to each
+// file when its segment speaks of files in the plural
+// ("the files", "each file", "all files", "every file")
+// or when the plan's context supplies a folder — an
+// earlier step's folder, or its own. The folder it
+// applies in is that folder. A step whose segment named
+// one concrete file is NOT each-file: a single named
+// file is a single target, and defeats the reading.
+//
+// "Named" is meant literally, and it matters: the
+// extractor may offer a favourite value for a segment
+// that stated none ("delete the first line in the
+// files" can come back with a file the user never
+// said). Such a value is not a named target, and does
+// not defeat the each-file reading; likewise only a
+// folder some segment actually named counts as context
+// for the per-file set. A value is grounded when it
+// appears in the segment that first stated it, and
+// groundedness travels with the value when it is
+// inherited.
+func shareContext(steps []planStep) {
+	for i := range steps {
+		s := &steps[i]
+		if !s.matched {
+			continue
+		}
+		s.eff = map[string]string{}
+		s.fromStep = map[string]int{}
+		s.grounded = map[string]bool{}
+		for j, slot := range s.decl.Slots {
+			own := ""
+			if j < len(s.values) {
+				own = s.values[j]
+			}
+			if own != "" && segmentMentions(s.segment, own) {
+				s.eff[slot] = own // stated by this very segment: grounded
+				s.grounded[slot] = true
+				continue
+			}
+			// The step stated nothing (or only an unnamed
+			// favourite): a grounded value from an earlier
+			// step wins over the favourite.
+			filled := false
+			for k := 0; k < i && !filled; k++ {
+				if !steps[k].matched {
+					continue
+				}
+				if v, ok := steps[k].eff[slot]; ok && steps[k].grounded[slot] {
+					s.eff[slot] = v
+					s.grounded[slot] = true
+					if n := steps[k].fromStep[slot]; n > 0 {
+						s.fromStep[slot] = n
+					} else {
+						s.fromStep[slot] = k + 1
+					}
+					filled = true
+				}
+			}
+			if filled {
+				continue
+			}
+			if own != "" {
+				s.eff[slot] = own // the favourite stands: nothing better exists
+				continue
+			}
+			for k := 0; k < i; k++ {
+				if !steps[k].matched {
+					continue
+				}
+				if v, ok := steps[k].eff[slot]; ok {
+					s.eff[slot] = v
+					s.grounded[slot] = steps[k].grounded[slot]
+					if n := steps[k].fromStep[slot]; n > 0 {
+						s.fromStep[slot] = n
+					} else {
+						s.fromStep[slot] = k + 1
+					}
+					break
+				}
+			}
+		}
+	}
+	for i := range steps {
+		s := &steps[i]
+		if !s.matched {
+			continue
+		}
+		fileIdx := -1
+		for j, slot := range s.decl.Slots {
+			if slot == "file" {
+				fileIdx = j
+			}
+		}
+		if fileIdx < 0 {
+			continue
+		}
+		ownNamed := fileIdx < len(s.values) && s.values[fileIdx] != "" &&
+			segmentMentions(s.segment, s.values[fileIdx])
+		if ownNamed || s.fromStep["file"] > 0 {
+			continue // one concrete file is in play: a single target
+		}
+		folder, folderIn := "", 0
+		if v, ok := s.eff["folder"]; ok && s.grounded["folder"] {
+			folder = v
+			if n := s.fromStep["folder"]; n > 0 {
+				folderIn = n
+			} else {
+				folderIn = i + 1
+			}
+		} else {
+			for k := 0; k < i; k++ {
+				if !steps[k].matched {
+					continue
+				}
+				if v, ok := steps[k].eff["folder"]; ok && steps[k].grounded["folder"] {
+					folder, folderIn = v, k+1
+					if n := steps[k].fromStep["folder"]; n > 0 {
+						folderIn = n
+					}
+					break
+				}
+			}
+		}
+		if rePluralFiles.MatchString(s.segment) || folder != "" {
+			s.eachFile = true
+			s.eachFolder = folder
+			if folder != "" && folderIn != i+1 {
+				s.eachFolderIn = folderIn
+			}
+		}
+	}
+}
+
+// segmentMentions reports whether a value appears, as a
+// whole word, in a segment — the test of whether the
+// segment actually NAMED the value, as opposed to the
+// extractor offering it for a segment that stated none.
+func segmentMentions(segment, value string) bool {
+	if value == "" {
+		return false
+	}
+	return regexp.MustCompile(`(?i)\b` + regexp.QuoteMeta(value) + `\b`).MatchString(segment)
+}
+
+// rePluralFiles is the plural-file marker a segment can
+// carry: files spoken of as a set, not one named file.
+var rePluralFiles = regexp.MustCompile(`(?i)\b(?:the|all)\s+files\b|\b(?:each|every)\s+files?\b`)
+
+// posValues renders a step's effective values in slot
+// order, for previewText and wouldRun: each slot's own
+// or inherited value, positionally. Only positions up to
+// the last valued slot are returned (a wholly unvalued
+// step keeps the extractor's own answer), and a slot
+// with no value before that point pads as "" — which
+// previewText reads as not heard.
+func (s planStep) posValues() []string {
+	last := -1
+	for j, slot := range s.decl.Slots {
+		if _, ok := s.eff[slot]; ok {
+			last = j
+		}
+	}
+	if last < 0 {
+		return s.values
+	}
+	out := make([]string, last+1)
+	for j := 0; j <= last; j++ {
+		out[j] = s.eff[s.decl.Slots[j]]
+	}
+	return out
+}
+
+// stageLabel renders a stage for the checklist: the
+// declared stage, capitalized — and "Execute" for an
+// unstaged command, which is where an untagged step
+// sorts anyway.
+func stageLabel(stage string) string {
+	s := strings.ToLower(strings.TrimSpace(stage))
+	if s == "" {
+		return "Execute"
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
+}
+
+// provMark is the "(from step N)" marker for a slot
+// whose value the step inherited, or "" for its own.
+func (s planStep) provMark(slot string) string {
+	if n := s.fromStep[slot]; n > 0 {
+		return fmt.Sprintf(" (from step %d)", n)
+	}
+	return ""
+}
+
+// targetText renders a step's Target line: what the
+// step acts on, in words. An each-file step names the
+// set it applies to; a step whose command declares an
+// acts-on hint leads with it (a bound folder seats as
+// "in <folder>", a bound file as the file itself, and
+// other slots stay out of the way — "database" is
+// target enough for a migration); a step with no hint
+// lists its bound slots as words ("folder trips",
+// "from jim to jake"). Inherited values carry their
+// "(from step N)" mark. A step with nothing bound and
+// no hint has no target to name: "—".
+func (s planStep) targetText() string {
+	if s.eachFile {
+		t := "each file"
+		if s.eachFolder != "" {
+			t += " in " + s.eachFolder
+			if s.eachFolderIn > 0 {
+				t += fmt.Sprintf(" (from step %d)", s.eachFolderIn)
+			}
+		}
+		return t
+	}
+	if s.decl.ActsOn != "" {
+		t := s.decl.ActsOn
+		if v, ok := s.eff["folder"]; ok {
+			t += " in " + v + s.provMark("folder")
+		} else if v, ok := s.eff["file"]; ok {
+			t += " " + v + s.provMark("file")
+		}
+		return t
+	}
+	var words []string
+	for _, slot := range s.decl.Slots {
+		v, ok := s.eff[slot]
+		if !ok {
+			continue
+		}
+		switch slot {
+		case "from":
+			words = append(words, "from "+v+s.provMark("from"))
+		case "to":
+			words = append(words, "to "+v+s.provMark("to"))
+		default:
+			words = append(words, slot+" "+v+s.provMark(slot))
+		}
+	}
+	if len(words) == 0 {
+		return "—"
+	}
+	return strings.Join(words, ", ")
+}
+
+// stepRender returns the declaration and positional
+// values a step renders its preview and Would run lines
+// with. For an each-file step the file slot is dropped
+// from both: the step applies to a set of files, not to
+// any one file — least of all a favourite the extractor
+// offered for a segment that named none, which must not
+// ride into the rendered command.
+func (s planStep) stepRender() (cmdmatch.Declaration, []string) {
+	decl, vals := s.decl, s.posValues()
+	if !s.eachFile {
+		return decl, vals
+	}
+	var slots []string
+	var out []string
+	for j, slot := range decl.Slots {
+		if slot == "file" {
+			continue
+		}
+		slots = append(slots, slot)
+		if j < len(vals) {
+			out = append(out, vals[j])
+		} else {
+			out = append(out, "")
+		}
+	}
+	for len(out) > 0 && out[len(out)-1] == "" {
+		out = out[:len(out)-1]
+	}
+	decl.Slots = slots
+	return decl, out
+}
+
+// wouldRunText renders a step's Would run line: the
+// command with the step's effective values, exactly as
+// if they had all been spoken in its own segment — and,
+// for an each-file step, the per-file suffix naming the
+// set it applies to.
+func (s planStep) wouldRunText() string {
+	decl, vals := s.stepRender()
+	base := wouldRun(decl, vals)
+	if !s.eachFile {
+		return base
+	}
+	if s.eachFolder != "" {
+		return base + " — on each file in " + s.eachFolder
+	}
+	return base + " — on each file"
+}
+
 // printPlan renders the checklist: a header counting
-// steps, ready steps, and gaps; one numbered entry per
-// step — a matched step with its command's name, its
-// stage and acts-on hints when declared, its preview
-// line (the description with the segment's values
-// seated, exactly as the single-line path renders it)
-// and its runs line; a gap step with the segment nobody
-// knows; then the missing-link notes; and the standing
-// reminder that nothing has run.
+// steps, ready steps, and gaps; then one checkbox entry
+// per step — its stage and concept, a Target line
+// naming what it acts on (with inherited values marked
+// "(from step N)"), its preview line (the description
+// with the step's effective values seated, exactly as
+// the single-line path renders it), and its Would run
+// line. A step whose concept removes or changes things
+// carries the caution, as the single-line preview does.
+// A gap step is a single checkbox line with the segment
+// nobody knows. Then the missing-link notes, and the
+// standing reminder that nothing has run.
 func (d *demo) printPlan(steps []planStep, notes []string) {
 	ready, gaps := 0, 0
 	for _, s := range steps {
@@ -280,33 +625,22 @@ func (d *demo) printPlan(steps []planStep, notes []string) {
 	fmt.Fprintf(d.out, "plan: %d %s (%d ready, %d %s)\n", len(steps), plural(len(steps), "step"), ready, gaps, plural(gaps, "gap"))
 	for i, s := range steps {
 		if !s.matched {
-			fmt.Fprintf(d.out, "%d. ? — no command knows this step yet: '%s'\n", i+1, s.segment)
+			fmt.Fprintf(d.out, "[ ] %d. ? — no command knows this step yet: '%s'\n", i+1, s.segment)
 			continue
 		}
-		fmt.Fprintf(d.out, "%d. %s%s — %s\n", i+1, s.decl.Name, stepMeta(s.decl), previewText(s.decl, s.values))
-		fmt.Fprintf(d.out, "   runs: %s\n", wouldRun(s.decl, s.values))
+		fmt.Fprintf(d.out, "[ ] %d. %s — concept: %s\n", i+1, stageLabel(stepStage(s)), s.decl.Name)
+		fmt.Fprintf(d.out, "    Target: %s\n", s.targetText())
+		decl, vals := s.stepRender()
+		fmt.Fprintf(d.out, "    preview: %s\n", previewTextProvenance(decl, vals, s.fromStep))
+		fmt.Fprintf(d.out, "    Would run: %s\n", s.wouldRunText())
+		if cmdmatch.HasRemoveWord(s.decl.Name) || cmdmatch.HasRemoveWord(s.decl.Description) {
+			fmt.Fprintln(d.out, "    careful: this command removes or changes things.")
+		}
 	}
 	for _, n := range notes {
 		fmt.Fprintln(d.out, n)
 	}
 	fmt.Fprintln(d.out, "nothing has run yet.")
-}
-
-// stepMeta renders a step's declared hints — its stage,
-// and what it acts on — as " [execute · on logs]", or ""
-// when the command declares neither.
-func stepMeta(decl cmdmatch.Declaration) string {
-	var parts []string
-	if decl.Stage != "" {
-		parts = append(parts, decl.Stage)
-	}
-	if decl.ActsOn != "" {
-		parts = append(parts, "on "+decl.ActsOn)
-	}
-	if len(parts) == 0 {
-		return ""
-	}
-	return " [" + strings.Join(parts, " · ") + "]"
 }
 
 // plural returns the word, or the word plus "s" — the
