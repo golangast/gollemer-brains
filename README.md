@@ -853,10 +853,21 @@ or it carries an action word from the matcher's verb
 families (create, copy, list, run…) — the don't-know is
 followed by one offer. Your answer is the command that
 should run; your want-line itself, verbatim, becomes
-the entry's description and its one example, the
-command's `{placeholders}` become its slots, and its
-name is derived from the command (`mkdir {folder}` →
+the entry's description and its one example, its slots
+come from the same rules as a declaration's (below)
+applied to the want-line as description, and its name
+is derived from the command (`mkdir {folder}` →
 `mkdir`). Pressing enter skips, and nothing is written.
+One guard on the answer: if it reads like a
+*declaration* instead — a sentence carrying a file
+marker, "i have a command that deletes … in file
+del.sh" — it is parsed as a declaration, not stored as
+the command. The unguarded flow had a real failure
+here: it stored such a sentence *as* the command, which
+swallowed the user's next want as the "answer" and
+baked that want's filename into the stored command
+forever. A bare command answer (`mkdir {folder}`,
+`./wipe.sh`) never trips the guard.
 Pure small talk — no closest script, no action word —
 gets the plain don't-know and no offer. The entry is
 written through the same registry save as `add`, and
@@ -901,19 +912,31 @@ sentence that states the command outright — John's
 form: name it, say what it does, say what file it is
 in. The parse is deterministic, markers only: a
 command/script **named** or **called** X (or "my
-command X", corroborated by a file or a doing-marker),
-the token ending in `.sh` (or the word after "in
-file" / "the file is" / "it is in") for the file — a
-bare `copy.sh` is stored as the runnable `./copy.sh` —
-and the doing-clause between "it will" / "it does" /
-"that" / "and it" and the file clause for the
+command X", corroborated by a file or a doing-marker)
+— or **no name at all**: "i have a command that …" (or
+"there is a command that …") carrying a file marker or
+a doing-clause is a declaration too, and the entry
+takes its name from the file's stem (`del.sh` → `del`),
+shown in the confirmation like any other fact. The
+file is the token ending in `.sh` (or the word after
+"in file" / "the file is" / "it is in") — a bare
+`copy.sh` is stored as the runnable `./copy.sh` — and
+the description is the doing-clause between "it will"
+/ "it does" / "that" / "and it" and the file clause,
+cut where the file clause's *introducer* starts ("and
+the command is in file", "and it is in file", "in the
+file", …), not at the file token: cutting at the token
+left "…and the command is" sitting inside one real
 description. A fact the sentence does not carry is
 asked for with one follow-up ("what does copy do?").
-Slots get exactly one inference: `{placeholders}` in
-the command, else a description that goes "from"
-somewhere "to" somewhere else takes the pair
-[from, to]. An ordinary want carries no markers and is
-never parsed as a declaration. On a fresh registry:
+Slots get two inferences beyond `{placeholders}` in
+the command: a description that goes "from" somewhere
+"to" somewhere else takes the pair [from, to]; else a
+description that mentions "a file" or "the file"
+takes the single slot [file] — the common
+script-takes-a-file shape. An ordinary want carries no
+markers and is never parsed as a declaration. On a
+fresh registry:
 
 ```
 > i have a command named copy and it will copy files from one folder to another and it is in file copy.sh
@@ -952,6 +975,39 @@ folder names are; against a fresh one it abstains and
 earns the teach offer — and either way the registry is
 exactly as it was until a teaching answer is given.
 
+The unnamed shape is John's second declaration, typed
+live — no name, no "named", just the command, what it
+does, and its file:
+
+```
+> i have a command that deletes the first line of a file and the command is in file del.sh
+learned: del — deletes the first line of a file
+command: ./del.sh (slots: file). it chooses del from now on, in this session and every later one. nothing was retrained.
+> delete the first line of the file cat.txt
+understood: del (1.00) — deletes the first line of a file
+arguments: file=winter
+preview: deletes the first line of the file winter
+  runs: ./del.sh winter
+  nothing has run yet.
+  careful: this command removes or changes things.
+would run: ./del.sh winter
+```
+
+The name derivation is mechanical — the file's stem,
+nothing smarter — and a name you dislike is renamed by
+editing the registry or re-declaring through `add`.
+The session also shows the extractor's standing limit
+unedited: the description and the [file] slot are
+exact, and the slot binds what the extractor *hears* —
+but `cat.txt`, a dotted filename shape its generic
+training never contained, is an unseen value, and it
+substituted a trained favourite (`winter`), the same
+boundary as rudy/petra → wade. What the declaration
+layer owes — the right script, the right slot, the
+filename bound when it is heard — is all here; the
+hearing itself is the extractor's known edge, not the
+declaration's.
+
 *One binding fix came with the loop.* The would-run
 line used to append **every** value the extractor
 heard, even past the declared slots — John's screenshot
@@ -967,6 +1023,37 @@ understood: rename-photos (0.70) — renames the photos in a folder from camera 
 arguments: folder=jim
 (also heard, with no slot to bind: owen)
 would run: ./scripts/rename-photos.sh jim
+```
+
+*Every match is previewed.* Between the understood
+line and the would-run line, a matched command —
+shipped, taught, or declared — prints a preview: the
+command's own description with the bound values worked
+into its seats (a from/to pair replaces the
+description's from- and to-phrases, a bound file or
+folder slot names the actual file or folder in the
+sentence; a slot with no seat is listed after, and one
+whose value was not heard is marked "(not heard)"),
+then the exact line that would run — built by the same
+code as the would-run line, so the two can never
+disagree — and the reminder that nothing has run yet.
+A command whose name or description carries a
+remove-family word (delete, clean, wipe, trash, … —
+the matcher's own synonym families) earns a caution
+line. Nothing new is invented for the preview: it is
+the user's description with the user's values in it.
+It is also the gate any future execution step would
+confirm against — this block is what the user would be
+saying yes to.
+
+```
+> migrate a database from folder jim to jake
+understood: migrate-database (1.27) — migrates a database from one folder to another
+arguments: from=jim, to=jake
+preview: migrates a database from jim to jake
+  runs: ./scripts/migrate-db.sh jim jake
+  nothing has run yet.
+would run: ./scripts/migrate-db.sh jim jake
 ```
 
 **Measured, not promised.** Thirty-two hand-written

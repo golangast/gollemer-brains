@@ -204,6 +204,62 @@ func TestWouldRunForms(t *testing.T) {
 	}
 }
 
+// TestParseTeachAnswerGuard pins the teach-answer
+// guard's two sides: a declaration in disguise (a
+// sentence carrying a file marker) is recognised for
+// routing, with name and description parsed out of it;
+// a bare command — the answer the prompt actually asks
+// for — is not.
+func TestParseTeachAnswerGuard(t *testing.T) {
+	p, ok := parseTeachAnswer(johnDeleteDeclaration)
+	if !ok {
+		t.Fatal("John's declaration as a teach answer not recognised")
+	}
+	if p.name != "del" || p.file != "del.sh" || p.description != "deletes the first line of a file" {
+		t.Errorf("guard parse = %+v, want del/del.sh/clean description", p)
+	}
+	p, ok = parseTeachAnswer("the command is in file del.sh")
+	if !ok || p.name != "del" || p.file != "del.sh" || p.description != "" {
+		t.Errorf("file-only answer = %+v, %v; want del/del.sh/no description yet", p, ok)
+	}
+	for _, bare := range []string{"./wipe.sh", "wipe.sh --force", "mkdir {folder}", "./scripts/make-folder.sh"} {
+		if p, ok := parseTeachAnswer(bare); ok {
+			t.Errorf("bare command %q routed as a declaration: %+v", bare, p)
+		}
+	}
+}
+
+// TestTeachAnswerDeclarationNotStoredRaw is the defect
+// itself, end to end: a want earns the teach offer, the
+// answer is a declaration sentence, and what lands in
+// the registry is the DECLARED entry — command ./del.sh,
+// slot file — never the sentence stored as a command
+// with a filename baked in.
+func TestTeachAnswerDeclarationNotStoredRaw(t *testing.T) {
+	path, reg := tempShippedRegistry(t)
+	d, out := queueDemo(t, path, reg, []string{johnDeleteDeclaration})
+
+	d.handle("create a folder")
+	got := out.String()
+	if !strings.Contains(got, "learned: del — deletes the first line of a file") {
+		t.Errorf("teach answer should be learned as the del declaration:\n%s", got)
+	}
+	if strings.Contains(got, "i'll run i have a command") {
+		t.Errorf("declaration sentence stored raw as a command:\n%s", got)
+	}
+	back, err := cmdmatch.LoadRegistry(path)
+	if err != nil {
+		t.Fatalf("LoadRegistry(after teach): %v", err)
+	}
+	decl, ok := back.Find("del")
+	if !ok || decl.Command != "./del.sh" || len(decl.Slots) != 1 || decl.Slots[0] != "file" {
+		t.Errorf("registry entry wrong: %+v (found %v)", decl, ok)
+	}
+	if _, ok := back.Find("mkdir"); ok {
+		t.Error("the folder want itself should not have been taught — its answer declared a different command")
+	}
+}
+
 func TestDeriveNameAndPlaceholders(t *testing.T) {
 	for command, want := range map[string]string{
 		"mkdir {folder}":           "mkdir",

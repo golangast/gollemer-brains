@@ -32,8 +32,11 @@
 // session is still there in the next one.
 //
 // This example RUNS NOTHING. It prints the script it
-// understood, the arguments it heard, and the exact
-// command line it WOULD run. Executing that line is a
+// understood, the arguments it heard, a plain-words
+// preview of what the command would do (the description
+// with the heard values worked into it — the gate any
+// future execution step would confirm against), and the
+// exact command line it WOULD run. Executing that line is a
 // separate, gated step — confirmation, allowlists, and
 // sandboxing are the host program's job, as in
 // examples/filecmd — and it is deliberately not in this
@@ -52,6 +55,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -159,16 +163,19 @@ func (d *demo) handle(line string) bool {
 // present prints the understood block for a matched
 // declaration: the script and its score, the argument
 // values the extractor heard bound to the declared
-// slots, and the exact command line that WOULD run.
+// slots, a plain-words PREVIEW of what the command
+// would do, and the exact command line that WOULD run.
 func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 	fmt.Fprintf(d.out, "understood: %s (%.2f) — %s\n", decl.Name, score, decl.Description)
 	if len(decl.Slots) == 0 {
+		d.printPreview(decl, nil)
 		fmt.Fprintf(d.out, "would run: %s\n", decl.Command)
 		return
 	}
 	raw, err := d.extract(line)
 	if err != nil {
 		fmt.Fprintf(d.out, "but the extractor brain failed: %v — no arguments read.\n", err)
+		d.printPreview(decl, nil)
 		fmt.Fprintf(d.out, "would run: %s (arguments missing)\n", decl.Command)
 		return
 	}
@@ -185,7 +192,106 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 	if len(values) > len(decl.Slots) {
 		fmt.Fprintf(d.out, "(also heard, with no slot to bind: %s)\n", strings.Join(values[len(decl.Slots):], " "))
 	}
+	d.printPreview(decl, values)
 	fmt.Fprintf(d.out, "would run: %s\n", wouldRun(decl, values))
+}
+
+// printPreview prints the preview block between the
+// understood line and the would-run line: the command's
+// own description with the bound values worked into its
+// seats, the exact line that would run (built by the
+// same wouldRun as the would-run line, so the two can
+// never disagree), and the standing reminder that
+// nothing has run. A command whose name or description
+// carries a remove-family word — it deletes, cleans,
+// wipes, throws away — earns one more line: the caution.
+// The preview is the gate any future execution step
+// would confirm against: this is what the user would be
+// saying yes to.
+func (d *demo) printPreview(decl cmdmatch.Declaration, values []string) {
+	fmt.Fprintf(d.out, "preview: %s\n", previewText(decl, values))
+	fmt.Fprintf(d.out, "  runs: %s\n", wouldRun(decl, values))
+	fmt.Fprintln(d.out, "  nothing has run yet.")
+	if cmdmatch.HasRemoveWord(decl.Name) || cmdmatch.HasRemoveWord(decl.Description) {
+		fmt.Fprintln(d.out, "  careful: this command removes or changes things.")
+	}
+}
+
+var (
+	// The from/to seat: "… from one folder to another".
+	reFromToSeat = regexp.MustCompile(`(?i)\bfrom\s+[^,]*?\s+to\s+[^,]*`)
+	// The file seat: "a file" / "the file".
+	reFileSeat = regexp.MustCompile(`(?i)\b(?:a|the)\s+file\b`)
+	// The folder seat: "a folder" / "the folder".
+	reFolderSeat = regexp.MustCompile(`(?i)\b(?:a|the)\s+folder\b`)
+)
+
+// previewText works the bound values into the
+// description's obvious seats, deterministically — the
+// preview is the user's own description with their
+// values in it, and no prose the description does not
+// support is invented:
+//
+//   - a from/to pair replaces the description's
+//     from-phrase and to-phrase ("migrates a database
+//     from one folder to another" → "… from jim to
+//     jake");
+//   - a bound file slot turns the description's file
+//     mention into the actual file ("deletes the first
+//     line of a file" → "… of the file cat.txt");
+//   - a bound folder slot does the same for its folder
+//     mention ("in a folder" → "in the folder trips").
+//
+// A slot with no seat in the description is listed after
+// it ("— with folder=trips"); a slot whose value was not
+// heard is marked "(not heard)" in its seat or its
+// listing, never hidden.
+func previewText(decl cmdmatch.Declaration, values []string) string {
+	text := decl.Description
+	bound := map[string]string{}
+	for i, slot := range decl.Slots {
+		if i < len(values) {
+			bound[slot] = values[i]
+		} else {
+			bound[slot] = "(not heard)"
+		}
+	}
+	seated := map[string]bool{}
+	if from, hasFrom := bound["from"]; hasFrom {
+		if to, hasTo := bound["to"]; hasTo {
+			if loc := reFromToSeat.FindStringIndex(text); loc != nil {
+				text = text[:loc[0]] + "from " + from + " to " + to + text[loc[1]:]
+				seated["from"], seated["to"] = true, true
+			}
+		}
+	}
+	if v, ok := bound["file"]; ok {
+		if loc := reFileSeat.FindStringIndex(text); loc != nil {
+			text = text[:loc[0]] + "the file " + v + text[loc[1]:]
+			seated["file"] = true
+		}
+	}
+	if v, ok := bound["folder"]; ok {
+		if loc := reFolderSeat.FindStringIndex(text); loc != nil {
+			text = text[:loc[0]] + "the folder " + v + text[loc[1]:]
+			seated["folder"] = true
+		}
+	}
+	var unseated []string
+	for _, slot := range decl.Slots {
+		if seated[slot] {
+			continue
+		}
+		if bound[slot] == "(not heard)" {
+			unseated = append(unseated, slot+": (not heard)")
+		} else {
+			unseated = append(unseated, slot+"="+bound[slot])
+		}
+	}
+	if len(unseated) > 0 {
+		text += " — with " + strings.Join(unseated, ", ")
+	}
+	return text
 }
 
 // wouldRun renders the command line for a declaration

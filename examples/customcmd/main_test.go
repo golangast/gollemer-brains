@@ -205,6 +205,68 @@ func TestAddFlowZeroRetrain(t *testing.T) {
 	}
 }
 
+// TestPreviewBlocks pins the preview's shapes against
+// the shipped registry: values seated into the
+// description's own phrases, the runs line agreeing
+// with the would-run line, a slotless command previewed
+// as its bare description, and no caution where no
+// remove-family word appears.
+func TestPreviewBlocks(t *testing.T) {
+	d, out := newTestDemo(t, "jim jake")
+	d.handle("migrate a database from folder jim to jake")
+	got := out.String()
+	for _, want := range []string{
+		"preview: migrates a database from jim to jake\n",
+		"  runs: ./scripts/migrate-db.sh jim jake\n",
+		"  nothing has run yet.\n",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("migrate preview missing %q:\n%s", want, got)
+		}
+	}
+	if strings.Contains(got, "careful:") {
+		t.Errorf("migrate carries no remove word; no caution expected:\n%s", got)
+	}
+
+	// Slotless: the preview is the description itself.
+	out.Reset()
+	d.handle("back up my photos")
+	got = out.String()
+	for _, want := range []string{
+		"preview: backs up my photo library to the external drive\n",
+		"  runs: ./scripts/backup-photos.sh\n",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("slotless preview missing %q:\n%s", want, got)
+		}
+	}
+
+	// The folder seat, and the unbound slot said out loud.
+	out.Reset()
+	d.extract = func(line string) (string, error) { return "jim", nil }
+	d.handle("rename the photos in jim")
+	if got = out.String(); !strings.Contains(got, "preview: renames the photos in the folder jim from camera names to dates\n") {
+		t.Errorf("folder seat missing:\n%s", got)
+	}
+	out.Reset()
+	d.handle("migrate a database from folder jim")
+	if got = out.String(); !strings.Contains(got, "preview: migrates a database from jim to (not heard)\n") {
+		t.Errorf("unbound slot should be marked in its seat:\n%s", got)
+	}
+}
+
+// TestPreviewTextFallback: a slot with no seat in the
+// description is listed after it, bound or not heard.
+func TestPreviewTextFallback(t *testing.T) {
+	decl := cmdmatch.Declaration{Description: "sorts the entries", Slots: []string{"folder"}}
+	if got := previewText(decl, []string{"trips"}); got != "sorts the entries — with folder=trips" {
+		t.Errorf("fallback listing: got %q", got)
+	}
+	if got := previewText(decl, nil); got != "sorts the entries — with folder: (not heard)" {
+		t.Errorf("fallback unbound: got %q", got)
+	}
+}
+
 func TestCleanValues(t *testing.T) {
 	for raw, want := range map[string]bool{
 		"jim jake":    true,

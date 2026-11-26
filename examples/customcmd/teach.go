@@ -58,11 +58,23 @@ func (d *demo) teachFlow(want string) {
 	if command == "" {
 		return // skipped: nothing written, nothing learned
 	}
+	// The guard: an answer that reads like a DECLARATION
+	// — a sentence carrying a file marker — is not a bare
+	// command, and storing it as one was the defect that
+	// swallowed John's next want as this answer and baked
+	// its filename into the stored command. Route it
+	// through the declaration parse instead; the entry it
+	// learns is the declared one. A bare command answer
+	// ("mkdir {folder}", "./wipe.sh") never trips this.
+	if p, ok := parseTeachAnswer(command); ok {
+		d.declarationFlow(p)
+		return
+	}
 	decl := cmdmatch.Declaration{
 		Name:        d.uniqueName(deriveName(command)),
 		Command:     command,
 		Description: want,
-		Slots:       placeholdersOf(command),
+		Slots:       declarationSlots(want, command),
 		Examples:    []string{want},
 	}
 	if !d.persist(decl) {

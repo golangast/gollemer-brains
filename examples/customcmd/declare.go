@@ -19,11 +19,15 @@ import (
 // the teach flow write: name copy, command ./copy.sh,
 // description "copy files from one folder to another",
 // slots from,to. The sentence is recognised by its
-// markers — a command/script NAMED or CALLED something,
-// or "my command X" — never by its topic: an ordinary
-// want ("copy files from jim to jake") carries no marker
-// and falls through to matching untouched, and when the
-// parse is unsure it falls through too.
+// markers, never by its topic: a command/script NAMED or
+// CALLED something, "my command X", or — with no name at
+// all — "i have a command that …" carrying a file marker
+// or a doing-clause, in which case the name is derived
+// from the file (del.sh → del) and shown in the
+// confirmation. An ordinary want ("copy files from jim
+// to jake") carries no marker and falls through to
+// matching untouched, and when the parse is unsure it
+// falls through too.
 
 // parsedDeclaration is what a declaration sentence
 // yielded. file is the file token as written ("" when no
@@ -42,19 +46,50 @@ var (
 	reNamedCmd = regexp.MustCompile(`(?i)\b(?:command|script)\s+(?:named|called)\s+([a-z0-9][a-z0-9_-]*)`)
 	// "my command X" / "my script X".
 	reMyCmd = regexp.MustCompile(`(?i)\bmy\s+(?:command|script)\s+([a-z0-9][a-z0-9_-]*)`)
+	// An UNNAMED declaration: "i have a command that …",
+	// "there is a script that …" — the command/script is
+	// stated but never named; the name is derived from
+	// its file instead.
+	reHaveCmd = regexp.MustCompile(`(?i)\b(?:i have|there is|there's|i've got|we have)\s+an?\s+(?:command|script)\b`)
 	// A .sh token anywhere in the line.
 	reShFile = regexp.MustCompile(`[^\s,;]+\.sh\b`)
-	// The introducer that may precede the .sh token, at
-	// the very end of the text before it: "…and it is in
-	// file ", "…it is in ", "…in the file ", "…the file
-	// is " — each alternative runs right up to the token.
-	reFileIntro = regexp.MustCompile(`(?i)(?:\band\s+)?(?:it\s+is\s+in(?:\s+file)?|in\s+(?:the\s+)?file|the\s+file\s+is)\s+$`)
+	// The file-clause INTRODUCER: the words that open the
+	// clause naming the file — "and the command is in
+	// file", "and it is in file", "the command is in",
+	// "it is in file", "and the command is", "in file",
+	// "in the file", "the file is". The description is
+	// cut where the introducer STARTS, not where the
+	// file token sits: cutting at the token left the
+	// tail "…and the command is" inside the description
+	// of John's delete declaration. Longest shapes first,
+	// so "the command is in file" wins over "in file".
+	reFileClauseIntro = regexp.MustCompile(`(?i)\b(?:and\s+)?(?:the\s+command\s+is\s+in\s+(?:the\s+)?file|the\s+command\s+is\s+in|the\s+command\s+is|it\s+is\s+in\s+(?:the\s+)?file|it\s+is\s+in|in\s+(?:the\s+)?file|the\s+file\s+is)\b`)
 	// A file named without .sh: "in file X", "the file
 	// is X", "it is in X".
 	reFilePhrase = regexp.MustCompile(`(?i)\b(?:in\s+the\s+file|in\s+file|the\s+file\s+is|it\s+is\s+in)\s+([^\s,;]+)`)
 	reThat       = regexp.MustCompile(`(?i)\bthat\b`)
 	reAndIt      = regexp.MustCompile(`(?i)\band\s+it\b`)
+	// A description that speaks of "a file" or "the
+	// file": the file-slot rule's trigger.
+	reFileMention = regexp.MustCompile(`(?i)\b(?:a|the)\s+file\b`)
 )
+
+// fileClauseStart returns where a line's file clause
+// begins: the start of the LAST file-clause introducer
+// ending at or before the file token — the introducer
+// nearest the token is the clause's opening; an earlier
+// "in file" inside the doing-clause itself is not. With
+// no introducer, the clause starts at the token.
+func fileClauseStart(line string, tokenStart int) int {
+	start := tokenStart
+	if tokenStart > len(line) {
+		tokenStart = len(line)
+	}
+	for _, m := range reFileClauseIntro.FindAllStringIndex(line[:tokenStart], -1) {
+		start = m[0]
+	}
+	return start
+}
 
 // notNames are words that can follow "my command" without
 // being a name ("my command is…", "my script that…"): the
@@ -73,6 +108,7 @@ func parseDeclaration(line string) (parsedDeclaration, bool) {
 	var p parsedDeclaration
 	nameEnd := -1
 	viaMy := false
+	unnamed := false
 	if loc := reNamedCmd.FindStringSubmatchIndex(line); loc != nil {
 		p.name = line[loc[2]:loc[3]]
 		nameEnd = loc[3]
@@ -84,26 +120,29 @@ func parseDeclaration(line string) (parsedDeclaration, bool) {
 		p.name = cand
 		nameEnd = loc[3]
 		viaMy = true
+	} else if loc := reHaveCmd.FindStringIndex(line); loc != nil {
+		// Unnamed: "i have a command that …". The name
+		// is derived from the file below; the doing-clause
+		// starts right after the command/script word.
+		nameEnd = loc[1]
+		unnamed = true
 	} else {
 		return p, false
 	}
 
-	// The file: a .sh token if there is one (with its
-	// introducer, which belongs to the file clause, not
-	// the description), else a file phrase's next word.
+	// The file: a .sh token if there is one, else a file
+	// phrase's next word. Either way the file CLAUSE
+	// starts at its introducer ("…and the command is in
+	// file del.sh" — the clause opens at "and the
+	// command is", not at "del.sh"), and the description
+	// is cut there.
 	fileClause := -1 // where the file clause starts, if any
 	if loc := reShFile.FindStringIndex(line); loc != nil {
 		p.file = line[loc[0]:loc[1]]
-		fileClause = loc[0]
-		if m := reFileIntro.FindStringIndex(line[:loc[0]]); m != nil {
-			fileClause = m[0]
-		}
+		fileClause = fileClauseStart(line, loc[0])
 	} else if loc := reFilePhrase.FindStringSubmatchIndex(line); loc != nil {
 		p.file = strings.Trim(line[loc[2]:loc[3]], `"'`)
-		fileClause = loc[0]
-		if fileClause >= 4 && strings.EqualFold(line[fileClause-4:fileClause], "and ") {
-			fileClause -= 4
-		}
+		fileClause = fileClauseStart(line, loc[2])
 	}
 
 	// The my-pattern is the loosest trigger, so it needs
@@ -116,6 +155,105 @@ func parseDeclaration(line string) (parsedDeclaration, bool) {
 	}
 
 	p.description = doingClause(line, nameEnd, fileClause)
+	if isJunkClause(p.description) {
+		p.description = ""
+	}
+
+	// The unnamed trigger likewise needs substance: a
+	// file marker or a doing-clause. A bare "i have a
+	// command" states nothing learnable and falls
+	// through. With a file, the entry takes the file's
+	// stem as its name — del.sh is called del — and the
+	// confirmation shows it, so the derivation is never
+	// silent.
+	if unnamed {
+		if p.file == "" && p.description == "" {
+			return parsedDeclaration{}, false
+		}
+		if p.file != "" {
+			p.name = deriveName(p.file)
+		}
+	}
+	return p, true
+}
+
+// isJunkClause reports whether an extracted clause is
+// only connective tissue ("is", "it", "that and") — the
+// cut left nothing the command DOES, so the fact counts
+// as missing and the flow asks for it.
+func isJunkClause(s string) bool {
+	if s == "" {
+		return true
+	}
+	for _, w := range strings.Fields(strings.ToLower(s)) {
+		switch w {
+		case "is", "it", "the", "a", "an", "that", "and", "will", "does":
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+// parseTeachAnswer recognises a teach answer that is not
+// a bare command but a declaration in disguise: asked
+// "what command should run when you say that?", the user
+// answered with a sentence — "i have a command that
+// deletes … in file del.sh", or "the command is in file
+// del.sh". Storing such a sentence AS the command was
+// the defect John's lines exposed (the next want was
+// swallowed as the answer, and its filename baked into
+// the stored "command" forever). So an answer carrying
+// a file marker anywhere but its first token is routed
+// through the declaration parse instead. A bare command
+// — "./wipe.sh", "wipe.sh --force", "mkdir {folder}" —
+// leads with its program (or names no file at all) and
+// keeps the teach flow's original behaviour exactly.
+func parseTeachAnswer(ans string) (parsedDeclaration, bool) {
+	if p, ok := parseDeclaration(ans); ok {
+		return p, true
+	}
+	if !reShFile.MatchString(ans) && !reFilePhrase.MatchString(ans) {
+		return parsedDeclaration{}, false
+	}
+	fields := strings.Fields(ans)
+	if len(fields) < 4 || strings.Contains(fields[0], ".sh") {
+		return parsedDeclaration{}, false // a bare command, not a sentence
+	}
+	// Build the declaration by hand: the file from its
+	// marker, the name from the file's stem, the
+	// description from the text before the file clause
+	// (or after the file token, when the doing words
+	// trail it).
+	var p parsedDeclaration
+	fileClause := -1
+	if loc := reShFile.FindStringIndex(ans); loc != nil {
+		p.file = ans[loc[0]:loc[1]]
+		fileClause = fileClauseStart(ans, loc[0])
+	} else if loc := reFilePhrase.FindStringSubmatchIndex(ans); loc != nil {
+		p.file = strings.Trim(ans[loc[2]:loc[3]], `"'`)
+		fileClause = fileClauseStart(ans, loc[2])
+	}
+	if p.file == "" {
+		return parsedDeclaration{}, false
+	}
+	p.name = deriveName(p.file)
+	if fileClause > 0 {
+		region := ans[:fileClause]
+		if loc := reHaveCmd.FindStringIndex(region); loc != nil {
+			region = region[loc[1]:]
+		}
+		p.description = clauseFrom(region)
+	}
+	if p.description == "" && fileClause >= 0 {
+		rest := ans[fileClause:]
+		if loc := reShFile.FindStringIndex(rest); loc != nil {
+			p.description = clauseFrom(rest[loc[1]:])
+		}
+	}
+	if isJunkClause(p.description) {
+		p.description = ""
+	}
 	return p, true
 }
 
@@ -203,11 +341,19 @@ func runnableCommand(file string) string {
 	return "./" + file
 }
 
-// declarationSlots derives a declared entry's slots. One
-// rule, stated plainly: {placeholders} in the command
-// name the slots; otherwise a description that speaks of
-// going "from" somewhere "to" somewhere else takes the
-// pair [from, to]. No other inference is made.
+// declarationSlots derives an entry's slots — declared
+// or taught; the description is the want-line in the
+// teach flow, so the same rules apply there. Stated
+// plainly: {placeholders} in the command name the slots;
+// otherwise a description that speaks of going "from"
+// somewhere "to" somewhere else takes the pair
+// [from, to]; otherwise a description that mentions "a
+// file" or "the file" takes the single slot [file] —
+// the common script-takes-a-file shape, and the one
+// John's delete declaration needs: without it the
+// filename in "delete the first line of the file
+// cat.txt" had nowhere to bind, and the would-run line
+// was the bare ./del.sh. No other inference is made.
 func declarationSlots(description, command string) []string {
 	if ph := placeholdersOf(command); len(ph) > 0 {
 		return ph
@@ -215,6 +361,9 @@ func declarationSlots(description, command string) []string {
 	lower := " " + strings.ToLower(description) + " "
 	if strings.Contains(lower, " from ") && strings.Contains(lower, " to ") {
 		return []string{"from", "to"}
+	}
+	if reFileMention.MatchString(description) {
+		return []string{"file"}
 	}
 	return nil
 }
@@ -229,7 +378,11 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 	if p.file != "" {
 		command = runnableCommand(p.file)
 	} else {
-		ans, ok := d.nextLine(fmt.Sprintf("what file runs %s — a .sh file, or the whole command: ", p.name))
+		label := p.name
+		if label == "" {
+			label = "it" // an unnamed declaration whose file is still missing
+		}
+		ans, ok := d.nextLine(fmt.Sprintf("what file runs %s — a .sh file, or the whole command: ", label))
 		if !ok || strings.TrimSpace(ans) == "" {
 			fmt.Fprintln(d.out, "ok — not saved.")
 			return
@@ -241,9 +394,16 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 			command = ans
 		}
 	}
+	// An unnamed declaration with a file already carries
+	// its derived name (the file's stem); one that had to
+	// ask for its file derives the name from the answer.
+	name := p.name
+	if name == "" {
+		name = deriveName(command)
+	}
 	desc := p.description
 	if desc == "" {
-		ans, ok := d.nextLine(fmt.Sprintf("what does %s do: ", p.name))
+		ans, ok := d.nextLine(fmt.Sprintf("what does %s do: ", name))
 		if !ok || strings.TrimSpace(ans) == "" {
 			fmt.Fprintln(d.out, "ok — not saved.")
 			return
@@ -251,7 +411,7 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 		desc = strings.TrimSpace(ans)
 	}
 	decl := cmdmatch.Declaration{
-		Name:        p.name,
+		Name:        name,
 		Command:     command,
 		Description: desc,
 		Slots:       declarationSlots(desc, command),

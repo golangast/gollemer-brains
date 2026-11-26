@@ -109,6 +109,15 @@ func buildActionStems() map[string]bool {
 	return out
 }
 
+// wordTokens splits a raw line into word tokens —
+// letters and digits kept, everything else a separator —
+// for the stemmed-membership signals below.
+func wordTokens(line string) []string {
+	return strings.FieldsFunc(strings.ToLower(line), func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	})
+}
+
 // HasActionWord reports whether a line contains a word
 // from one of the table's verb families, in any
 // inflection: the signal that a line is asking for an
@@ -118,10 +127,52 @@ func buildActionStems() map[string]bool {
 // so "creates", "creating" and "create" all land on the
 // family's form.
 func HasActionWord(line string) bool {
-	for _, tok := range strings.FieldsFunc(strings.ToLower(line), func(r rune) bool {
-		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
-	}) {
+	for _, tok := range wordTokens(line) {
 		if actionStems[stem(tok)] {
+			return true
+		}
+	}
+	return false
+}
+
+// removeStems is the stemmed form of every word in the
+// REMOVE families: the verb families whose members take
+// things away — the family of "delete" (clean, clear,
+// remove, erase, wipe, tidy, empty, purge) and the
+// family of "trash" (discard, throw). The set is derived
+// from the table by those two anchor words, not copied
+// out, so curating the families curates this set too.
+var removeStems = buildRemoveStems()
+
+func buildRemoveStems() map[string]bool {
+	out := map[string]bool{}
+	for _, fam := range verbFamilies {
+		removes := false
+		for _, w := range fam {
+			if w == "delete" || w == "trash" {
+				removes = true
+				break
+			}
+		}
+		if removes {
+			for _, w := range fam {
+				out[stem(w)] = true
+			}
+		}
+	}
+	return out
+}
+
+// HasRemoveWord reports whether a text — a script's name
+// or description — carries a remove-family word, in any
+// inflection. It backs the preview's caution line in
+// examples/customcmd: a command whose own description
+// says it deletes, cleans, wipes or throws away gets
+// flagged before anything runs. Like HasActionWord it
+// plays no part in scoring.
+func HasRemoveWord(text string) bool {
+	for _, tok := range wordTokens(text) {
+		if removeStems[stem(tok)] {
 			return true
 		}
 	}
