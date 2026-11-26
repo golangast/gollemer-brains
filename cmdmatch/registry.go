@@ -32,12 +32,27 @@ import (
 // sentences in the user's own words that mean this script
 // (they widen what the matcher recognises — the description
 // alone is enough).
+//
+// The last three fields are the PLAN layer's metadata —
+// all optional, all ignored by the matcher. Stage is a
+// rough order tag (inspect, prepare, execute, verify,
+// cleanup) saying where in a multi-step job this command
+// belongs; After names other commands that should run
+// before this one when both appear in a plan; ActsOn is
+// a hint about what kind of thing the command acts on
+// (file, tests, repo, logs…), so steps in a plan can
+// share context. They exist so a plan can be ORDERED and
+// its gaps spotted; they change nothing about which
+// script a single sentence means.
 type Declaration struct {
 	Name        string   `json:"name"`
 	Command     string   `json:"command"`
 	Description string   `json:"description"`
 	Slots       []string `json:"slots,omitempty"`
 	Examples    []string `json:"examples,omitempty"`
+	Stage       string   `json:"stage,omitempty"`
+	After       []string `json:"after,omitempty"`
+	ActsOn      string   `json:"acts_on,omitempty"`
 }
 
 // Registry is a loaded registry file: an optional comment

@@ -1276,6 +1276,112 @@ same would-run line in the REPL.
   one press of enter; the offer is never made for talk
   with no neighbour and no action word.
 
+**Plans: several wants in one line, laid out in the
+order they should run.** A single want gets a single
+answer. But a line carrying several wants — *"back up
+the config, update the script, and run the checks"* —
+is a small job, and answering it with only the
+best-matching script would drop the rest of the job.
+So a line that splits into two or more segments (at
+its commas, *ands* and *thens*) with at least one
+segment matching a command is treated as a plan: each
+segment is matched on its own, and the steps are laid
+out as a numbered checklist. Lines that do not split,
+or whose segments match nothing, keep the ordinary
+single-line handling, untouched.
+
+Three optional fields on a registry entry steer the
+layout (all are ignored by the matcher itself):
+
+- **stage** — a rough order tag: `inspect`,
+  `prepare`, `execute`, `verify`, or `cleanup`. Steps
+  sort by stage — prepare before execute before
+  verify before cleanup — *not* by the order they
+  were typed. An unstaged command sorts as `execute`.
+  The `add` flow asks for a stage (blank for none);
+  taught and declared entries leave it empty.
+- **after** — the names of other commands that should
+  run first when both are in the plan. A stable
+  topological pass honours these edges even across
+  stages and even against typing order; an `after`
+  naming a step the plan does not contain is reported
+  as a missing link, not an error; a cycle is reported
+  and the steps shown in stage order.
+- **acts_on** — a hint about what the command acts on
+  (`file`, `tests`, `repo`, `logs`, …), shown in the
+  checklist so steps can share context.
+
+The shipped registry is annotated where the fit is
+plain: backup-photos, start-dev-server and
+seed-test-data are `prepare`; migrate-database,
+rename-photos, deploy-site, sync-notes and
+update-mirrors are `execute`; compress-logs and
+clean-downloads are `cleanup`. No shipped entry
+declares an `after` yet — the field is there for
+yours.
+
+Typed in the wrong order on purpose — cleanup first,
+the migration last — the plan still comes out sorted:
+
+```
+> compress the logs, back up my photos and migrate a database from folder jim to jake
+plan: 3 steps (3 ready, 0 gaps)
+1. backup-photos [prepare · on files] — backs up my photo library to the external drive
+   runs: ./scripts/backup-photos.sh
+2. migrate-database [execute · on database] — migrates a database from jim to jake
+   runs: ./scripts/migrate-db.sh jim jake
+3. compress-logs [cleanup · on logs] — compresses old log files into a single archive
+   runs: ./scripts/compress-logs.sh
+nothing has run yet.
+```
+
+Each step carries the same preview as the single-line
+path — the description with the segment's own values
+seated — and its exact runs line. A segment no
+command knows is a **gap**, printed in place; after
+the plan, the first gap earns the same teach offer a
+lone unknown want gets, and teaching it re-renders
+the plan complete:
+
+```
+> back up my photos and water the greenhouse plants
+plan: 2 steps (1 ready, 1 gap)
+1. backup-photos [prepare · on files] — backs up my photo library to the external drive
+   runs: ./scripts/backup-photos.sh
+2. ? — no command knows this step yet: 'water the greenhouse plants'
+nothing has run yet.
+want to teach me? what command should run when you say that — or press enter to skip: ./scripts/water-plants.sh
+learned: when you say "water the greenhouse plants", i'll run ./scripts/water-plants.sh (saved as water-plants) — it chooses it from now on, in this session and every later one. nothing was retrained.
+plan: 2 steps (2 ready, 0 gaps)
+1. backup-photos [prepare · on files] — backs up my photo library to the external drive
+   runs: ./scripts/backup-photos.sh
+2. water-plants — water the greenhouse plants
+   runs: ./scripts/water-plants.sh
+nothing has run yet.
+```
+
+Missing links are called out, not papered over: a
+step whose `after` partner is absent is named
+("note: publish-report is declared after gather-stats,
+but no step in this plan is gather-stats."), and a
+`verify` step in a plan with no `execute` step earns
+its own line — "verify with no execute step — nothing
+to check the result of."
+
+**Plan limits, plainly.** The splitting is
+punctuation-level: commas and *ands* and *thens*,
+nothing smarter, so one want phrased with an *and*
+inside it ("water the greenhouse plants and log it")
+lays out as two steps, the second a gap if no command
+knows it. The ordering is only as good as the stages
+declared: unstaged commands all land at `execute` and
+keep their typed order among themselves, and an
+`after` edge can only order steps the plan actually
+contains. And a plan, like everything in this
+example, is printed, never run — its checklist is
+what a gated executor would confirm, step by step,
+against each step's preview.
+
 
 ## Runnable example: sort a brain dump by intent
 

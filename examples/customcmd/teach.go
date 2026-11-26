@@ -40,23 +40,44 @@ func (d *demo) looksLikeWant(line string, ranked []cmdmatch.Scored) bool {
 }
 
 // teachFlow runs the offer made after an unmatched want.
-// The user's reply is the command that should run when
-// they say the want; an empty reply (or EOF) skips, and
-// nothing is written. On success the flow confirms what
-// was learned and immediately re-runs the original want
-// through the pipeline — the loop closes in the same
-// breath, with the would-run line the want now produces.
+// On success it confirms what was learned and immediately
+// re-runs the original want through the pipeline — the
+// loop closes in the same breath, with the would-run line
+// the want now produces.
 func (d *demo) teachFlow(want string) {
-	if d.nextLine == nil {
+	_, learned, viaDeclaration := d.learnWant(want)
+	if !learned || viaDeclaration {
 		return
+	}
+	if decl2, score, ok := d.matcher.Match(want); ok {
+		d.present(decl2, score, want)
+	} else {
+		fmt.Fprintln(d.out, "(saved — but that line on its own still does not match itself: a match needs two of its words in a line, so longer phrasings of it are the ones that will land.)")
+	}
+}
+
+// learnWant is the teaching core, shared by the
+// single-line teach offer and the plan layer's gap offer:
+// it prompts for the command that should run when the
+// user says the want, and writes the entry through the
+// shared persist path. The user's reply is that command;
+// an empty reply (or EOF) skips, and nothing is written.
+// It reports what happened: the learned declaration and
+// true for the bare-command path, or viaDeclaration true
+// when the reply read as a declaration and was routed
+// through the declaration flow instead (which prints its
+// own confirmation).
+func (d *demo) learnWant(want string) (decl cmdmatch.Declaration, learned, viaDeclaration bool) {
+	if d.nextLine == nil {
+		return decl, false, false
 	}
 	ans, ok := d.nextLine("want to teach me? what command should run when you say that — or press enter to skip: ")
 	if !ok {
-		return
+		return decl, false, false
 	}
 	command := strings.TrimSpace(ans)
 	if command == "" {
-		return // skipped: nothing written, nothing learned
+		return decl, false, false // skipped: nothing written, nothing learned
 	}
 	// The guard: an answer that reads like a DECLARATION
 	// — a sentence carrying a file marker — is not a bare
@@ -68,9 +89,9 @@ func (d *demo) teachFlow(want string) {
 	// ("mkdir {folder}", "./wipe.sh") never trips this.
 	if p, ok := parseTeachAnswer(command); ok {
 		d.declarationFlow(p)
-		return
+		return decl, true, true
 	}
-	decl := cmdmatch.Declaration{
+	decl = cmdmatch.Declaration{
 		Name:        d.uniqueName(deriveName(command)),
 		Command:     command,
 		Description: want,
@@ -78,14 +99,10 @@ func (d *demo) teachFlow(want string) {
 		Examples:    []string{want},
 	}
 	if !d.persist(decl) {
-		return
+		return cmdmatch.Declaration{}, false, false
 	}
 	fmt.Fprintf(d.out, "learned: when you say %q, i'll run %s (saved as %s) — it chooses it from now on, in this session and every later one. nothing was retrained.\n", want, command, decl.Name)
-	if decl2, score, ok := d.matcher.Match(want); ok {
-		d.present(decl2, score, want)
-	} else {
-		fmt.Fprintln(d.out, "(saved — but that line on its own still does not match itself: a match needs two of its words in a line, so longer phrasings of it are the ones that will land.)")
-	}
+	return decl, true, false
 }
 
 // placeholdersOf returns the {slot} names a command

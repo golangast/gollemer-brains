@@ -186,9 +186,17 @@ func TestAddFlowZeroRetrain(t *testing.T) {
 		t.Fatalf("add flow did not confirm:\n%s", out.String())
 	}
 	out.Reset()
+	// This line is two wants joined by "and", so the
+	// plan layer answers it: the freshly declared script
+	// is the plan's first step (and "log it", which no
+	// script knows, is its gap). Before plans existed the
+	// same line produced the single-match block; the
+	// zero-retrain property this test pins — a script
+	// declared by description alone matches from the next
+	// line on — is what the step line asserts now.
 	d.handle("water the greenhouse plants and log it")
-	if !strings.Contains(out.String(), "understood: water-plants") ||
-		!strings.Contains(out.String(), "would run: ./scripts/water-plants.sh") {
+	if !strings.Contains(out.String(), "1. water-plants — logs watering the greenhouse plants and notes the time") ||
+		!strings.Contains(out.String(), "   runs: ./scripts/water-plants.sh") {
 		t.Errorf("freshly declared script did not match:\n%s", out.String())
 	}
 	// And the addition persisted to the registry file.

@@ -31,6 +31,14 @@
 // registry save path `add` uses, so what is learned in a
 // session is still there in the next one.
 //
+// A line carrying several wants at once is answered
+// with a PLAN (plan.go): the line is split at its commas
+// and ands, each segment is matched on its own, and the
+// steps are laid out as a numbered checklist ordered by
+// the stages and prerequisites the registry declares —
+// not by typing order — with the segments no command
+// knows shown as gaps and offered for teaching.
+//
 // This example RUNS NOTHING. It prints the script it
 // understood, the arguments it heard, a plain-words
 // preview of what the command would do (the description
@@ -136,6 +144,16 @@ func (d *demo) handle(line string) bool {
 	// parsed and learned before matching is consulted.
 	if p, isDecl := parseDeclaration(line); isDecl {
 		d.declarationFlow(p)
+		return true
+	}
+
+	// A line of several wants is a PLAN, not a single
+	// want: it is split and each segment matched on its
+	// own (see plan.go). Lines that do not split, or
+	// whose segments match nothing, fall through to the
+	// ordinary single-line handling below, unchanged.
+	if _, isPlan := d.buildPlan(line); isPlan {
+		d.handlePlan(line)
 		return true
 	}
 
@@ -337,10 +355,12 @@ func (d *demo) addFlow() {
 	command, ok2 := ask("command: ")
 	description, ok3 := ask("description (what it does, in plain words): ")
 	slotsLine, ok4 := ask("slots (comma-separated, blank for none): ")
-	if !ok1 || !ok2 || !ok3 || !ok4 {
+	stage, ok5 := ask("stage (inspect, prepare, execute, verify, cleanup — blank for none): ")
+	if !ok1 || !ok2 || !ok3 || !ok4 || !ok5 {
 		fmt.Fprintln(d.out, "add cancelled.")
 		return
 	}
+	stage = strings.ToLower(strings.TrimSpace(stage))
 	var slots []string
 	for _, s := range strings.Split(slotsLine, ",") {
 		if s = strings.TrimSpace(s); s != "" {
@@ -361,6 +381,7 @@ func (d *demo) addFlow() {
 		Description: description,
 		Slots:       slots,
 		Examples:    examples,
+		Stage:       stage,
 	}
 	if !d.persist(decl) {
 		return
@@ -463,6 +484,7 @@ func main() {
 	fmt.Printf("registry: %s (%d scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.\n", *registryFlag, len(reg.Scripts))
 	fmt.Println("if i don't know a want, i'll ask to be taught it — and you can declare a command any time:")
 	fmt.Println("'i have a command named copy and it will copy files from one folder to another and it is in file copy.sh'.")
+	fmt.Println("say several wants in one line — 'back up my photos, migrate the database, clean the downloads' — and i'll lay them out as a plan, in the order they should run.")
 	for {
 		fmt.Print("> ")
 		if !sc.Scan() {

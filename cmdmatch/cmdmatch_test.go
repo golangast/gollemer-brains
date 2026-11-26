@@ -278,3 +278,34 @@ func TestHasActionWord(t *testing.T) {
 		}
 	}
 }
+
+// TestPlanFieldsRoundTrip pins the plan layer's metadata:
+// Stage, After, and ActsOn survive a save/load round trip,
+// and a registry written before they existed — none of
+// the fields present — still loads with them empty
+// (omitempty keeps old files old-shaped).
+func TestPlanFieldsRoundTrip(t *testing.T) {
+	r := &Registry{Scripts: []Declaration{{
+		Name: "publish-report", Command: "./publish.sh",
+		Description: "publishes the stats report",
+		Stage:       "execute", After: []string{"gather-stats"}, ActsOn: "repo",
+	}, {
+		Name: "plain", Command: "./plain.sh", Description: "does a plain thing",
+	}}}
+	path := t.TempDir() + "/reg.json"
+	if err := r.Save(path); err != nil {
+		t.Fatal(err)
+	}
+	back, err := LoadRegistry(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, _ := back.Find("publish-report")
+	if got.Stage != "execute" || len(got.After) != 1 || got.After[0] != "gather-stats" || got.ActsOn != "repo" {
+		t.Errorf("plan fields lost in round trip: %+v", got)
+	}
+	plain, _ := back.Find("plain")
+	if plain.Stage != "" || plain.After != nil || plain.ActsOn != "" {
+		t.Errorf("unstaged script gained plan fields: %+v", plain)
+	}
+}
