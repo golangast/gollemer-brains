@@ -188,18 +188,21 @@ func (d *demo) handle(line string) bool {
 	decl, score, ok := d.matcher.Match(line)
 	if !ok {
 		ranked := d.matcher.Rank(line)
+		// No script claims the line — the other brains
+		// read it first (brains.go): conversation goes to
+		// the chat brain, file wants to the file brain's
+		// understanding, behind the scenes. The matcher's
+		// dead-end line is only printed when no brain
+		// takes the line either — a line the chat brain
+		// answers was never a line nobody understood.
+		read, haveRead := d.readIntent(line)
+		if d.routeAbstain(line, ranked, read, haveRead) {
+			return true
+		}
 		if len(ranked) > 0 && ranked[0].Mass > 0 {
 			fmt.Fprintf(d.out, "i don't know which script you mean (closest: %s at %.2f, under the %.2f bar).\n", ranked[0].Script.Name, ranked[0].Score, cmdmatch.Threshold)
 		} else {
 			fmt.Fprintln(d.out, "i don't know which script you mean.")
-		}
-		// No script claims the line — the other brains
-		// read it (brains.go): conversation goes to the
-		// chat brain, file wants to the file brain's
-		// understanding, behind the scenes.
-		read, haveRead := d.readIntent(line)
-		if d.routeAbstain(line, ranked, read, haveRead) {
-			return true
 		}
 		// An unmatched WANT is a teaching moment: offer
 		// to learn it on the spot. Small talk (no closest
