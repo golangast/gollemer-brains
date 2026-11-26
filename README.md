@@ -1,22 +1,6 @@
 # gollemer-brains
 
-gollemer-brains is a small language brain written in pure Go, with no dependencies. You teach it meanings by giving it example sentences, once. When you later say something it has never seen, it guesses the meaning from the words the sentence carries. That is the whole idea: declare what things mean, and let unseen phrasings find their way to the meaning, instead of hardcoding every way a person might ask.
-
-```
-                        one prompt
-                            |
-        +-------------------+-------------------+
-        |                   |                   |
-  your scripts        the chat brain      the file brain
-  (described by       (questions and      (file actions,
-   you, in words)      conversation)       understood)
-        |                   |                   |
-        +-------------------+-------------------+
-                            |
-              preview, plan, would-run line
-```
-
-The main program is one prompt, and every brain sits behind it; you never choose a brain. You describe your own scripts in plain words, and from then on the prompt knows which script you mean when you ask for it, pulls the arguments out of your sentence, and shows you a preview of what would run. Say several wants in one line and it lays them out as a plan, in the order they should run. Ask a question and the chat brain answers; talk about files and the file brain reads it. If no brain can place your line, it asks to be taught, and what you teach it is kept. It runs nothing. It shows you the exact command it would run, and stops there — executing is a separate step, and it is not in this program.
+You have scripts that do useful things. To use one, you have to remember its name, where it lives, and what order its arguments go in — and if you say what you want in your own words instead, nothing understands you. Every tool works like this: you learn its words, exactly, or you get nothing. Here you teach the tool your words, once, in one sentence — and from then on you just say what you want.
 
 ```
 > i have a command named copy and it will copy files from one folder to another and it is in file copy.sh
@@ -28,7 +12,7 @@ preview: copy files from jim to jake
 would run: ./copy.sh jim jake
 ```
 
-The smaller examples each do one thing. One sorts a dump of what's on your mind into quick wins, deep focus, venting, and parked. One works with files inside a sandbox. One combines chat and files. The limits are plain: the prompt guesses from your words, so a script is only as findable as the description you gave it. Names it has never seen can be misheard. The chat brain understands more than it can say, and its replies are sometimes garbled. Everything it knows is written in files you can read and edit — nothing is hidden, and nothing needs retraining when you teach it something new.
+Real jobs are worse than one script. Backing up, migrating, and cleaning up is three scripts in the right order, and the order lives in your head. And a program that guesses what you mean is not a program you want pressing enter — so this one never runs anything. Say the whole job in one line and it comes back as a plan: the right scripts, in the right order, each with the exact command it would run. Then it stops.
 
 ```
 > compress the logs, back up my photos and migrate a database from folder jim to jake
@@ -42,15 +26,34 @@ plan: 3 steps (3 ready, 0 gaps)
 nothing has run yet.
 ```
 
+Sometimes there is no script at all — just a head full of unsorted thoughts at the end of the day. Some are two-minute jobs, some need an hour of quiet, some are just noise you need said out loud. Dump them here and they come back sorted by what they really are. The guesses are not magic, and the limits are plain: a script can only be found from the words you described it with, a name it has never seen can come back misheard, and questions it was never taught can come back garbled. What it knows, it knows because you told it — in sentences you can read, in files you can edit.
+
+```
+> reply to the invoice email
+  -> quick_win · kind: act · 0.90
+> the parser rewrite needs a quiet afternoon
+  -> deep_focus · kind: act · 0.97
+> i am so tired of this flaky test
+  -> venting · kind: express · 0.94
+> sort
+
+Quick wins — act now, minutes each (1):
+  - reply to the invoice email
+
+Deep focus — needs a real block, schedule it (1):
+  - the parser rewrite needs a quiet afternoon
+
+Venting — no action, it just needed saying (1):
+  - i am so tired of this flaky test
+```
+
 ## Run it
 
 ```
-go run ./examples/customcmd     the one prompt: your scripts, chat, files, plans
-go run ./examples/thoughtsort   sort a head full of thoughts
-go run ./examples/assistant     chat and files together
-go run ./examples/filecmd       files in a sandbox
+go run ./examples/customcmd     say what you want; get the script, the preview, the plan
+go run ./examples/thoughtsort   dump your thoughts; get them back sorted
+go run ./examples/assistant     ask questions and work with files in one place
+go run ./examples/filecmd       work with files in a sandbox
 ```
-
-The brains ship trained, so there is nothing to build first.
 
 License: GPL-3.0.
