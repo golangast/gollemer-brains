@@ -658,6 +658,274 @@ the damage when a reading is wrong — no file was
 wrongly deleted in either session, and nothing has
 ever left the sandbox.
 
+## Runnable example: your own commands, described not trained
+
+`examples/customcmd` binds sentences to commands under a
+different rule than the chapters above, stated by John as
+the requirement itself: *"if they have like a custom bash
+script and give it a general description can it know what
+you mean when you say you want it to run it? … I want it
+to learn through training how to have it understand your
+commands and descriptions so you don't have to hard code
+everything to the commands. You can just tell it what you
+want."* And the corollary that shaped the design: a user
+should not have to retrain every time they add a command.
+
+So: **you do not train your commands at all. You
+describe them.** Your scripts live in a registry file,
+`examples/commands.json`:
+
+```json
+{
+  "name": "migrate-database",
+  "command": "./scripts/migrate-db.sh",
+  "description": "migrates a database from one folder to another",
+  "slots": ["from", "to"],
+  "examples": [
+    "migrate the database from jim to jake",
+    "move my database from the jim folder to the jake folder",
+    "run the database migration",
+    "migrate my database"
+  ]
+}
+```
+
+Adding your script is adding one entry like that — name,
+command, a plain description, the argument slots it
+takes if any, and optionally a few example sentences in
+your own words. There is no regenerate-and-retrain step:
+the program loads the registry when it starts, re-reads
+it as you type (an edit in another window lands on the
+next line), and the REPL's `add` command declares a new
+script conversationally. A script declared at 9:00
+matches at 9:00, because nothing about matching is
+trained.
+
+Two mechanisms divide the work, and only one of them is
+a neural net:
+
+**Which script you mean** is decided by the `cmdmatch`
+package, lexically, at runtime. Your line is reduced to
+its content words (stopwords dropped, words crudely
+stemmed). Each registered script has a profile — the
+content words of its description and name, plus the
+words of its examples. A line scores against a script by
+how much of the line's weighted word mass the profile
+covers: words are weighted by inverse document frequency
+across the registry (a word only one script uses is
+strong evidence; a word every script uses is weak),
+description and name words count half again as much as
+example-only words, and a mistyped word with exactly one
+near neighbour in the registry's vocabulary is repaired
+before scoring — at half weight, because a guess is
+weaker evidence than a word actually typed. The score is
+a coverage ratio, not a probability, and can pass 1.0.
+The best script wins only if it clears four bars — score
+at least 0.40, matched mass at least 1.2, at least two
+distinct matched words, and a margin of 0.08 over the
+runner-up — otherwise the program says it does not know
+which script you mean. The bars are the talk guard: an
+everyday line shares few content words with any
+description, so it covers little of its own mass anywhere
+and lands below them.
+
+**Which arguments you said** is read by a small seq2seq
+brain — the one trained piece — and it was trained on
+data that has never seen your scripts.
+`examples/genericcommands.jsonl` (1,151 rows, generated
+by `examples/customcmd/gen.go`) contains requests for
+invented scripts that do not exist — transfer-ledger,
+sort-recipes, pin-notice — in domains the registry never
+touches. What it teaches is sentence *shapes*: "from X
+to Y", "in the X folder", "called X", "on X", "into X",
+with each row's output being exactly the shape's values.
+At runtime the extractor reads values out of your line
+for whichever script the matcher picked, and the host
+binds them, in order, to that script's declared slots.
+A test in the example pins the separation: no registry
+script's name, none of the registry's distinctive words
+(database, photos, downloads, mirrors, notes, logs,
+website, server, …), and no description fragment appears
+anywhere in the generic file.
+
+```sh
+go run ./cmd/train -data examples/genericcommands.jsonl -out custombrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10
+go run ./examples/customcmd -model custombrain.gob -registry examples/commands.json
+```
+
+(The extractor's run early-stopped at epoch 219 of 300,
+best loss 0.0198 — the same band where the file chapter's
+BPE extractor became exact on trained names.)
+
+The REPL prints what it understood — and runs nothing:
+
+```
+customcmd: your scripts, described not trained. Say what you want in your own words;
+i will name the script i think you mean and the exact command i WOULD run.
+i never run anything — understanding only; executing is a separate, gated step.
+registry: examples/commands.json (10 scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.
+> migrate a database from folder jim to jake
+understood: migrate-database (1.27) — migrates a database from one folder to another
+arguments: from=jim, to=jake
+would run: ./scripts/migrate-db.sh jim jake
+> migrate a database from folder rudy to petra
+understood: migrate-database (0.80) — migrates a database from one folder to another
+arguments: from=wade, to=(not heard)
+would run: ./scripts/migrate-db.sh wade
+> the script that moves my database between folders
+understood: migrate-database (0.88) — migrates a database from one folder to another
+arguments: from=family, to=(not heard)
+would run: ./scripts/migrate-db.sh family
+> back up my photos
+understood: backup-photos (1.50) — backs up my photo library to the external drive
+would run: ./scripts/backup-photos.sh
+> how are you
+i don't know which script you mean.
+```
+
+That boundary is deliberate and load-bearing: this
+example understands; executing the line it prints is a
+separate, gated step (confirmation, allowlists,
+sandboxing — the filecmd chapter's machinery), and it
+is not in this example. The session above also shows
+the extractor's standing weakness twice, unedited: for
+rudy and petra — names no training ever contained — it
+substituted a trained name and heard only one value of
+two; and asked about a sentence that states no values
+at all ("the script that moves my database…"), it still
+offered a favourite, `family`. What it heard is printed
+as heard; nothing here acts on it.
+
+**The zero-retrain proof.** One session, the shipped
+registry and the shipped extractor brain, a script that
+does not exist:
+
+```
+> the script that logs watering the greenhouse
+i don't know which script you mean (closest: compress-logs at 0.38, under the 0.40 bar).
+> add
+script name: water-plants
+command: ./scripts/water-plants.sh
+description (what it does, in plain words): logs watering the greenhouse plants and notes the time
+slots (comma-separated, blank for none):
+example sentence (blank to finish):
+added water-plants — it matches from the next line on. nothing was retrained.
+> water the greenhouse plants and log it
+understood: water-plants (1.50) — logs watering the greenhouse plants and notes the time
+would run: ./scripts/water-plants.sh
+```
+
+No training run, no restart: the same brain file before
+and after, and the new script is declared by description
+alone — it has no examples at all. (The pre-add line's
+closest guess is itself instructive: "logs" is
+compress-logs' word, and 0.38 is under the bar, so the
+program said so instead of firing the wrong script.)
+
+**Measured, not promised.** Thirty-two hand-written
+held-out lines — two fresh request phrasings and one
+description-only reference per registered script, plus
+John's migrate shape with trained and unseen folder
+names — scored against the shipped registry, the shipped
+matcher, and the extractor trained as above. Matching:
+
+| script | right | wrong | abstained |
+| --- | --- | --- | --- |
+| migrate-database | 5 | 0 | 0 |
+| backup-photos | 2 | 0 | 1 |
+| clean-downloads | 3 | 0 | 0 |
+| start-dev-server | 0 | 0 | 3 |
+| deploy-site | 3 | 0 | 0 |
+| sync-notes | 2 | 0 | 1 |
+| rename-photos | 3 | 0 | 0 |
+| compress-logs | 2 | 0 | 1 |
+| update-mirrors | 2 | 0 | 1 |
+| seed-test-data | 2 | 0 | 1 |
+| **total** | **24** | **0** | **8** |
+
+Zero wrong is the property to notice: on this set the
+matcher's failure mode is silence, never a wrong script.
+The abstentions have mechanics, not mysteries.
+start-dev-server lost all three lines to its neighbour:
+"fire up the local server for my site" ties deploy-site
+exactly (0.67 each — *local server* points one way, *my
+site* the other, and the margin bar refuses the coin
+flip); "get my website running on my machine so i can
+test it" loses the margin to seed-test-data, 0.43 to
+0.43, because the line ends in the word *test*; and its
+description-only line ("the script that runs my site
+locally for testing", 0.32) never says *server* or
+*website* — the two words its registry entry is built
+from. "bring the backup mirrors up to date" ties
+update-mirrors with rename-photos at 0.40, because *date*
+is rename-photos' description word ("…to dates") and the
+idiom walked into it. Two of the bars in the matcher
+exist because of this measurement's first run: with
+threshold, mass, and margin alone, the held-out set
+scored 26/0/6 but the talk set below fired 4 of 10 —
+"tell me a joke" (the repair read *joke* as the stemmed
+*jake*), "the server at my office crashed this morning"
+(*crashed* repaired to the description word *trash*),
+and "i keep my notes in a paper notebook" (one strong
+word, *notes*, covering half a short line). Adding
+"repaired words count half" and "a match needs two
+matched words" cost two held-out lines — the
+seed-test-data description-only line, which had matched
+on the single word *test*, and the *test*-margin line
+above — and bought the talk set down to 1 of 10. Both
+runs are the record; the shipped matcher is the second.
+
+The talk set — ten everyday lines, five of them
+near-miss talk on the scripts' own topics: **1 fired,
+9 clean.** The one that fires is "i downloaded a great
+movie last night" → `clean-downloads (0.43)`: a genuine
+topic word (*downloaded*) in a past-tense statement.
+Lexical matching cannot see tense; that is a limit
+below, not a patch.
+
+Slots, on the eight held-out lines that state values:
+**5 exact, 3 substituted, 0 partial, 0 missing.** Exact:
+every migrate line with trained names (jim→jake three
+ways) and both rename-photos lines (holidays,
+birthdays). Substituted: rudy/petra → `wade` (one value
+heard of two), and seed-test-data's two env values —
+"fill the staging database with fake data" → `wedding`,
+"load some dummy data into the test environment" →
+`nina`. The env values were deliberately never in the
+generic pool: no shipped training can foresee a
+particular user's slot vocabulary, and the extractor's
+answer is a trained stand-in, exactly the filename
+boundary from the file chapter wearing different
+clothes.
+
+**Limits, plainly.**
+
+- Matching is lexical. A request that uses none of the
+  description's or examples' words cannot match:
+  "time to save my pictures again before i lose them"
+  abstains (0.20), because *pictures*, *save*, and
+  *lose* are words the backup-photos entry never uses.
+  The fix is in the user's hands and costs no training:
+  add the word to the description or the examples.
+- Past-tense talk on a script's own topic can fire it
+  (the downloaded-movie line above). The bars bound
+  this; they do not abolish it.
+- Two scripts whose descriptions share their topic
+  words will tie on lines between them and abstain —
+  the two server scripts are the standing example.
+  Descriptions that differ in words, not just in
+  intent, are the user's lever.
+- Unseen slot values substitute in extraction, as
+  everywhere in this repo: the would-run line can name
+  a folder you never said. That is one more reason the
+  printed line is a proposal for a gated executor to
+  confirm, not an action.
+- The extractor may offer a favourite value for a
+  sentence that states none. Slots it returns nothing
+  for are shown as "(not heard)"; a host that executes
+  must treat any value it cannot confirm the same way.
+
+
 ## Improving unseen answers
 
 The chapters above describe a brain that is strong on what
@@ -1953,6 +2221,9 @@ intent/     the meaning classifier: bag-of-words softmax
             over "intent" labels, with confidence abstention
             and an optional kind level (plus optional
             subword piece schemes)
+cmdmatch/   the description matcher: a runtime registry of
+            user-declared commands, matched lexically
+            against their descriptions — no training
 brain/      standalone glue: vocab building, the trainer loop
             with checkpoint-resume, greedy + checked sampling
 cmd/train   train a brain: -data -out -epochs -layers -resume
@@ -1963,8 +2234,14 @@ examples/   pairs.jsonl — 3,731 toy pairs to start from
             commands.jsonl — 60 command rows with intents;
             filecommands.jsonl — 1,634 rows: 1,456 file-command rows over
             240 filenames, plus 178 label-only "chat" rows,
-            filecmd/ — the runnable filesystem demo for them, and
-            assistant/ — filecmd and the chat brain in one routed program
+            filecmd/ — the runnable filesystem demo for them,
+            assistant/ — filecmd and the chat brain in one routed program,
+            commands.json — a runtime registry of 10 described
+            custom scripts (not training data),
+            genericcommands.jsonl — 1,151 generic extractor rows
+            about invented scripts, and
+            customcmd/ — the describe-it-once commands demo
+            (with gen.go, the generic rows' generator)
 ```
 
 ## Provenance
