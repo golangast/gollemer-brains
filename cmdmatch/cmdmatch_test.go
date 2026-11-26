@@ -257,3 +257,24 @@ func TestRegistryRoundTripAndValidation(t *testing.T) {
 		t.Error("Names lost a script")
 	}
 }
+
+// TestHasActionWord pins the want signal: a line carrying
+// a verb-family word (in any inflection, "make" included
+// though it is a stopword for matching) is asking for an
+// action; small talk is not.
+func TestHasActionWord(t *testing.T) {
+	for line, want := range map[string]bool{
+		"create a folder":         true,
+		"creates a folder":        true,
+		"make a directory":        true,
+		"copy files from jim":     true,
+		"please list the scripts": true,
+		"how are you":             false,
+		"what a lovely day today": false,
+		"i love pizza on fridays": false,
+	} {
+		if got := HasActionWord(line); got != want {
+			t.Errorf("HasActionWord(%q) = %v, want %v", line, got, want)
+		}
+	}
+}

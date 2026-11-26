@@ -1,5 +1,10 @@
 package cmdmatch
 
+import (
+	"strings"
+	"unicode"
+)
+
 // The synonym table: word FAMILIES — groups of words that
 // name the same command-domain idea — used to expand each
 // script's profile at registry load (see match.go). A
@@ -41,8 +46,9 @@ package cmdmatch
 // synonymFactor in match.go. And curation is part of the
 // deal — a family member that produces a wrong match in
 // measurement comes out, and the removal is reported.
-var synonymFamilies = [][]string{
-	// Verbs: the actions commands do.
+
+// verbFamilies are the actions commands do.
+var verbFamilies = [][]string{
 	{"rename", "change", "retitle", "relabel"},
 	{"list", "show", "display", "view"},
 	{"back", "backup", "copy", "save", "store", "duplicate"},
@@ -60,13 +66,66 @@ var synonymFamilies = [][]string{
 	{"check", "test", "verify", "validate"},
 	{"fill", "load", "populate", "seed"},
 	{"fake", "dummy", "mock", "synthetic"},
-	// Nouns: the things commands act on.
+}
+
+// nounFamilies are the things commands act on.
+var nounFamilies = [][]string{
 	{"file", "document"},
 	{"photo", "picture", "image", "pic"},
 	{"folder", "directory", "dir"},
 	{"name", "title", "label"},
 	{"website", "site"},
 	{"data", "record", "dataset"},
+}
+
+// synonymFamilies is every family, verbs first — the
+// table the profile expansion and the disjointness test
+// work over.
+var synonymFamilies = func() [][]string {
+	out := make([][]string, 0, len(verbFamilies)+len(nounFamilies))
+	out = append(out, verbFamilies...)
+	out = append(out, nounFamilies...)
+	return out
+}()
+
+// actionStems is the stemmed form of every verb in the
+// table, plus "make": the trainer table's make/build pair
+// carries over to matching only as build ("make" is a
+// stopword in match.go, so it can never be a profile
+// word), but as a signal that a line is a WANT — someone
+// asking for something to be done — "make" is as much an
+// action word as "create". HasActionWord is that signal;
+// it plays no part in scoring.
+var actionStems = buildActionStems()
+
+func buildActionStems() map[string]bool {
+	out := map[string]bool{}
+	for _, fam := range verbFamilies {
+		for _, w := range fam {
+			out[stem(w)] = true
+		}
+	}
+	out[stem("make")] = true
+	return out
+}
+
+// HasActionWord reports whether a line contains a word
+// from one of the table's verb families, in any
+// inflection: the signal that a line is asking for an
+// action, as opposed to small talk. It tokenises the raw
+// line — stopwords included, since "make" is one — and
+// stems each token with the same stem() matching uses,
+// so "creates", "creating" and "create" all land on the
+// family's form.
+func HasActionWord(line string) bool {
+	for _, tok := range strings.FieldsFunc(strings.ToLower(line), func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	}) {
+		if actionStems[stem(tok)] {
+			return true
+		}
+	}
+	return false
 }
 
 // cousins maps each stemmed family member to the stemmed

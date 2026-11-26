@@ -18,6 +18,19 @@
 // REPL's `add` command, and the new script matches from
 // the next line on.
 //
+// The registry also grows IN CONVERSATION, two ways.
+// When a line that looks like a want matches nothing, the
+// REPL offers to learn it on the spot: you name the
+// command that should run, and your want-line itself
+// becomes the new entry's description — from then on the
+// want (and its cousins) chooses that command. And a
+// declaration — "i have a command named copy and it will
+// copy files from one folder to another and it is in file
+// copy.sh" — is parsed deterministically into the same
+// kind of entry. Both doors write through the one
+// registry save path `add` uses, so what is learned in a
+// session is still there in the next one.
+//
 // This example RUNS NOTHING. It prints the script it
 // understood, the arguments it heard, and the exact
 // command line it WOULD run. Executing that line is a
@@ -26,11 +39,9 @@
 // examples/filecmd — and it is deliberately not in this
 // example.
 //
-// Train the extractor brain first (see the README section
-// "Runnable example: your own commands, described not
-// trained"):
+// The extractor brain ships trained (custombrain.gob at
+// the repo root), so the example runs as-is:
 //
-//	go run ./cmd/train -data examples/genericcommands.jsonl -out custombrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10
 //	go run ./examples/customcmd -model custombrain.gob -registry examples/commands.json
 package main
 
@@ -116,26 +127,50 @@ func (d *demo) handle(line string) bool {
 		return true
 	}
 
+	// A declaration ("i have a command named copy … it is
+	// in file copy.sh") is teaching, not a want: it is
+	// parsed and learned before matching is consulted.
+	if p, isDecl := parseDeclaration(line); isDecl {
+		d.declarationFlow(p)
+		return true
+	}
+
 	decl, score, ok := d.matcher.Match(line)
 	if !ok {
-		if ranked := d.matcher.Rank(line); len(ranked) > 0 && ranked[0].Mass > 0 {
+		ranked := d.matcher.Rank(line)
+		if len(ranked) > 0 && ranked[0].Mass > 0 {
 			fmt.Fprintf(d.out, "i don't know which script you mean (closest: %s at %.2f, under the %.2f bar).\n", ranked[0].Script.Name, ranked[0].Score, cmdmatch.Threshold)
 		} else {
 			fmt.Fprintln(d.out, "i don't know which script you mean.")
 		}
+		// An unmatched WANT is a teaching moment: offer
+		// to learn it on the spot. Small talk (no closest
+		// script, no action word) gets no offer.
+		if d.looksLikeWant(line, ranked) {
+			d.teachFlow(line)
+		}
 		return true
 	}
 
+	d.present(decl, score, line)
+	return true
+}
+
+// present prints the understood block for a matched
+// declaration: the script and its score, the argument
+// values the extractor heard bound to the declared
+// slots, and the exact command line that WOULD run.
+func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 	fmt.Fprintf(d.out, "understood: %s (%.2f) — %s\n", decl.Name, score, decl.Description)
 	if len(decl.Slots) == 0 {
 		fmt.Fprintf(d.out, "would run: %s\n", decl.Command)
-		return true
+		return
 	}
 	raw, err := d.extract(line)
 	if err != nil {
 		fmt.Fprintf(d.out, "but the extractor brain failed: %v — no arguments read.\n", err)
 		fmt.Fprintf(d.out, "would run: %s (arguments missing)\n", decl.Command)
-		return true
+		return
 	}
 	values := strings.Fields(raw)
 	var bound []string
@@ -150,12 +185,36 @@ func (d *demo) handle(line string) bool {
 	if len(values) > len(decl.Slots) {
 		fmt.Fprintf(d.out, "(also heard, with no slot to bind: %s)\n", strings.Join(values[len(decl.Slots):], " "))
 	}
-	would := decl.Command
-	if len(values) > 0 {
-		would += " " + strings.Join(values, " ")
+	fmt.Fprintf(d.out, "would run: %s\n", wouldRun(decl, values))
+}
+
+// wouldRun renders the command line for a declaration
+// and the values heard for it. A command that names its
+// slots inline ({folder}) has each placeholder replaced
+// by the value bound to that slot; any other command
+// takes its bound values appended, in slot order. Either
+// way the line carries DECLARED SLOTS ONLY: a value the
+// extractor heard beyond the slots is reported (in
+// present's "also heard" line) but never passed to a
+// command that never asked for it.
+func wouldRun(decl cmdmatch.Declaration, values []string) string {
+	cmd := decl.Command
+	if strings.Contains(cmd, "{") {
+		for i, slot := range decl.Slots {
+			if i < len(values) {
+				cmd = strings.ReplaceAll(cmd, "{"+slot+"}", values[i])
+			}
+		}
+		return cmd
 	}
-	fmt.Fprintf(d.out, "would run: %s\n", would)
-	return true
+	n := len(values)
+	if n > len(decl.Slots) {
+		n = len(decl.Slots)
+	}
+	if n == 0 {
+		return cmd
+	}
+	return cmd + " " + strings.Join(values[:n], " ")
 }
 
 // addFlow declares a new script interactively and appends
@@ -197,18 +256,32 @@ func (d *demo) addFlow() {
 		Slots:       slots,
 		Examples:    examples,
 	}
-	if err := d.reg.Add(decl); err != nil {
-		fmt.Fprintf(d.out, "not added: %v\n", err)
+	if !d.persist(decl) {
 		return
 	}
+	fmt.Fprintf(d.out, "added %s — it matches from the next line on. nothing was retrained.\n", name)
+}
+
+// persist is the ONE registry write path: `add`, the
+// teach-on-ask flow, and a parsed declaration all land
+// here. The declaration is validated, appended, and the
+// registry file rewritten — so what is learned in a
+// session survives restarts — and the matcher is rebuilt
+// over the new registry, so the entry matches from the
+// next line on. Nothing anywhere is retrained.
+func (d *demo) persist(decl cmdmatch.Declaration) bool {
+	if err := d.reg.Add(decl); err != nil {
+		fmt.Fprintf(d.out, "not saved: %v\n", err)
+		return false
+	}
 	if err := d.reg.Save(d.registryPath); err != nil {
-		fmt.Fprintf(d.out, "not added: could not write the registry: %v\n", err)
+		fmt.Fprintf(d.out, "not saved: could not write the registry: %v\n", err)
 		d.reg.Scripts = d.reg.Scripts[:len(d.reg.Scripts)-1]
-		return
+		return false
 	}
 	d.matcher = cmdmatch.NewMatcher(d.reg)
 	d.regStamp = stampOf(d.registryPath)
-	fmt.Fprintf(d.out, "added %s — it matches from the next line on. nothing was retrained.\n", name)
+	return true
 }
 
 // cleanValues reports whether an extractor answer is a
@@ -282,6 +355,8 @@ func main() {
 	fmt.Println("i will name the script i think you mean and the exact command i WOULD run.")
 	fmt.Println("i never run anything — understanding only; executing is a separate, gated step.")
 	fmt.Printf("registry: %s (%d scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.\n", *registryFlag, len(reg.Scripts))
+	fmt.Println("if i don't know a want, i'll ask to be taught it — and you can declare a command any time:")
+	fmt.Println("'i have a command named copy and it will copy files from one folder to another and it is in file copy.sh'.")
 	for {
 		fmt.Print("> ")
 		if !sc.Scan() {

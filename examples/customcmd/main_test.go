@@ -153,6 +153,7 @@ func TestAddFlowZeroRetrain(t *testing.T) {
 	}
 	var out bytes.Buffer
 	answers := []string{
+		"", // skip the teach offer the first line now earns
 		"water-plants",
 		"./scripts/water-plants.sh",
 		"logs watering the greenhouse plants and notes the time",

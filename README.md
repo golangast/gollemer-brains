@@ -697,9 +697,13 @@ your own words. There is no regenerate-and-retrain step:
 the program loads the registry when it starts, re-reads
 it as you type (an edit in another window lands on the
 next line), and the REPL's `add` command declares a new
-script conversationally. A script declared at 9:00
-matches at 9:00, because nothing about matching is
-trained.
+script conversationally. Two further doors into the
+same registry — teaching an unmatched want on the spot,
+and declaring a command in a single sentence — are
+covered under "Teaching in conversation" below; `add`
+remains the manual form of the same act. A script
+declared at 9:00 matches at 9:00, because nothing about
+matching is trained.
 
 Two mechanisms divide the work, and only one of them is
 a neural net:
@@ -774,6 +778,8 @@ customcmd: your scripts, described not trained. Say what you want in your own wo
 i will name the script i think you mean and the exact command i WOULD run.
 i never run anything — understanding only; executing is a separate, gated step.
 registry: examples/commands.json (10 scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.
+if i don't know a want, i'll ask to be taught it — and you can declare a command any time:
+'i have a command named copy and it will copy files from one folder to another and it is in file copy.sh'.
 > migrate a database from folder jim to jake
 understood: migrate-database (1.27) — migrates a database from one folder to another
 arguments: from=jim, to=jake
@@ -831,6 +837,137 @@ alone — it has no examples at all. (The pre-add line's
 closest guess is itself instructive: "logs" is
 compress-logs' word, and 0.38 is under the bar, so the
 program said so instead of firing the wrong script.)
+
+**Teaching in conversation: say the want, or declare
+the command.** `add` is the deliberate form of declaring
+a script, but it is a form — you have to know it exists.
+John's statement of the point: *"the user can tell it
+about a command and it will know how to choose it for
+next time the user says they want to use it."* So the
+conversation itself is now the primary teaching flow,
+in two shapes.
+
+*Teach on ask.* When a line matches nothing **and looks
+like a want** — some script is at least its neighbour,
+or it carries an action word from the matcher's verb
+families (create, copy, list, run…) — the don't-know is
+followed by one offer. Your answer is the command that
+should run; your want-line itself, verbatim, becomes
+the entry's description and its one example, the
+command's `{placeholders}` become its slots, and its
+name is derived from the command (`mkdir {folder}` →
+`mkdir`). Pressing enter skips, and nothing is written.
+Pure small talk — no closest script, no action word —
+gets the plain don't-know and no offer. The entry is
+written through the same registry save as `add`, and
+the flow closes the loop in the same breath by re-running
+the want:
+
+```
+> create a folder
+i don't know which script you mean (closest: migrate-database at 0.51, under the 0.40 bar).
+want to teach me? what command should run when you say that — or press enter to skip: mkdir {folder}
+learned: when you say "create a folder", i'll run mkdir {folder} (saved as mkdir) — it chooses it from now on, in this session and every later one. nothing was retrained.
+understood: mkdir (1.50) — create a folder
+arguments: folder=mark
+would run: mkdir mark
+```
+
+(The `mark` is the extractor's standing weakness, live:
+the want states no folder name, so it offered a trained
+favourite — see the limits. The choice of script, which
+is the teaching's claim, is exact.) On a later launch
+the taught want is simply known: "create a folder
+called receipts" chooses `mkdir` with no teaching. Two
+phrasings from the same verification runs show the
+edges honestly. "create a folder **named** receipts"
+*ties* the taught entry with rename-photos, 0.63 each —
+*named* stems to rename-photos' description word
+*names*, *create* is unique to the taught entry, the
+two evidences weigh the same, and the margin bar
+abstains rather than coin-flip. And "make a directory
+called trips" is *claimed* by rename-photos (0.51):
+*directory* is folder's cousin, but *trips* is
+rename-photos' own example word, while the taught entry
+matches only that one cousin — a match needs two of an
+entry's words, and *make* is a stopword that can never
+be one of them. What the entry would need is a second
+surviving word: teach with the phrasing itself ("make a
+directory"), or add it as an example. The mechanism is
+not bent to hide either case.
+
+*Declare the command.* The other shape is a single
+sentence that states the command outright — John's
+form: name it, say what it does, say what file it is
+in. The parse is deterministic, markers only: a
+command/script **named** or **called** X (or "my
+command X", corroborated by a file or a doing-marker),
+the token ending in `.sh` (or the word after "in
+file" / "the file is" / "it is in") for the file — a
+bare `copy.sh` is stored as the runnable `./copy.sh` —
+and the doing-clause between "it will" / "it does" /
+"that" / "and it" and the file clause for the
+description. A fact the sentence does not carry is
+asked for with one follow-up ("what does copy do?").
+Slots get exactly one inference: `{placeholders}` in
+the command, else a description that goes "from"
+somewhere "to" somewhere else takes the pair
+[from, to]. An ordinary want carries no markers and is
+never parsed as a declaration. On a fresh registry:
+
+```
+> i have a command named copy and it will copy files from one folder to another and it is in file copy.sh
+learned: copy — copy files from one folder to another
+command: ./copy.sh (slots: from, to). it chooses copy from now on, in this session and every later one. nothing was retrained.
+> copy files from jim to jake
+understood: copy (0.75) — copy files from one folder to another
+arguments: from=jim, to=jake
+would run: ./copy.sh jim jake
+> duplicate files from jim to jake
+understood: copy (0.66) — copy files from one folder to another
+arguments: from=jim, to=jake
+would run: ./copy.sh jim jake
+```
+
+The cousin that lands is *duplicate* — copy's own
+family. *Move* does not land on copy: move belongs to
+migrate's family, and against the shipped registry
+"move files from jim to jake" chooses migrate-database,
+correctly by the table. The photos phrasing — "copy my
+photos from holidays to backup" — lands on the declared
+copy too (0.66): photo is *not* file's cousin and never
+carries it; *copy* exact plus *backup*, copy's cousin,
+are the two words that do. And declared entries compete
+in the same registry as everyone: declared into the
+*shipped* registry, the same jim→jake want abstains on
+the margin (migrate-database 0.63, copy 0.55 — jim and
+jake are migrate's literal example folders, the
+strongest evidence a line can carry), while "copy files
+from holidays to backup", whose folder names are
+nobody's examples, chooses copy at 0.84. A want typed
+*before* any declaration creates nothing: it goes down
+the ordinary want path — against the shipped registry
+it matches migrate-database, whose examples those
+folder names are; against a fresh one it abstains and
+earns the teach offer — and either way the registry is
+exactly as it was until a teaching answer is given.
+
+*One binding fix came with the loop.* The would-run
+line used to append **every** value the extractor
+heard, even past the declared slots — John's screenshot
+had `./scripts/rename-photos.sh jim owen` for a
+one-slot script. The line now carries declared slots
+only, in order (placeholders in the command are
+substituted in place); extra heard values stay in the
+"(also heard…)" report and never reach the command:
+
+```
+> rename the photos in jim and owen
+understood: rename-photos (0.70) — renames the photos in a folder from camera names to dates
+arguments: folder=jim
+(also heard, with no slot to bind: owen)
+would run: ./scripts/rename-photos.sh jim
+```
 
 **Measured, not promised.** Thirty-two hand-written
 held-out lines — two fresh request phrasings and one
@@ -1035,6 +1172,22 @@ same would-run line in the REPL.
   sentence that states none. Slots it returns nothing
   for are shown as "(not heard)"; a host that executes
   must treat any value it cannot confirm the same way.
+- A taught entry knows its want-line's words and their
+  cousins, nothing more: a later phrasing must share
+  two of them to choose it. "make a directory called
+  trips" shares one (*directory*) with a "create a
+  folder" entry and is claimed by rename-photos
+  instead — the remedy is in the user's hands (teach
+  with that phrasing, or add it as an example), and a
+  phrasing can also tie a neighbour exactly and
+  abstain ("create a folder named receipts", above).
+- The teach offer follows the same signals as the
+  closest-script report, typo repair included, so talk
+  can occasionally earn one: "what a lovely day today"
+  is offered teaching because the repair reads *day* as
+  rename-photos' *dates*. The cost of a wrong offer is
+  one press of enter; the offer is never made for talk
+  with no neighbour and no action word.
 
 
 ## Improving unseen answers
