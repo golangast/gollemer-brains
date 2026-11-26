@@ -622,19 +622,19 @@ func (d *demo) printPlan(steps []planStep, notes []string) {
 			gaps++
 		}
 	}
-	fmt.Fprintf(d.out, "plan: %d %s (%d ready, %d %s)\n", len(steps), plural(len(steps), "step"), ready, gaps, plural(gaps, "gap"))
+	fmt.Fprintf(d.out, "%s %d %s (%d ready, %d %s)\n", d.paint(ansiLabel, "plan:"), len(steps), plural(len(steps), "step"), ready, gaps, plural(gaps, "gap"))
 	for i, s := range steps {
 		if !s.matched {
 			fmt.Fprintf(d.out, "[ ] %d. ? — no command knows this step yet: '%s'\n", i+1, s.segment)
 			continue
 		}
-		fmt.Fprintf(d.out, "[ ] %d. %s — concept: %s\n", i+1, stageLabel(stepStage(s)), s.decl.Name)
-		fmt.Fprintf(d.out, "    Target: %s\n", s.targetText())
+		fmt.Fprintf(d.out, "[ ] %d. %s — %s %s\n", i+1, stageLabel(stepStage(s)), d.paint(ansiLabel, "concept:"), s.decl.Name)
+		fmt.Fprintf(d.out, "    %s %s\n", d.paint(ansiLabel, "Target:"), s.targetText())
 		decl, vals := s.stepRender()
-		fmt.Fprintf(d.out, "    preview: %s\n", previewTextProvenance(decl, vals, s.fromStep))
-		fmt.Fprintf(d.out, "    Would run: %s\n", s.wouldRunText())
+		fmt.Fprintf(d.out, "    %s %s\n", d.paint(ansiLabel, "preview:"), previewTextProvenance(decl, vals, s.fromStep))
+		fmt.Fprintf(d.out, "    %s %s\n", d.paint(ansiLabel, "Would run:"), s.wouldRunText())
 		if cmdmatch.HasRemoveWord(s.decl.Name) || cmdmatch.HasRemoveWord(s.decl.Description) {
-			fmt.Fprintln(d.out, "    careful: this command removes or changes things.")
+			fmt.Fprintln(d.out, d.paint(ansiWarn, "    careful: this command removes or changes things."))
 		}
 	}
 	for _, n := range notes {

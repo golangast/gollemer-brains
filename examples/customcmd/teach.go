@@ -101,7 +101,7 @@ func (d *demo) learnWant(want string) (decl cmdmatch.Declaration, learned, viaDe
 	if !d.persist(decl) {
 		return cmdmatch.Declaration{}, false, false
 	}
-	fmt.Fprintf(d.out, "learned: when you say %q, i'll run %s (saved as %s) — it chooses it from now on, in this session and every later one. nothing was retrained.\n", want, command, decl.Name)
+	fmt.Fprintf(d.out, "%s when you say %q, i'll run %s (saved as %s) — it chooses it from now on, in this session and every later one. nothing was retrained.\n", d.paint(ansiGood, "learned:"), want, command, decl.Name)
 	return decl, true, false
 }
 

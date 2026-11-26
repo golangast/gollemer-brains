@@ -73,19 +73,18 @@ func brainsDemo(t *testing.T, answers []string) (*demo, *bytes.Buffer) {
 }
 
 // TestBrainsChatRoute: a greeting the matcher cannot
-// claim is answered by the chat brain, labelled, with
-// the intent read shown — and no teach prompt is served.
+// claim is answered by the chat brain, labelled — the
+// answer alone, no intent annotation under it (John's
+// rule) — and no teach prompt is served.
 func TestBrainsChatRoute(t *testing.T) {
 	d, out := brainsDemo(t, nil)
 	d.handle("hello there friend")
 	got := out.String()
-	for _, want := range []string{
-		"chat brain: stub chat reply",
-		"(intent: greeting · kind: talk ·",
-	} {
-		if !strings.Contains(got, want) {
-			t.Errorf("chat route output missing %q:\n%s", want, got)
-		}
+	if !strings.Contains(got, "chat brain: stub chat reply") {
+		t.Errorf("chat route output missing the answer:\n%s", got)
+	}
+	if strings.Contains(got, "(intent:") {
+		t.Errorf("chat answer still carries an intent annotation:\n%s", got)
 	}
 	if strings.Contains(got, "want to teach me") {
 		t.Errorf("small talk earned a teach offer:\n%s", got)
@@ -99,8 +98,11 @@ func TestBrainsQuestionRoute(t *testing.T) {
 	d, out := brainsDemo(t, nil)
 	d.handle("what is a widget")
 	got := out.String()
-	if !strings.Contains(got, "chat brain: stub chat reply") || !strings.Contains(got, "explain_widget") {
+	if !strings.Contains(got, "chat brain: stub chat reply") {
 		t.Errorf("question did not take the chat route:\n%s", got)
+	}
+	if strings.Contains(got, "(intent:") {
+		t.Errorf("question answer still carries an intent annotation:\n%s", got)
 	}
 }
 
@@ -124,15 +126,16 @@ func TestBrainsFileRoute(t *testing.T) {
 	}
 }
 
-// TestBrainsTeachShowsRead: a want-kind meaning with no
+// TestBrainsTeachNoRead: a want-kind meaning with no
 // script (set_reminder) reaches the teach offer, and the
-// offer is preceded by the intent read.
-func TestBrainsTeachShowsRead(t *testing.T) {
+// offer stands alone — no intent read printed before it
+// (John's rule).
+func TestBrainsTeachNoRead(t *testing.T) {
 	d, out := brainsDemo(t, []string{""}) // skip the offer
 	d.handle("remind me to call mother")
 	got := out.String()
-	if !strings.Contains(got, "this reads as: schedule · set_reminder") {
-		t.Errorf("teach offer did not show the intent read:\n%s", got)
+	if strings.Contains(got, "this reads as:") {
+		t.Errorf("teach offer still shows the intent read:\n%s", got)
 	}
 	if strings.Contains(got, "chat brain:") || strings.Contains(got, "file brain:") {
 		t.Errorf("a reminder want was routed to a brain:\n%s", got)
@@ -153,7 +156,7 @@ func TestBrainsUnwiredIsTheOldBehaviour(t *testing.T) {
 	d, out := queueDemo(t, path, reg, nil)
 	d.handle("hello there friend")
 	got := out.String()
-	if got != "i don't know which script you mean.\n" {
-		t.Errorf("unwired greeting changed:\n%q", got)
+	if got != "" {
+		t.Errorf("unwired greeting should get silence (no brain, no want — just the next prompt):\n%q", got)
 	}
 }

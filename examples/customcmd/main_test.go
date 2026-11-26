@@ -123,11 +123,12 @@ func TestHandleUnderstands(t *testing.T) {
 		t.Errorf("slotless match should print the bare command:\n%s", out.String())
 	}
 
-	// Talk lands on the abstention, not on a script.
+	// Talk lands on the abstention, not on a script —
+	// and an abstention with no brain wired is silence.
 	out.Reset()
 	d.handle("how are you doing today")
-	if !strings.Contains(out.String(), "i don't know which script you mean") {
-		t.Errorf("talk line should abstain:\n%s", out.String())
+	if out.String() != "" {
+		t.Errorf("talk line should get silence, not a script:\n%s", out.String())
 	}
 }
 
@@ -177,7 +178,7 @@ func TestAddFlowZeroRetrain(t *testing.T) {
 	}
 
 	d.handle("the script that logs watering the greenhouse")
-	if !strings.Contains(out.String(), "i don't know which script you mean") {
+	if strings.Contains(out.String(), "understood:") || strings.Contains(out.String(), "would run:") {
 		t.Fatalf("unregistered script should not match:\n%s", out.String())
 	}
 	out.Reset()

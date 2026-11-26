@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/golangast/gollemer-brains/cmdmatch"
-	"github.com/golangast/gollemer-brains/intent"
 )
 
 // All the brains: the matcher is the first call on a line,
@@ -35,15 +34,13 @@ import (
 // The user never chooses a brain. They type a line — a
 // want, a question, a greeting, a plan — and the routing
 // below picks the reader behind the scenes. Brain names
-// appear only in the banner's status list and on the
-// labels of the answers themselves.
+// appear only on the labels of the answers themselves.
 //
 // Every brain is optional at runtime: a missing or
-// unwired brain simply removes its route (the banner
-// names it "not trained"), and with none wired the REPL
-// behaves exactly as it did before they arrived — which
-// is also how the older tests, wiring none, keep passing
-// byte for byte.
+// unwired brain simply removes its route, and with none
+// wired the REPL behaves exactly as it did before they
+// arrived — which is also how the older tests, wiring
+// none, keep passing.
 
 // fileActionLabels are the meanings the file brain owns:
 // the file route fires for these and no others.
@@ -91,20 +88,6 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 	}
 	r.kindGuess, r.kindConf = d.clf.PredictKind(line)
 	return r, true
-}
-
-// describe renders the read the way answer blocks show
-// it: the meaning, its kind, and the confidence — or the
-// honest abstention, with the kind neighbourhood when
-// even that much is known.
-func (r intentRead) describe() string {
-	if r.label != "" {
-		return fmt.Sprintf("intent: %s · kind: %s · %.2f", r.label, r.kind, r.conf)
-	}
-	if r.kindGuess != "" {
-		return fmt.Sprintf("intent: no confident label · kind looks like %s · %.2f", r.kindGuess, r.kindConf)
-	}
-	return "intent: no confident read"
 }
 
 // routeAbstain is consulted when the matcher abstains: it
@@ -175,16 +158,17 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 }
 
 // chatRoute hands a conversational line to the chat
-// brain and prints its answer, labelled, with the intent
-// read that sent it there.
+// brain and prints its answer, labelled. The intent read
+// that sent it there steers the routing but is not
+// printed (John's rule, 2026-11-26: no annotations —
+// just the answer).
 func (d *demo) chatRoute(line string, read intentRead) {
 	ans, err := d.chatAnswer(line)
 	if err != nil || strings.TrimSpace(ans) == "" {
-		fmt.Fprintln(d.out, "chat brain: (it could not answer that)")
+		fmt.Fprintf(d.out, "%s (it could not answer that)\n", d.paint(ansiLabel, "chat brain:"))
 	} else {
-		fmt.Fprintf(d.out, "chat brain: %s\n", ans)
+		fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "chat brain:"), ans)
 	}
-	fmt.Fprintf(d.out, "  (%s)\n", read.describe())
 }
 
 // fileRoute hands a file want to the file brain and
@@ -193,9 +177,9 @@ func (d *demo) chatRoute(line string, read intentRead) {
 // UNDERSTANDING ONLY — the block says so on its face:
 // nothing is created, deleted, or listed here.
 func (d *demo) fileRoute(line string, read intentRead) {
-	label, conf := read.label, read.conf
-	if lp, lc := d.filePredict(line); lp != "" {
-		label, conf = lp, lc // the file brain's own read leads its block
+	label := read.label
+	if lp, _ := d.filePredict(line); lp != "" {
+		label = lp // the file brain's own read leads its block
 	}
 	what := label
 	if label == "create_file" || label == "delete_file" {
@@ -207,8 +191,8 @@ func (d *demo) fileRoute(line string, read intentRead) {
 			}
 		}
 	}
-	fmt.Fprintf(d.out, "file brain: reads this as %s\n", what)
-	fmt.Fprintf(d.out, "  (%s · the file brain's own confidence %.2f — understanding only: nothing was created, deleted, or listed; acting on files is the filecmd example's job.)\n", read.describe(), conf)
+	fmt.Fprintf(d.out, "%s reads this as %s\n", d.paint(ansiLabel, "file brain:"), what)
+	fmt.Fprintln(d.out, "  understanding only — nothing was created, deleted, or listed.")
 }
 
 // cleanFileName judges the file brain's raw answer the
@@ -235,40 +219,16 @@ func cleanFileName(raw string) (string, bool) {
 var fileNameRe = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_-]*\.[A-Za-z0-9]+$`)
 
 // teachOffer decides, on the ordinary abstain path,
-// whether the line earns the teach offer, and prints the
-// intent read before the offer when the classifier chose
-// a label (the brief's shape: "this reads as: make ·
-// create_folder"). The offer fires on today's signals
-// (looksLikeWant) or on a confident want-kind label —
-// and never for a line a brain route already took, which
-// is how small talk stays out of it.
+// whether the line earns the teach offer. The offer
+// fires on today's signals (looksLikeWant) or on a
+// confident want-kind label — and never for a line a
+// brain route already took, which is how small talk
+// stays out of it. The offer stands alone: no read is
+// printed before it (John's rule, 2026-11-26).
 func (d *demo) teachOffer(line string, ranked []cmdmatch.Scored, read intentRead, haveRead bool) bool {
 	if !d.looksLikeWant(line, ranked) && !(haveRead && read.label != "" && wantKinds[read.kind]) {
 		return false
 	}
-	if haveRead && read.label != "" {
-		fmt.Fprintf(d.out, "this reads as: %s · %s (%.2f)\n", read.kind, read.label, read.conf)
-	}
 	d.teachFlow(line)
 	return true
-}
-
-// brainsStatus renders the banner's status list: every
-// brain the program can use, with the ones that did not
-// load named as not trained. It is a status line, not a
-// menu — nothing in it is chosen by the user.
-func brainsStatus(clf *intent.Classifier, chatOK, fileOK bool) string {
-	part := func(name string, ok bool) string {
-		if ok {
-			return name
-		}
-		return name + " (not trained)"
-	}
-	return strings.Join([]string{
-		"scripts",
-		part("intent", clf != nil),
-		part("chat", chatOK),
-		part("file", fileOK),
-		"extractor",
-	}, " · ")
 }

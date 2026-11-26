@@ -72,7 +72,6 @@ func TestTeachOnAbstainClosesLoop(t *testing.T) {
 	d.handle("create a folder")
 	got := out.String()
 	for _, want := range []string{
-		"i don't know which script you mean",
 		"learned: when you say \"create a folder\", i'll run mkdir {folder} (saved as mkdir)",
 		"understood: mkdir", // the same-breath re-run
 	} {
@@ -151,8 +150,8 @@ func TestTalkGetsNoTeachOffer(t *testing.T) {
 	for _, line := range []string{"how are you", "good morning everyone", "the weather is nice this week"} {
 		out.Reset()
 		d.handle(line)
-		if !strings.Contains(out.String(), "i don't know which script you mean") {
-			t.Errorf("talk line %q should abstain:\n%s", line, out.String())
+		if out.String() != "" {
+			t.Errorf("talk line %q should get silence:\n%s", line, out.String())
 		}
 	}
 	if asked {

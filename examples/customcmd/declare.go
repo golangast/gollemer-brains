@@ -424,6 +424,6 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 	if len(decl.Slots) > 0 {
 		slots = "slots: " + strings.Join(decl.Slots, ", ")
 	}
-	fmt.Fprintf(d.out, "learned: %s — %s\n", decl.Name, decl.Description)
+	fmt.Fprintf(d.out, "%s %s — %s\n", d.paint(ansiGood, "learned:"), decl.Name, decl.Description)
 	fmt.Fprintf(d.out, "command: %s (%s). it chooses %s from now on, in this session and every later one. nothing was retrained.\n", decl.Command, slots, decl.Name)
 }

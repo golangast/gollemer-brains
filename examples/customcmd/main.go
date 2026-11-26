@@ -103,6 +103,7 @@ type demo struct {
 	extract  func(line string) (raw string, err error)
 	nextLine func(prompt string) (string, bool)
 	out      io.Writer
+	color    bool // colour the answers (color.go); tests leave it off
 
 	// The other brains (brains.go). All nil-safe: a nil
 	// field removes that brain's route, and with none of
@@ -189,20 +190,16 @@ func (d *demo) handle(line string) bool {
 	if !ok {
 		ranked := d.matcher.Rank(line)
 		// No script claims the line — the other brains
-		// read it first (brains.go): conversation goes to
-		// the chat brain, file wants to the file brain's
-		// understanding, behind the scenes. The matcher's
-		// dead-end line is only printed when no brain
-		// takes the line either — a line the chat brain
-		// answers was never a line nobody understood.
+		// read it (brains.go): conversation goes to the
+		// chat brain, file wants to the file brain's
+		// understanding, behind the scenes. And when no
+		// brain takes it and it is not a teachable want,
+		// nothing is printed at all: the next prompt is
+		// the whole answer. (John's rule, 2026-11-26:
+		// no dead-end line — silence for unclaimed lines.)
 		read, haveRead := d.readIntent(line)
 		if d.routeAbstain(line, ranked, read, haveRead) {
 			return true
-		}
-		if len(ranked) > 0 && ranked[0].Mass > 0 {
-			fmt.Fprintf(d.out, "i don't know which script you mean (closest: %s at %.2f, under the %.2f bar).\n", ranked[0].Script.Name, ranked[0].Score, cmdmatch.Threshold)
-		} else {
-			fmt.Fprintln(d.out, "i don't know which script you mean.")
 		}
 		// An unmatched WANT is a teaching moment: offer
 		// to learn it on the spot. Small talk (no closest
@@ -223,17 +220,17 @@ func (d *demo) handle(line string) bool {
 // slots, a plain-words PREVIEW of what the command
 // would do, and the exact command line that WOULD run.
 func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
-	fmt.Fprintf(d.out, "understood: %s (%.2f) — %s\n", decl.Name, score, decl.Description)
+	fmt.Fprintf(d.out, "%s %s (%.2f) — %s\n", d.paint(ansiLabel, "understood:"), decl.Name, score, decl.Description)
 	if len(decl.Slots) == 0 {
 		d.printPreview(decl, nil)
-		fmt.Fprintf(d.out, "would run: %s\n", decl.Command)
+		fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "would run:"), decl.Command)
 		return
 	}
 	raw, err := d.extract(line)
 	if err != nil {
 		fmt.Fprintf(d.out, "but the extractor brain failed: %v — no arguments read.\n", err)
 		d.printPreview(decl, nil)
-		fmt.Fprintf(d.out, "would run: %s (arguments missing)\n", decl.Command)
+		fmt.Fprintf(d.out, "%s %s (arguments missing)\n", d.paint(ansiLabel, "would run:"), decl.Command)
 		return
 	}
 	values := strings.Fields(raw)
@@ -245,12 +242,12 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 			bound = append(bound, fmt.Sprintf("%s=(not heard)", slot))
 		}
 	}
-	fmt.Fprintf(d.out, "arguments: %s\n", strings.Join(bound, ", "))
+	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "arguments:"), strings.Join(bound, ", "))
 	if len(values) > len(decl.Slots) {
 		fmt.Fprintf(d.out, "(also heard, with no slot to bind: %s)\n", strings.Join(values[len(decl.Slots):], " "))
 	}
 	d.printPreview(decl, values)
-	fmt.Fprintf(d.out, "would run: %s\n", wouldRun(decl, values))
+	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "would run:"), wouldRun(decl, values))
 }
 
 // printPreview prints the preview block between the
@@ -266,11 +263,11 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 // would confirm against: this is what the user would be
 // saying yes to.
 func (d *demo) printPreview(decl cmdmatch.Declaration, values []string) {
-	fmt.Fprintf(d.out, "preview: %s\n", previewText(decl, values))
-	fmt.Fprintf(d.out, "  runs: %s\n", wouldRun(decl, values))
+	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "preview:"), previewText(decl, values))
+	fmt.Fprintf(d.out, "  %s %s\n", d.paint(ansiLabel, "runs:"), wouldRun(decl, values))
 	fmt.Fprintln(d.out, "  nothing has run yet.")
 	if cmdmatch.HasRemoveWord(decl.Name) || cmdmatch.HasRemoveWord(decl.Description) {
-		fmt.Fprintln(d.out, "  careful: this command removes or changes things.")
+		fmt.Fprintln(d.out, d.paint(ansiWarn, "  careful: this command removes or changes things."))
 	}
 }
 
@@ -517,6 +514,7 @@ func main() {
 		matcher:      cmdmatch.NewMatcher(reg),
 		regStamp:     stampOf(*registryFlag),
 		out:          os.Stdout,
+		color:        colorEnabled(),
 	}
 
 	// The intent classifier trains IN MEMORY from the
@@ -536,14 +534,11 @@ func main() {
 
 	// The chat brain: conversation and questions. Loaded
 	// when its data file is there; absent, its route
-	// simply never fires and the banner says so. (Its
-	// own intent sidecar travels with it, but the read
-	// above is the in-memory one — one classifier, one
-	// source of truth.)
-	chatOK := false
+	// simply never fires. (Its own intent sidecar travels
+	// with it, but the read above is the in-memory one —
+	// one classifier, one source of truth.)
 	if cb, err := brain.LoadBrain(*chatFlag); err == nil {
 		cb.FixTypos = true // cmd/ask's standard policy for this brain
-		chatOK = true
 		d.chatAnswer = func(line string) (string, error) {
 			checked, err := cb.AnswerChecked(line, rng)
 			if err == nil && strings.TrimSpace(checked) != "" {
@@ -556,9 +551,7 @@ func main() {
 	// The file brain: it reads file wants and reports
 	// what it understood — it never acts here. Its
 	// classifier rides in its sidecar, as in filecmd.
-	fileOK := false
 	if fb, err := brain.LoadBrain(*fileFlag); err == nil && fb.Intents != nil {
-		fileOK = true
 		d.filePredict = fb.Intents.Predict
 		d.fileExtract = func(line string) (string, error) {
 			checked, err := fb.AnswerChecked(line, rng)
@@ -592,7 +585,9 @@ func main() {
 		return sc.Text(), true
 	}
 
-	fmt.Printf("customcmd (%d scripts in %s): say what you want in your own words — one want, or several for a plan — and i'll name the script, preview it, and show the exact command i WOULD run; i never run anything. 'list' to see them, 'add' to declare one, 'quit' to exit — and if i don't know a want, i'll ask to be taught it. brains: %s.\n", len(reg.Scripts), *registryFlag, brainsStatus(d.clf, chatOK, fileOK))
+	// No banner (John's rule, 2026-11-26): the program
+	// starts at the prompt, and the prompt is the whole
+	// greeting.
 	for {
 		fmt.Print("> ")
 		if !sc.Scan() {

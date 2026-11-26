@@ -410,7 +410,7 @@ func TestPlanNotForSingleOrUnmatchedLines(t *testing.T) {
 	if strings.Contains(out.String(), "plan:") {
 		t.Errorf("talk became a plan:\n%s", out.String())
 	}
-	if !strings.Contains(out.String(), "i don't know which script you mean") {
-		t.Errorf("unmatched multi-segment line lost its abstention:\n%s", out.String())
+	if out.String() != "" {
+		t.Errorf("unmatched multi-segment line should get silence, not a plan or a match:\n%s", out.String())
 	}
 }
