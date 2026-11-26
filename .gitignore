@@ -5,3 +5,7 @@
 *.gob.latest.json
 *.ckpt
 *.latest
+
+# The generic extractor brain ships trained — the customcmd
+# example runs out of the box; every other brain stays local.
+!/custombrain.gob

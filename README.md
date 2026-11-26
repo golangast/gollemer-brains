@@ -753,14 +753,19 @@ script's name, none of the registry's distinctive words
 website, server, …), and no description fragment appears
 anywhere in the generic file.
 
+The trained extractor ships with the repo
+(`custombrain.gob`, 6 MB, at the root) — there is
+nothing to train:
+
 ```sh
-go run ./cmd/train -data examples/genericcommands.jsonl -out custombrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10
-go run ./examples/customcmd -model custombrain.gob -registry examples/commands.json
+go run ./examples/customcmd
 ```
 
-(The extractor's run early-stopped at epoch 219 of 300,
-best loss 0.0198 — the same band where the file chapter's
-BPE extractor became exact on trained names.)
+(It early-stopped at epoch 219 of 300, best loss
+0.0198 — the same band where the file chapter's BPE
+extractor became exact on trained names. Retraining
+it yourself, for tinkering, is the one command
+`go run ./cmd/train -data examples/genericcommands.jsonl -out custombrain.gob -epochs 300 -layers char,copy -augment 0.5 -tokenizer bpe -ckpt-every 10`.)
 
 The REPL prints what it understood — and runs nothing:
 
