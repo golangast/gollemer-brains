@@ -1,0 +1,32 @@
+{"input": "send the landlord the photo of the meter reading, one picture", "intent": "quick_win", "kind": "act"}
+{"input": "put the bins out before the truck comes, two minutes", "intent": "quick_win", "kind": "act"}
+{"input": "tap approve on that expense report, done in a second", "intent": "quick_win", "kind": "act"}
+{"input": "grab batteries for the smoke alarm while i am at the shop", "intent": "quick_win", "kind": "act"}
+{"input": "message the group chat about saturday, quick note", "intent": "quick_win", "kind": "act"}
+{"input": "iron the shirt for tomorrow, five minutes at the board", "intent": "quick_win", "kind": "act"}
+{"input": "top up the travel card on the app, barely a minute", "intent": "quick_win", "kind": "act"}
+{"input": "leave a review for the plumber, he earned it, short one", "intent": "quick_win", "kind": "act"}
+{"input": "auditing three years of expenses will take a solid weekend", "intent": "deep_focus", "kind": "act"}
+{"input": "the research for my dissertation chapter is weeks of library days", "intent": "deep_focus", "kind": "act"}
+{"input": "renovating the spare room is a proper project, plaster and all", "intent": "deep_focus", "kind": "act"}
+{"input": "i need whole mornings to draft the business plan, no way around it", "intent": "deep_focus", "kind": "act"}
+{"input": "the archive digitising job is hundreds of boxes, a month of work", "intent": "deep_focus", "kind": "act"}
+{"input": "mastering the violin piece means daily practice for a season", "intent": "deep_focus", "kind": "act"}
+{"input": "the product launch checklist is enormous, needs a war room week", "intent": "deep_focus", "kind": "act"}
+{"input": "translating grandma's letters is slow careful work, dozens of pages", "intent": "deep_focus", "kind": "act"}
+{"input": "the neighbour's alarm went off at dawn again, i am fuming", "intent": "venting", "kind": "express"}
+{"input": "my shoes got soaked through on the walk, miserable", "intent": "venting", "kind": "express"}
+{"input": "the soup was bland and the waiter vanished, worst lunch in ages", "intent": "venting", "kind": "express"}
+{"input": "i keep stubbing my toe on that doorstep, it is out to get me", "intent": "venting", "kind": "express"}
+{"input": "the queue for coffee took twenty minutes, twenty", "intent": "venting", "kind": "express"}
+{"input": "my umbrella broke in the wind, second one this year", "intent": "venting", "kind": "express"}
+{"input": "the group chat is just memes now, nobody reads anything", "intent": "venting", "kind": "express"}
+{"input": "the heating clanks all night like a haunted house", "intent": "venting", "kind": "express"}
+{"input": "the garden gate repair is a spring job, it can wait happily", "intent": "deferring", "kind": "park"}
+{"input": "i will renew the membership when the new year starts, not before", "intent": "deferring", "kind": "park"}
+{"input": "sorting the loft is for a rainy weekend sometime, no deadline", "intent": "deferring", "kind": "park"}
+{"input": "the old sofa can stay another year, it still sits fine", "intent": "deferring", "kind": "park"}
+{"input": "i am leaving the career course question until summer, decided", "intent": "deferring", "kind": "park"}
+{"input": "the chimney sweep is booked for autumn in my head, fine for now", "intent": "deferring", "kind": "park"}
+{"input": "replacing the curtains waits for the sales, they are only faded", "intent": "deferring", "kind": "park"}
+{"input": "the family tree project is a retirement hobby, parking it with pleasure", "intent": "deferring", "kind": "park"}

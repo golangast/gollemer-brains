@@ -1277,6 +1277,111 @@ same would-run line in the REPL.
   with no neighbour and no action word.
 
 
+## Runnable example: sort a brain dump by intent
+
+Too many thoughts at once is a sorting problem. This
+example declares four meanings about a dumped thought —
+what the line is really asking for — and classifies each
+line you type by intent and concept:
+
+| intent | kind (the concept) | what it means |
+|---|---|---|
+| `quick_win` | `act` | small — minutes, do it now |
+| `deep_focus` | `act` | big — needs a real block of time |
+| `venting` | `express` | saying it is the point; no action wanted |
+| `deferring` | `park` | a decision to leave it for later |
+
+The kind layer is doing concept work: a quick win and a
+deep-focus job are both `act`, but they ask for opposite
+next steps; venting wants no action at all; deferring is
+itself a decision. The meanings are declared the repo's
+way — `examples/thoughts.jsonl`, 219 label-only rows
+(`{"input", "intent", "kind"}`: quick_win ×53, deep_focus
+×52, venting ×64, deferring ×50), first-person dump
+phrasings across chores, work, money, health, people,
+house, and learning. There is no model file and nothing
+to train: the intent classifier is small enough to fit
+in memory at startup (~0.1–0.2 s for 219 rows, measured
+on a shared VM) and be thrown away at exit.
+
+```sh
+go run ./examples/thoughtsort            # REPL
+go run ./examples/thoughtsort -lines mydump.txt   # batch: verdicts + summary
+```
+
+Type lines, get verdicts; type `sort` and the whole dump
+comes back grouped — quick wins first, parked last. A
+real session:
+
+```
+> reply to the plumber's text about thursday, one minute
+  -> quick_win · kind: act · 0.99
+> the thesis chapter is the big one, it needs whole days
+  -> deep_focus · kind: act · 1.00
+> the upstairs neighbours were stomping around at midnight again, i am so tired of it
+  -> venting · kind: express · 1.00
+> the shed clearout can wait until spring, honestly
+  -> deferring · kind: park · 1.00
+> water the tomato plants before they wilt
+  -> quick_win · kind: act · 0.99
+> i will look at the pension paperwork next month, no rush
+  -> deferring · kind: park · 1.00
+> sort
+
+Quick wins — act now, minutes each (2):
+  - reply to the plumber's text about thursday, one minute
+  - water the tomato plants before they wilt
+
+Deep focus — needs a real block, schedule it (1):
+  - the thesis chapter is the big one, it needs whole days
+
+Venting — no action, it just needed saying (1):
+  - the upstairs neighbours were stomping around at midnight again, i am so tired of it
+
+Parked — decided: later (2):
+  - the shed clearout can wait until spring, honestly
+  - i will look at the pension paperwork next month, no rush
+```
+
+Measured on 32 held-out dump lines (8 per intent, written
+after the corpus, never trained on): **26 right / 4 wrong /
+2 abstained** overall. Per intent: deep_focus 8/0/0,
+venting 6/2/0, deferring 6/1/1, quick_win 6/1/1. Kind
+accuracy matched the labels (26/4/2); the kind classifier
+alone (PredictKind) put 28/32 in the right neighbourhood.
+A first run read 25/6/1 with venting at exactly half —
+all four misses were short, flat, markerless mishaps
+("my shoes got soaked through on the walk") read as quick
+wins — so one round of corpus mass went into that register
+(+12 venting rows), which is the run reported above.
+
+The borders are the exam, and they are declared in the
+corpus itself: a two-minute task mentioned with dread is
+still a quick win (size is the concept, not the feeling);
+"i'll deal with it next month" said calmly is deferring,
+said as a complaint about the thing itself it leans
+venting. On a separate 8-line border set: **6 right /
+2 wrong** — the misses are honest ones. "I have been
+avoiding the thirty second job of confirming my flight
+all week" reads as venting (0.98): the dread register
+beats the size words. And the sarcastic postponement —
+"that dripping shower head, next month, next month, it
+just keeps dripping at me" — lands quick_win (0.54):
+the classifier cannot hear the sarcasm, only the words.
+
+The limits, plainly: lines that share no words with the
+corpus abstain ("purple monkey dishwasher thoughts" →
+not sure, best label 0.00) — the tool says so instead of
+guessing, and when it can, it still offers the kind it
+thinks the line lives in. Borders between venting and a
+small task stay genuinely hard, because the same words
+("the sink is still dripping") are a complaint in one
+mouth and a job in another; the corpus picks the
+concept — is the line asking for anything? — and the
+misses above are where that judgement call went the
+other way.
+
+
 ## Improving unseen answers
 
 The chapters above describe a brain that is strong on what
@@ -2594,6 +2699,12 @@ examples/   pairs.jsonl — 3,731 toy pairs to start from
             about invented scripts, and
             customcmd/ — the describe-it-once commands demo
             (with gen.go, the generic rows' generator)
+            thoughts.jsonl — 219 label-only intent rows over
+            four thought intents (quick_win, deep_focus,
+            venting, deferring), and
+            thoughtsort/ — the brain-dump sorter demo:
+            classifies dumped lines by intent and kind,
+            trained in memory at startup, no model file
 ```
 
 ## Provenance

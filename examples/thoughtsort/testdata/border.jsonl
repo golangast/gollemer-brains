@@ -1,0 +1,8 @@
+{"input": "i have been avoiding the thirty second job of confirming my flight all week, silly me", "intent": "quick_win", "kind": "act"}
+{"input": "the permission slip needs one signature and i keep walking past it, just sign it", "intent": "quick_win", "kind": "act"}
+{"input": "i will deal with the car insurance renewal next month, it is on the list for then", "intent": "deferring", "kind": "park"}
+{"input": "the hedge trimming is a next month job, calmly, it grows slowly anyway", "intent": "deferring", "kind": "park"}
+{"input": "that dripping shower head, next month, next month, it just keeps dripping at me", "intent": "venting", "kind": "express"}
+{"input": "the rust spot on the car gets bigger every time i look, it is taunting me", "intent": "venting", "kind": "express"}
+{"input": "the whole house needs repainting, that is weeks of ladders and tape", "intent": "deep_focus", "kind": "act"}
+{"input": "my certification revision is a mountain, needs proper study days, plural", "intent": "deep_focus", "kind": "act"}

@@ -1,0 +1,219 @@
+{"input": "just need to text mara back, it will take ten seconds", "intent": "quick_win", "kind": "act"}
+{"input": "water the plants before they completely give up on me", "intent": "quick_win", "kind": "act"}
+{"input": "take the trash out tonight, quick job", "intent": "quick_win", "kind": "act"}
+{"input": "sign that form and drop it in the mail, two minutes", "intent": "quick_win", "kind": "act"}
+{"input": "pay the water bill online, it is a five minute thing", "intent": "quick_win", "kind": "act"}
+{"input": "reply to the landlord's email, just a yes or no answer", "intent": "quick_win", "kind": "act"}
+{"input": "put the laundry in, one load, done", "intent": "quick_win", "kind": "act"}
+{"input": "book the dentist appointment, one phone call", "intent": "quick_win", "kind": "act"}
+{"input": "cancel that free trial before it charges me", "intent": "quick_win", "kind": "act"}
+{"input": "hang the picture that has been leaning on the wall for weeks", "intent": "quick_win", "kind": "act"}
+{"input": "charge my headphones tonight so they work tomorrow", "intent": "quick_win", "kind": "act"}
+{"input": "order more coffee before we run out completely", "intent": "quick_win", "kind": "act"}
+{"input": "rsvp to june's party, just click the button", "intent": "quick_win", "kind": "act"}
+{"input": "print the boarding pass, quick and done", "intent": "quick_win", "kind": "act"}
+{"input": "wipe down the kitchen counters, five minutes tops", "intent": "quick_win", "kind": "act"}
+{"input": "return the library book, it is right by the door", "intent": "quick_win", "kind": "act"}
+{"input": "update the address on my license, the form is short", "intent": "quick_win", "kind": "act"}
+{"input": "text dad happy birthday, do not forget again", "intent": "quick_win", "kind": "act"}
+{"input": "plug in the tablet so it is charged for the trip", "intent": "quick_win", "kind": "act"}
+{"input": "put the leftovers in a container before they go bad", "intent": "quick_win", "kind": "act"}
+{"input": "check the tire pressure next time i get gas, quick", "intent": "quick_win", "kind": "act"}
+{"input": "send the receipt to accounting, it is one email", "intent": "quick_win", "kind": "act"}
+{"input": "refill my prescription, the pharmacy app takes a minute", "intent": "quick_win", "kind": "act"}
+{"input": "fold the dry clothes and put them away, small pile", "intent": "quick_win", "kind": "act"}
+{"input": "set out the recycling bin in the morning", "intent": "quick_win", "kind": "act"}
+{"input": "defrost something for dinner, just move it to the fridge", "intent": "quick_win", "kind": "act"}
+{"input": "write the grocery list before i forget everything again", "intent": "quick_win", "kind": "act"}
+{"input": "call the vet to move the appointment, one quick call", "intent": "quick_win", "kind": "act"}
+{"input": "unsubscribe from that newsletter i never read", "intent": "quick_win", "kind": "act"}
+{"input": "back up the photos on my phone, plug it in and tap", "intent": "quick_win", "kind": "act"}
+{"input": "sharpen the kitchen knife, two minutes with the steel", "intent": "quick_win", "kind": "act"}
+{"input": "replace the dead lightbulb in the hallway", "intent": "quick_win", "kind": "act"}
+{"input": "sweep the front steps, quick job", "intent": "quick_win", "kind": "act"}
+{"input": "email hr the signed form, it is sitting in my downloads", "intent": "quick_win", "kind": "act"}
+{"input": "buy stamps next time i am at the store, tiny errand", "intent": "quick_win", "kind": "act"}
+{"input": "wash the car windows, just the inside smears", "intent": "quick_win", "kind": "act"}
+{"input": "put the new batteries in the remote", "intent": "quick_win", "kind": "act"}
+{"input": "schedule the haircut, the booking link is right there", "intent": "quick_win", "kind": "act"}
+{"input": "drop the package at the post office on the way home", "intent": "quick_win", "kind": "act"}
+{"input": "make the bed properly for once, three minutes", "intent": "quick_win", "kind": "act"}
+{"input": "i have been dreading calling the bank all week and it is literally a two minute call", "intent": "quick_win", "kind": "act"}
+{"input": "ugh, replying to tom's message, i keep putting it off and it would take ten seconds", "intent": "quick_win", "kind": "act"}
+{"input": "the form is staring at me again, just sign it, it is one signature", "intent": "quick_win", "kind": "act"}
+{"input": "i feel ridiculous avoiding a thirty second email, send it and be done", "intent": "quick_win", "kind": "act"}
+{"input": "keep meaning to water the fern, poor thing, it takes less than a minute", "intent": "quick_win", "kind": "act"}
+{"input": "that one dish in the sink is haunting me, just wash it already", "intent": "quick_win", "kind": "act"}
+{"input": "dreading the tiny call to reschedule, it is honestly a minute on the phone", "intent": "quick_win", "kind": "act"}
+{"input": "the button on my shirt, one stitch, why have i not just sewn it", "intent": "quick_win", "kind": "act"}
+{"input": "venmo alex for lunch before i forget again", "intent": "quick_win", "kind": "act"}
+{"input": "put twenty in the birthday card and mail it today", "intent": "quick_win", "kind": "act"}
+{"input": "take my vitamins, they are right there on the counter", "intent": "quick_win", "kind": "act"}
+{"input": "stretch for five minutes, my back will thank me", "intent": "quick_win", "kind": "act"}
+{"input": "floss tonight, one minute, no excuses", "intent": "quick_win", "kind": "act"}
+{"input": "the quarterly report needs a whole afternoon, no way around it", "intent": "deep_focus", "kind": "act"}
+{"input": "i have to actually study for this certification, hours of it", "intent": "deep_focus", "kind": "act"}
+{"input": "the garage cleanout is a full weekend project, minimum", "intent": "deep_focus", "kind": "act"}
+{"input": "writing the grant proposal will take days of real concentration", "intent": "deep_focus", "kind": "act"}
+{"input": "my taxes are a shoebox of receipts, that is an evening gone", "intent": "deep_focus", "kind": "act"}
+{"input": "i need to sit down and rebuild the whole budget spreadsheet properly", "intent": "deep_focus", "kind": "act"}
+{"input": "the presentation for friday is barely started and it is a big one", "intent": "deep_focus", "kind": "act"}
+{"input": "learning sql properly is going to take weeks of evenings", "intent": "deep_focus", "kind": "act"}
+{"input": "sorting ten years of photos is a huge job, not a quick one", "intent": "deep_focus", "kind": "act"}
+{"input": "the bathroom remodel planning needs real research, not guesses", "intent": "deep_focus", "kind": "act"}
+{"input": "i have to write the whole first chapter before i show anyone", "intent": "deep_focus", "kind": "act"}
+{"input": "debugging the payment flow could eat my entire day", "intent": "deep_focus", "kind": "act"}
+{"input": "the job applications deserve a proper evening each, tailored resumes and all", "intent": "deep_focus", "kind": "act"}
+{"input": "planning the move means inventories, boxes, quotes, the works", "intent": "deep_focus", "kind": "act"}
+{"input": "i need a long quiet block to finish the design document", "intent": "deep_focus", "kind": "act"}
+{"input": "the attic insulation research alone is hours of reading", "intent": "deep_focus", "kind": "act"}
+{"input": "reconciling a year of bank statements, that is deep work", "intent": "deep_focus", "kind": "act"}
+{"input": "the wedding seating chart is a genuine puzzle, needs a clear head", "intent": "deep_focus", "kind": "act"}
+{"input": "studying for the driving theory test, the book is three hundred pages", "intent": "deep_focus", "kind": "act"}
+{"input": "rewriting my portfolio site is a multi day project", "intent": "deep_focus", "kind": "act"}
+{"input": "the garden redesign needs measuring, planning, lists, everything", "intent": "deep_focus", "kind": "act"}
+{"input": "i have to prepare for the interview like it matters, mock questions and all", "intent": "deep_focus", "kind": "act"}
+{"input": "the car needs a proper diagnosis, not a guess, that is a saturday", "intent": "deep_focus", "kind": "act"}
+{"input": "finishing the quilt is weeks of careful sewing", "intent": "deep_focus", "kind": "act"}
+{"input": "the data migration at work is the big one, everything depends on it", "intent": "deep_focus", "kind": "act"}
+{"input": "reading the contract properly, all forty pages, with notes", "intent": "deep_focus", "kind": "act"}
+{"input": "the thesis outline will not write itself and it is due soon", "intent": "deep_focus", "kind": "act"}
+{"input": "building the deck is a two weekend job with help", "intent": "deep_focus", "kind": "act"}
+{"input": "i need to go through every box in storage and decide, that is days", "intent": "deep_focus", "kind": "act"}
+{"input": "the spanish exam needs serious study sessions, not flashcards on the bus", "intent": "deep_focus", "kind": "act"}
+{"input": "writing performance reviews for the whole team takes real thought", "intent": "deep_focus", "kind": "act"}
+{"input": "the kitchen deep clean, inside every cupboard, is a full day", "intent": "deep_focus", "kind": "act"}
+{"input": "planning the fundraiser means budgets, venues, sponsors, a real project", "intent": "deep_focus", "kind": "act"}
+{"input": "the novel revision is the mountain i keep circling", "intent": "deep_focus", "kind": "act"}
+{"input": "sorting out dad's estate paperwork is weeks of careful work", "intent": "deep_focus", "kind": "act"}
+{"input": "the certification course is forty hours of video, no shortcut", "intent": "deep_focus", "kind": "act"}
+{"input": "i have to learn the new codebase before i can change anything safely", "intent": "deep_focus", "kind": "act"}
+{"input": "the fence repair is a whole weekend with the right tools", "intent": "deep_focus", "kind": "act"}
+{"input": "preparing the workshop means slides, exercises, handouts, everything", "intent": "deep_focus", "kind": "act"}
+{"input": "the insurance appeal needs a proper letter with all the evidence", "intent": "deep_focus", "kind": "act"}
+{"input": "redoing the resume from scratch deserves a quiet evening", "intent": "deep_focus", "kind": "act"}
+{"input": "the basement flooding problem needs real investigation, not a mop", "intent": "deep_focus", "kind": "act"}
+{"input": "planning the europe trip properly is a research project in itself", "intent": "deep_focus", "kind": "act"}
+{"input": "the annual accounts will take the accountant and me a full day", "intent": "deep_focus", "kind": "act"}
+{"input": "the garage is a disaster and honestly it needs a full weekend, not a tidy", "intent": "deep_focus", "kind": "act"}
+{"input": "i keep chipping at the thesis and getting nowhere, it needs whole days", "intent": "deep_focus", "kind": "act"}
+{"input": "the inbox is at four thousand, that is not an evening job anymore", "intent": "deep_focus", "kind": "act"}
+{"input": "this move is going to swallow the whole month if i let it, plan it properly", "intent": "deep_focus", "kind": "act"}
+{"input": "the garden is a jungle, clearing it is a two day job at least", "intent": "deep_focus", "kind": "act"}
+{"input": "my novel draft is a mess and fixing it is months of mornings", "intent": "deep_focus", "kind": "act"}
+{"input": "the paperwork pile for the visa is enormous, needs a system and a weekend", "intent": "deep_focus", "kind": "act"}
+{"input": "learning the piano again means real practice, an hour a day for months", "intent": "deep_focus", "kind": "act"}
+{"input": "i am so sick of the neighbors blasting music at midnight", "intent": "venting", "kind": "express"}
+{"input": "the bus was late again, third time this week, unbelievable", "intent": "venting", "kind": "express"}
+{"input": "why does the printer only break when i am in a hurry", "intent": "venting", "kind": "express"}
+{"input": "rent went up again, of course it did", "intent": "venting", "kind": "express"}
+{"input": "i hate that the good parking spots are always taken by nine", "intent": "venting", "kind": "express"}
+{"input": "my phone battery dies by lunch now, it is infuriating", "intent": "venting", "kind": "express"}
+{"input": "the meeting could have been an email, it is always an email", "intent": "venting", "kind": "express"}
+{"input": "traffic on the highway was a parking lot for an hour", "intent": "venting", "kind": "express"}
+{"input": "i am tired of being the only one who replaces the toilet paper", "intent": "venting", "kind": "express"}
+{"input": "the weather ruined the picnic again, classic", "intent": "venting", "kind": "express"}
+{"input": "groceries cost a fortune now, the receipt made me wince", "intent": "venting", "kind": "express"}
+{"input": "my laptop fan sounds like a jet engine and i am over it", "intent": "venting", "kind": "express"}
+{"input": "the dog tracked mud everywhere right after i mopped", "intent": "venting", "kind": "express"}
+{"input": "i cannot stand the hold music at the insurance company", "intent": "venting", "kind": "express"}
+{"input": "another software update that moved everything around, great", "intent": "venting", "kind": "express"}
+{"input": "the neighbors' dog barks at five in the morning, every morning", "intent": "venting", "kind": "express"}
+{"input": "i am fed up with group projects where i do all the work", "intent": "venting", "kind": "express"}
+{"input": "the wifi drops every single evening, i have had it", "intent": "venting", "kind": "express"}
+{"input": "someone ate my leftovers from the office fridge, my labeled leftovers", "intent": "venting", "kind": "express"}
+{"input": "the elevator in our building has been broken for a week", "intent": "venting", "kind": "express"}
+{"input": "i hate winter driving, the salt, the scraping, all of it", "intent": "venting", "kind": "express"}
+{"input": "my manager keeps moving the deadline and pretending she didn't", "intent": "venting", "kind": "express"}
+{"input": "the line at the dmv was out the door, of course it was", "intent": "venting", "kind": "express"}
+{"input": "i am so over stepping on lego in the dark", "intent": "venting", "kind": "express"}
+{"input": "the coffee machine at work makes brown sadness, not coffee", "intent": "venting", "kind": "express"}
+{"input": "why is there always a sock missing, where do they go", "intent": "venting", "kind": "express"}
+{"input": "the news is just exhausting lately, everything is a crisis", "intent": "venting", "kind": "express"}
+{"input": "my back hurts from that awful office chair again", "intent": "venting", "kind": "express"}
+{"input": "the kids left dishes in the sink again, every single day", "intent": "venting", "kind": "express"}
+{"input": "i am annoyed that the store moved everything to a different aisle", "intent": "venting", "kind": "express"}
+{"input": "the flight got delayed twice and nobody tells us anything", "intent": "venting", "kind": "express"}
+{"input": "mosquitoes ate me alive at the barbecue, i am still itching", "intent": "venting", "kind": "express"}
+{"input": "i hate that passwords expire every ninety days at work", "intent": "venting", "kind": "express"}
+{"input": "the upstairs floor creaks all night, i barely slept", "intent": "venting", "kind": "express"}
+{"input": "my umbrella flipped inside out in front of everyone, humiliating", "intent": "venting", "kind": "express"}
+{"input": "the train smelled awful this morning, windows would not open", "intent": "venting", "kind": "express"}
+{"input": "i am sick of robocalls at dinner time", "intent": "venting", "kind": "express"}
+{"input": "the package said delivered and it is just not here, infuriating", "intent": "venting", "kind": "express"}
+{"input": "my team lost in the last minute again, i cannot take it", "intent": "venting", "kind": "express"}
+{"input": "the sink is still dripping, that sound all night long", "intent": "venting", "kind": "express"}
+{"input": "the dentist, ugh, that tooth is going to nag me forever at this rate", "intent": "venting", "kind": "express"}
+{"input": "the leaking tap is driving me up the wall, drip drip drip all night", "intent": "venting", "kind": "express"}
+{"input": "that squeaky door is the soundtrack of my life now, apparently", "intent": "venting", "kind": "express"}
+{"input": "my car's mystery rattle gets louder every week, i just know it", "intent": "venting", "kind": "express"}
+{"input": "the cracked phone screen mocks me every time i look at it", "intent": "venting", "kind": "express"}
+{"input": "the wobbly table leg, the endless saga, everything slides off", "intent": "venting", "kind": "express"}
+{"input": "the paint peeling in the bathroom makes the whole room look sad", "intent": "venting", "kind": "express"}
+{"input": "my inbox is a horror show and opening it ruins my mood", "intent": "venting", "kind": "express"}
+{"input": "the garden weeds are winning and they know it", "intent": "venting", "kind": "express"}
+{"input": "that one drawer that will not close properly, every day it taunts me", "intent": "venting", "kind": "express"}
+{"input": "the fridge hums louder every month, it is plotting something", "intent": "venting", "kind": "express"}
+{"input": "my shoes squeak on the office floor and everyone hears me coming", "intent": "venting", "kind": "express"}
+{"input": "the soup boiled over and flooded the whole stove", "intent": "venting", "kind": "express"}
+{"input": "i locked myself out and stood in the rain for half an hour", "intent": "venting", "kind": "express"}
+{"input": "the bus drove straight past my stop this morning", "intent": "venting", "kind": "express"}
+{"input": "my favourite mug cracked in the wash, the good one", "intent": "venting", "kind": "express"}
+{"input": "the tent leaked on the one night it poured", "intent": "venting", "kind": "express"}
+{"input": "i bit my tongue at lunch and it still hurts now", "intent": "venting", "kind": "express"}
+{"input": "the car would not start in the cold, perfect start to the day", "intent": "venting", "kind": "express"}
+{"input": "my glasses are scratched right in the middle of the lens", "intent": "venting", "kind": "express"}
+{"input": "the zip on my coat jammed with my keys inside the pocket", "intent": "venting", "kind": "express"}
+{"input": "i stepped in a puddle in my new trainers, soaked socks all day", "intent": "venting", "kind": "express"}
+{"input": "the delivery went to a house three streets away, again", "intent": "venting", "kind": "express"}
+{"input": "my phone slipped off the counter and the corner is dented", "intent": "venting", "kind": "express"}
+{"input": "the attic clearout can wait until spring, no rush at all", "intent": "deferring", "kind": "park"}
+{"input": "i will deal with the storage unit next month, decided", "intent": "deferring", "kind": "park"}
+{"input": "the shed roof is fine until autumn, parking that one", "intent": "deferring", "kind": "park"}
+{"input": "no hurry on the passport renewal, the trip is not until next year", "intent": "deferring", "kind": "park"}
+{"input": "i am putting the marathon idea on hold until my knee is better", "intent": "deferring", "kind": "park"}
+{"input": "the kitchen repaint can wait, it is cosmetic anyway", "intent": "deferring", "kind": "park"}
+{"input": "deal with the old laptop later, it is not going anywhere", "intent": "deferring", "kind": "park"}
+{"input": "the will update matters but not this month, parking it", "intent": "deferring", "kind": "park"}
+{"input": "i will sort the garage when the weather cools down, not before", "intent": "deferring", "kind": "park"}
+{"input": "the language course can start in january, that is the plan", "intent": "deferring", "kind": "park"}
+{"input": "no rush to sell the bike, spring will be better for it anyway", "intent": "deferring", "kind": "park"}
+{"input": "the fence stain waits for a dry weekend, whenever that is", "intent": "deferring", "kind": "park"}
+{"input": "i am deferring the whole home office rethink until after the move", "intent": "deferring", "kind": "park"}
+{"input": "the photo albums are a someday project, and that is fine", "intent": "deferring", "kind": "park"}
+{"input": "the car detail can wait, it is just going to rain again", "intent": "deferring", "kind": "park"}
+{"input": "putting off the big declutter until the kids are back at school", "intent": "deferring", "kind": "park"}
+{"input": "the basement shelves are a winter project, decided", "intent": "deferring", "kind": "park"}
+{"input": "i will look at new phones when this one actually dies", "intent": "deferring", "kind": "park"}
+{"input": "the garden pond idea is parked until we know about the move", "intent": "deferring", "kind": "park"}
+{"input": "no need to book flights yet, prices will settle, wait and see", "intent": "deferring", "kind": "park"}
+{"input": "the certificate course can wait for a quieter quarter at work", "intent": "deferring", "kind": "park"}
+{"input": "i am shelving the side business idea until the baby is older", "intent": "deferring", "kind": "park"}
+{"input": "the roof inspection is booked thinking, next season is soon enough", "intent": "deferring", "kind": "park"}
+{"input": "sorting mum's recipes is a lovely someday job, not a now job", "intent": "deferring", "kind": "park"}
+{"input": "the boat restoration is next summer's problem, happily", "intent": "deferring", "kind": "park"}
+{"input": "i will refinance when rates drop a bit more, watching and waiting", "intent": "deferring", "kind": "park"}
+{"input": "the driveway reseal can hold until next year, it is fine", "intent": "deferring", "kind": "park"}
+{"input": "put the novel away until the course is done, one thing at a time", "intent": "deferring", "kind": "park"}
+{"input": "the spare room stays a junk room until guests are actually coming", "intent": "deferring", "kind": "park"}
+{"input": "i am not touching the investment accounts until the review in march", "intent": "deferring", "kind": "park"}
+{"input": "the big family reunion planning starts in the new year, not now", "intent": "deferring", "kind": "park"}
+{"input": "wait until the sales to replace the washing machine, it still works", "intent": "deferring", "kind": "park"}
+{"input": "the tree pruning is a late winter job, it can wait", "intent": "deferring", "kind": "park"}
+{"input": "i will learn the ukulele someday, it is on the someday list", "intent": "deferring", "kind": "park"}
+{"input": "the bathroom grout is ugly but harmless, next year problem", "intent": "deferring", "kind": "park"}
+{"input": "defer the website redesign until the product settles, agreed at work", "intent": "deferring", "kind": "park"}
+{"input": "the holiday planning can start in october, plenty of time", "intent": "deferring", "kind": "park"}
+{"input": "i am parking the whole phd question until i have savings again", "intent": "deferring", "kind": "park"}
+{"input": "the old car can limp to spring, then i will decide", "intent": "deferring", "kind": "park"}
+{"input": "no rush on framing those prints, they have waited a year already", "intent": "deferring", "kind": "park"}
+{"input": "i will deal with the insurance paperwork next month, it is decided and i am fine with that", "intent": "deferring", "kind": "park"}
+{"input": "the tax folder goes on the january pile, calmly, it can wait", "intent": "deferring", "kind": "park"}
+{"input": "dentist checkup can be next month, it is booked in my head for then", "intent": "deferring", "kind": "park"}
+{"input": "i will answer that long email thread next week, it is not urgent", "intent": "deferring", "kind": "park"}
+{"input": "the subscriptions audit is a next month job, no stress about it", "intent": "deferring", "kind": "park"}
+{"input": "renewing the gym membership can wait until payday, easy decision", "intent": "deferring", "kind": "park"}
+{"input": "the broken gate gets fixed in the spring round of jobs, settled", "intent": "deferring", "kind": "park"}
+{"input": "i will think about the career change after the holidays, deliberately", "intent": "deferring", "kind": "park"}
+{"input": "the spare tyre can be replaced at the next service, no hurry", "intent": "deferring", "kind": "park"}
+{"input": "that wobbly shelf is a january fix, writing it off until then", "intent": "deferring", "kind": "park"}
