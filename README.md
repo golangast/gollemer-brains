@@ -53,6 +53,4 @@ go run ./examples/filecmd       files in a sandbox
 
 The brains ship trained, so there is nothing to build first.
 
-How it works, and how it was measured: [DEVELOPMENT.md](DEVELOPMENT.md).
-
 License: GPL-3.0.
