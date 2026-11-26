@@ -774,12 +774,7 @@ it yourself, for tinkering, is the one command
 The REPL prints what it understood — and runs nothing:
 
 ```
-customcmd: your scripts, described not trained. Say what you want in your own words;
-i will name the script i think you mean and the exact command i WOULD run.
-i never run anything — understanding only; executing is a separate, gated step.
-registry: examples/commands.json (10 scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.
-if i don't know a want, i'll ask to be taught it — and you can declare a command any time:
-'i have a command named copy and it will copy files from one folder to another and it is in file copy.sh'.
+customcmd (10 scripts in examples/commands.json): say what you want in your own words — one want, or several for a plan — and i'll name the script, preview it, and show the exact command i WOULD run; i never run anything. 'list' to see them, 'add' to declare one, 'quit' to exit — and if i don't know a want, i'll ask to be taught it.
 > migrate a database from folder jim to jake
 understood: migrate-database (1.27) — migrates a database from one folder to another
 arguments: from=jim, to=jake

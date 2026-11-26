@@ -502,13 +502,7 @@ func main() {
 		return sc.Text(), true
 	}
 
-	fmt.Println("customcmd: your scripts, described not trained. Say what you want in your own words;")
-	fmt.Println("i will name the script i think you mean and the exact command i WOULD run.")
-	fmt.Println("i never run anything — understanding only; executing is a separate, gated step.")
-	fmt.Printf("registry: %s (%d scripts). type 'list' to see them, 'add' to declare a new one, 'quit' to exit.\n", *registryFlag, len(reg.Scripts))
-	fmt.Println("if i don't know a want, i'll ask to be taught it — and you can declare a command any time:")
-	fmt.Println("'i have a command named copy and it will copy files from one folder to another and it is in file copy.sh'.")
-	fmt.Println("say several wants in one line — 'back up my photos, migrate the database, clean the downloads' — and i'll lay them out as a plan, in the order they should run.")
+	fmt.Printf("customcmd (%d scripts in %s): say what you want in your own words — one want, or several for a plan — and i'll name the script, preview it, and show the exact command i WOULD run; i never run anything. 'list' to see them, 'add' to declare one, 'quit' to exit — and if i don't know a want, i'll ask to be taught it.\n", len(reg.Scripts), *registryFlag)
 	for {
 		fmt.Print("> ")
 		if !sc.Scan() {
