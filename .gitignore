@@ -9,3 +9,10 @@
 # The generic extractor brain ships trained — the customcmd
 # example runs out of the box; every other brain stays local.
 !/custombrain.gob
+
+# The chat and file brains ship trained too, for the same
+# example: customcmd loads all three as data files behind
+# its one prompt. (Their .intents.json sidecars are not
+# matched by the *.gob rules and travel normally.)
+!/brain.gob
+!/filebrain.gob

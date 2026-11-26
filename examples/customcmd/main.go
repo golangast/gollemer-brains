@@ -8,15 +8,27 @@
 // says which script you mean; a small trained brain, the
 // extractor, reads the argument values out of your line.
 //
-// The extractor is the only trained piece, and it was
-// trained ONCE, on generic data (examples/genericcommands.jsonl)
-// about invented scripts that do not exist — it knows
-// sentence shapes ("from X to Y", "in the X folder",
-// "called X"), never your scripts. Your scripts live only
-// in the registry, so adding one needs no retraining: edit
-// the file (the REPL re-reads it as you type) or use the
-// REPL's `add` command, and the new script matches from
-// the next line on.
+// The extractor was trained ONCE, on generic data
+// (examples/genericcommands.jsonl) about invented scripts
+// that do not exist — it knows sentence shapes ("from X
+// to Y", "in the X folder", "called X"), never your
+// scripts. Your scripts live only in the registry, so
+// adding one needs no retraining: edit the file (the REPL
+// re-reads it as you type) or use the REPL's `add`
+// command, and the new script matches from the next line
+// on.
+//
+// And the extractor is no longer the only brain here
+// (see brains.go): when the matcher abstains, an intent
+// classifier trained in memory from examples/pairs.jsonl
+// reads the line's meaning and routes it behind the
+// scenes — conversation to the chat brain (brain.gob),
+// file wants to the file brain (filebrain.gob, which
+// only ever reports what it understood), and the rest to
+// the teach offer, now showing the meaning it read. The
+// user never chooses a brain: there is one prompt, and
+// the .gob files are data it loads, not programs to pick
+// between.
 //
 // The registry also grows IN CONVERSATION, two ways.
 // When a line that looks like a want matches nothing, the
@@ -54,10 +66,11 @@
 // examples/filecmd — and it is deliberately not in this
 // example.
 //
-// The extractor brain ships trained (custombrain.gob at
-// the repo root), so the example runs as-is:
+// Every brain ships trained (custombrain.gob, brain.gob,
+// and filebrain.gob at the repo root), so the example
+// runs as-is — one command, no choices:
 //
-//	go run ./examples/customcmd -model custombrain.gob -registry examples/commands.json
+//	go run ./examples/customcmd
 package main
 
 import (
@@ -73,6 +86,8 @@ import (
 
 	"github.com/golangast/gollemer-brains/brain"
 	"github.com/golangast/gollemer-brains/cmdmatch"
+	"github.com/golangast/gollemer-brains/data"
+	"github.com/golangast/gollemer-brains/intent"
 )
 
 // demo is the REPL's state. extract is the trained
@@ -88,6 +103,15 @@ type demo struct {
 	extract  func(line string) (raw string, err error)
 	nextLine func(prompt string) (string, bool)
 	out      io.Writer
+
+	// The other brains (brains.go). All nil-safe: a nil
+	// field removes that brain's route, and with none of
+	// them wired the REPL behaves exactly as it did
+	// before they arrived.
+	clf         *intent.Classifier // the in-memory intent read (pairs.jsonl)
+	chatAnswer  func(line string) (string, error)
+	filePredict func(line string) (label string, conf float64)
+	fileExtract func(line string) (raw string, err error)
 }
 
 // stampOf identifies a registry file's current contents
@@ -169,12 +193,20 @@ func (d *demo) handle(line string) bool {
 		} else {
 			fmt.Fprintln(d.out, "i don't know which script you mean.")
 		}
+		// No script claims the line — the other brains
+		// read it (brains.go): conversation goes to the
+		// chat brain, file wants to the file brain's
+		// understanding, behind the scenes.
+		read, haveRead := d.readIntent(line)
+		if d.routeAbstain(line, ranked, read, haveRead) {
+			return true
+		}
 		// An unmatched WANT is a teaching moment: offer
 		// to learn it on the spot. Small talk (no closest
-		// script, no action word) gets no offer.
-		if d.looksLikeWant(line, ranked) {
-			d.teachFlow(line)
-		}
+		// script, no action word, no want read) gets no
+		// offer — and talk the intent brain read as talk
+		// was already taken by the chat route above.
+		d.teachOffer(line, ranked, read, haveRead)
 		return true
 	}
 
@@ -456,6 +488,9 @@ func cleanValues(raw string) bool {
 func main() {
 	modelFlag := flag.String("model", "custombrain.gob", "path to the trained extractor brain (.gob trained on examples/genericcommands.jsonl)")
 	registryFlag := flag.String("registry", "examples/commands.json", "path to the registry of your described scripts")
+	chatFlag := flag.String("chat", "brain.gob", "path to the trained chat brain (.gob trained on examples/pairs.jsonl)")
+	fileFlag := flag.String("filebrain", "filebrain.gob", "path to the trained file brain (.gob trained on examples/filecommands.jsonl)")
+	pairsFlag := flag.String("pairs", "examples/pairs.jsonl", "path to the labeled pairs the intent classifier trains on, in memory")
 	flag.Parse()
 
 	b, err := brain.LoadBrain(*modelFlag)
@@ -480,6 +515,58 @@ func main() {
 		regStamp:     stampOf(*registryFlag),
 		out:          os.Stdout,
 	}
+
+	// The intent classifier trains IN MEMORY from the
+	// pairs file — no model of its own, so it can never
+	// go stale against the data. It is a small softmax,
+	// but 1,098 labeled rows still take it a few seconds
+	// (measured ~9 s on a modest VM at the time of
+	// writing); that pause is the startup cost of the
+	// read that routes everything else. A pairs file
+	// that will not load or train removes the read (and
+	// every route it steers) rather than the program.
+	if pairs, err := data.LoadPairs(*pairsFlag); err == nil {
+		if clf, err := intent.Train(pairs, intent.DefaultThreshold); err == nil {
+			d.clf = clf
+		}
+	}
+
+	// The chat brain: conversation and questions. Loaded
+	// when its data file is there; absent, its route
+	// simply never fires and the banner says so. (Its
+	// own intent sidecar travels with it, but the read
+	// above is the in-memory one — one classifier, one
+	// source of truth.)
+	chatOK := false
+	if cb, err := brain.LoadBrain(*chatFlag); err == nil {
+		cb.FixTypos = true // cmd/ask's standard policy for this brain
+		chatOK = true
+		d.chatAnswer = func(line string) (string, error) {
+			checked, err := cb.AnswerChecked(line, rng)
+			if err == nil && strings.TrimSpace(checked) != "" {
+				return checked, nil
+			}
+			return cb.Answer(line)
+		}
+	}
+
+	// The file brain: it reads file wants and reports
+	// what it understood — it never acts here. Its
+	// classifier rides in its sidecar, as in filecmd.
+	fileOK := false
+	if fb, err := brain.LoadBrain(*fileFlag); err == nil && fb.Intents != nil {
+		fileOK = true
+		d.filePredict = fb.Intents.Predict
+		d.fileExtract = func(line string) (string, error) {
+			checked, err := fb.AnswerChecked(line, rng)
+			if err == nil {
+				if _, ok := cleanFileName(checked); ok {
+					return checked, nil
+				}
+			}
+			return fb.Answer(line)
+		}
+	}
 	// The extractor: the seq2seq brain's answer to the same
 	// line, trained (by the generic rows) to be the bare
 	// argument values. Checked sampling first — the repo's
@@ -502,7 +589,7 @@ func main() {
 		return sc.Text(), true
 	}
 
-	fmt.Printf("customcmd (%d scripts in %s): say what you want in your own words — one want, or several for a plan — and i'll name the script, preview it, and show the exact command i WOULD run; i never run anything. 'list' to see them, 'add' to declare one, 'quit' to exit — and if i don't know a want, i'll ask to be taught it.\n", len(reg.Scripts), *registryFlag)
+	fmt.Printf("customcmd (%d scripts in %s): say what you want in your own words — one want, or several for a plan — and i'll name the script, preview it, and show the exact command i WOULD run; i never run anything. 'list' to see them, 'add' to declare one, 'quit' to exit — and if i don't know a want, i'll ask to be taught it. brains: %s.\n", len(reg.Scripts), *registryFlag, brainsStatus(d.clf, chatOK, fileOK))
 	for {
 		fmt.Print("> ")
 		if !sc.Scan() {
