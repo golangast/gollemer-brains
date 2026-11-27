@@ -62,9 +62,11 @@ func tempShippedRegistry(t *testing.T) (string, *cmdmatch.Registry) {
 // end: a want that matches nothing earns an offer; the
 // answer names the command; the entry written is the
 // want-line itself as description with the command's
-// placeholders as slots; the same breath re-runs the
-// want and it lands; and a later phrasing with a value
-// chooses the taught command and binds the value.
+// placeholders as slots, plus the teach-time synthesized
+// variants of the want as extra examples (synthesize.go);
+// the same breath re-runs the want and it lands; and a
+// later phrasing with a value chooses the taught command
+// and binds the value.
 func TestTeachOnAbstainClosesLoop(t *testing.T) {
 	path, reg := tempShippedRegistry(t)
 	d, out := queueDemo(t, path, reg, []string{"mkdir {folder}"})
@@ -89,9 +91,23 @@ func TestTeachOnAbstainClosesLoop(t *testing.T) {
 		t.Fatalf("taught entry not in the registry file:\n%s", got)
 	}
 	if decl.Description != "create a folder" || decl.Command != "mkdir {folder}" ||
-		len(decl.Slots) != 1 || decl.Slots[0] != "folder" ||
-		len(decl.Examples) != 1 || decl.Examples[0] != "create a folder" {
+		len(decl.Slots) != 1 || decl.Slots[0] != "folder" {
 		t.Errorf("taught entry wrong: %+v", decl)
+	}
+	// The want line itself first, then its synthesized
+	// variants: create's cousins, then folder's (the slot
+	// word still substitutes in a teach want — its anchors
+	// are the command's placeholders, not prose anchors;
+	// no value is seated in the line, so no value swaps).
+	wantExamples := []string{
+		"create a folder",
+		"build a folder",
+		"generate a folder",
+		"create a directory",
+		"create a dir",
+	}
+	if strings.Join(decl.Examples, "\n") != strings.Join(wantExamples, "\n") {
+		t.Errorf("taught examples = %v, want %v", decl.Examples, wantExamples)
 	}
 
 	out.Reset()

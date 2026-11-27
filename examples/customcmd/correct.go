@@ -128,6 +128,13 @@ func resolveChoice(ans string, names []string) string {
 // registry, so the example matches from the next line
 // on. An example the entry already carries is a no-op
 // success: there is nothing to write.
+//
+// The landed line also sprouts its paraphrase variants
+// (synthesize.go), generated from that line alone in the
+// entry's context: a correction teaches one sentence,
+// and the variants widen it the same way a fresh teaching
+// is widened — the loop's lesson should not be narrower
+// than the door's.
 func (d *demo) addExample(name, example string) bool {
 	for i := range d.reg.Scripts {
 		if d.reg.Scripts[i].Name != name {
@@ -138,10 +145,17 @@ func (d *demo) addExample(name, example string) bool {
 				return true
 			}
 		}
+		origLen := len(d.reg.Scripts[i].Examples)
 		d.reg.Scripts[i].Examples = append(d.reg.Scripts[i].Examples, example)
+		existing := map[string]bool{d.reg.Scripts[i].Description: true}
+		for _, ex := range d.reg.Scripts[i].Examples {
+			existing[ex] = true
+		}
+		variants := synthesizeFrom(d.reg.Scripts[i], []string{example}, existing)
+		d.reg.Scripts[i].Examples = append(d.reg.Scripts[i].Examples, variants...)
 		if err := d.reg.Save(d.registryPath); err != nil {
 			fmt.Fprintf(d.out, "not saved: could not write the registry: %v\n", err)
-			d.reg.Scripts[i].Examples = d.reg.Scripts[i].Examples[:len(d.reg.Scripts[i].Examples)-1]
+			d.reg.Scripts[i].Examples = d.reg.Scripts[i].Examples[:origLen]
 			return false
 		}
 		d.matcher = cmdmatch.NewMatcher(d.reg)

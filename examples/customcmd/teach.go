@@ -98,6 +98,10 @@ func (d *demo) learnWant(want string) (decl cmdmatch.Declaration, learned, viaDe
 		Slots:       declarationSlots(want, command),
 		Examples:    []string{want},
 	}
+	// The want sprouts its paraphrase variants before it
+	// is saved (synthesize.go): the one line the user said
+	// matches in several shapes from the next line on.
+	decl.Examples = append(decl.Examples, synthesizeExamples(decl)...)
 	if !d.persist(decl) {
 		return cmdmatch.Declaration{}, false, false
 	}

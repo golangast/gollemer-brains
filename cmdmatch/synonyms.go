@@ -219,3 +219,38 @@ func buildCousins() map[string][]string {
 func cousinsOf(stemmed string) []string {
 	return cousins[stemmed]
 }
+
+// Cousins returns the written forms of the family a word
+// belongs to — the word's cousins, in table order, the
+// word itself excluded (nil when the word is in no
+// family). The word may arrive in any inflection: it is
+// stemmed with the same stem() matching uses, and the
+// families are disjoint over stemmed forms (a test pins
+// that), so at most one family can claim it. This is the
+// table's surface for generators — code that writes new
+// sentences with the family's words, like the teach-time
+// variant synthesis in examples/customcmd — as opposed to
+// cousinsOf, which serves the matcher's stemmed world.
+func Cousins(word string) []string {
+	s := stem(strings.ToLower(word))
+	for _, fam := range synonymFamilies {
+		hit := false
+		for _, w := range fam {
+			if stem(w) == s {
+				hit = true
+				break
+			}
+		}
+		if !hit {
+			continue
+		}
+		var out []string
+		for _, w := range fam {
+			if stem(w) != s {
+				out = append(out, w)
+			}
+		}
+		return out
+	}
+	return nil
+}

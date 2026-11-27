@@ -436,6 +436,11 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 		Slots:       declarationSlots(desc, command),
 		Examples:    []string{desc},
 	}
+	// The description sprouts its paraphrase variants
+	// before it is saved (synthesize.go): one declared
+	// sentence matches in several shapes from the next
+	// line on.
+	decl.Examples = append(decl.Examples, synthesizeExamples(decl)...)
 	if !d.persist(decl) {
 		return
 	}
