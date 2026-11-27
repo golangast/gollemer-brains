@@ -50,7 +50,7 @@ func (d *demo) teachFlow(want string) {
 		return
 	}
 	if decl2, score, ok := d.matcher.Match(want); ok {
-		d.present(decl2, score, want)
+		d.presentMatch(decl2, score, want)
 	} else {
 		fmt.Fprintln(d.out, "(saved — but that line on its own still does not match itself: a match needs two of its words in a line, so longer phrasings of it are the ones that will land.)")
 	}

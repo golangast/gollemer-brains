@@ -87,6 +87,8 @@ type planStep struct {
 	eachFile     bool
 	eachFolder   string
 	eachFolderIn int // step the each-file folder came from; 0 = this step or none
+
+	note string // a note the step itself carries into planNotes (routine expansion)
 }
 
 // stageRank orders the stages a plan is sorted by:
@@ -127,6 +129,19 @@ func (d *demo) buildPlan(line string) ([]planStep, bool) {
 	for _, seg := range segments {
 		step := planStep{segment: seg}
 		if decl, score, ok := d.matcher.Match(seg); ok {
+			if len(decl.Steps) > 0 {
+				// A segment that names a routine expands
+				// into the routine's own steps, in place —
+				// the same expansion a single-line match
+				// gets (routine.go), one level from here.
+				for _, sub := range d.expandRoutineSteps(decl.Steps, seg, 1) {
+					if sub.matched {
+						matched++
+					}
+					steps = append(steps, sub)
+				}
+				continue
+			}
 			step.decl, step.score, step.matched = decl, score, true
 			matched++
 			if len(decl.Slots) > 0 {
@@ -217,17 +232,25 @@ func afterSatisfied(s planStep, present, emitted map[string]bool) bool {
 
 // planNotes collects the missing-link notes a plan
 // earns, in step order: an After prerequisite no step in
-// the plan provides, the verify-with-no-execute gap, and
-// (when orderSteps found one) the cycle note.
+// the plan provides, a Needs relation (Piece 1 of the
+// concept-graph build) the plan does not satisfy — the
+// needed concept absent, or present but later in the
+// order — the verify-with-no-execute gap, and (when
+// orderSteps found one) the cycle note. A Needs entry
+// that an After edge on the same step already encodes
+// earns no note: the After machinery owns that relation
+// (it orders by it, and reports its absence above).
 func planNotes(steps []planStep, cycle bool) []string {
 	var notes []string
 	present := map[string]bool{}
+	position := map[string]int{}
 	hasVerify, hasExecute := false, false
-	for _, s := range steps {
+	for i, s := range steps {
 		if !s.matched {
 			continue
 		}
 		present[s.decl.Name] = true
+		position[s.decl.Name] = i
 		if strings.EqualFold(strings.TrimSpace(s.decl.Stage), "verify") {
 			hasVerify = true
 		}
@@ -243,6 +266,21 @@ func planNotes(steps []planStep, cycle bool) []string {
 			if !present[before] {
 				notes = append(notes, fmt.Sprintf("note: %s is declared after %s, but no step in this plan is %s.", s.decl.Name, before, before))
 			}
+		}
+		for _, need := range s.decl.Needs {
+			if containsString(s.decl.After, need) {
+				continue
+			}
+			if !present[need] {
+				notes = append(notes, fmt.Sprintf("note: %s usually needs %s first — it is not in this plan.", s.decl.Name, need))
+			} else if position[need] > position[s.decl.Name] {
+				notes = append(notes, fmt.Sprintf("note: %s usually needs %s first — it comes later in this plan.", s.decl.Name, need))
+			}
+		}
+	}
+	for _, s := range steps {
+		if s.note != "" {
+			notes = append(notes, s.note)
 		}
 	}
 	if hasVerify && !hasExecute {
@@ -294,11 +332,16 @@ func (d *demo) handlePlan(line string) {
 //
 // First, INHERITANCE: a step missing a value for one of
 // its slots inherits the value an earlier step bound to
-// the SAME slot name — same name only, never a mapping
-// across names (a folder is not a file). The earliest
-// step holding the value is its source, and the step
-// remembers it (fromStep) so the value can be marked
-// "(from step N)" wherever it is shown. A value a step
+// the SAME slot name. One exception, the place family:
+// the slots that name a place (from, to, folder,
+// directory, dir) are one kind of thing, so a place slot
+// no earlier step holds any value for may take the
+// nearest earlier grounded place value across names —
+// a folder is not a file, but a folder IS a directory.
+// The earliest step holding a same-name value is its
+// source, and the step remembers it (fromStep) so the
+// value can be marked "(from step N)" wherever it is
+// shown. A value a step
 // inherited can itself be inherited onward; the mark
 // still names the step that first bound it. And a value
 // the extractor merely OFFERED a step — a favourite its
@@ -367,6 +410,27 @@ func shareContext(steps []planStep) {
 			}
 			if filled {
 				continue
+			}
+			// Place-family inheritance: the place slots
+			// {from, to, folder, directory, dir} are one
+			// family. A place slot that no earlier step
+			// holds a value for — under its own name or
+			// any other — may take the NEAREST earlier
+			// grounded place value, bound under whatever
+			// name that step used, marked "(from step N)"
+			// like any inheritance. Same-name still wins
+			// (both passes above run first, and the guard
+			// below defers to any same-name value at all);
+			// non-place slots never cross-inherit; and
+			// only grounded values cross — a favourite an
+			// extractor offered an earlier step stays home.
+			if placeSlot(slot) && !earlierHasSlot(steps[:i], slot) {
+				if v, from, ok := nearestPlaceValue(steps[:i]); ok {
+					s.eff[slot] = v
+					s.grounded[slot] = true
+					s.fromStep[slot] = from
+					continue
+				}
 			}
 			if own != "" {
 				s.eff[slot] = own // the favourite stands: nothing better exists
@@ -438,6 +502,62 @@ func shareContext(steps []planStep) {
 			}
 		}
 	}
+}
+
+// placeSlots are the slot names that name a PLACE — one
+// family for plan-context inheritance (see shareContext).
+// A folder by any of these names is the same kind of
+// thing: where the work happens.
+var placeSlots = map[string]bool{
+	"from": true, "to": true, "folder": true,
+	"directory": true, "dir": true,
+}
+
+// placeSlot reports whether a slot name belongs to the
+// place family.
+func placeSlot(slot string) bool { return placeSlots[slot] }
+
+// earlierHasSlot reports whether any earlier step holds
+// an effective value under the given slot name, grounded
+// or not — the guard that keeps place-family inheritance
+// from ever overriding a same-name value.
+func earlierHasSlot(earlier []planStep, slot string) bool {
+	for _, s := range earlier {
+		if !s.matched {
+			continue
+		}
+		if _, ok := s.eff[slot]; ok {
+			return true
+		}
+	}
+	return false
+}
+
+// nearestPlaceValue finds the nearest earlier step's
+// grounded place value: steps are searched nearest
+// first, a step's own place slots in their declared
+// order. It returns the value and the 1-based number of
+// the step that first bound it (provenance travels, as
+// with same-name inheritance).
+func nearestPlaceValue(earlier []planStep) (string, int, bool) {
+	for k := len(earlier) - 1; k >= 0; k-- {
+		s := earlier[k]
+		if !s.matched {
+			continue
+		}
+		for _, slot := range s.decl.Slots {
+			if !placeSlot(slot) {
+				continue
+			}
+			if v, ok := s.eff[slot]; ok && s.grounded[slot] {
+				if n := s.fromStep[slot]; n > 0 {
+					return v, n, true
+				}
+				return v, k + 1, true
+			}
+		}
+	}
+	return "", 0, false
 }
 
 // segmentMentions reports whether a value appears, as a
@@ -641,6 +761,16 @@ func (d *demo) printPlan(steps []planStep, notes []string) {
 		fmt.Fprintln(d.out, n)
 	}
 	fmt.Fprintln(d.out, "nothing has run yet.")
+}
+
+// containsString reports whether xs holds x exactly.
+func containsString(xs []string, x string) bool {
+	for _, s := range xs {
+		if s == x {
+			return true
+		}
+	}
+	return false
 }
 
 // plural returns the word, or the word plus "s" — the

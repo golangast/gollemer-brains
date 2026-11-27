@@ -33,7 +33,7 @@ import (
 // (they widen what the matcher recognises — the description
 // alone is enough).
 //
-// The last three fields are the PLAN layer's metadata —
+// The remaining fields are the PLAN layer's metadata —
 // all optional, all ignored by the matcher. Stage is a
 // rough order tag (inspect, prepare, execute, verify,
 // cleanup) saying where in a multi-step job this command
@@ -44,6 +44,22 @@ import (
 // share context. They exist so a plan can be ORDERED and
 // its gaps spotted; they change nothing about which
 // script a single sentence means.
+//
+// Needs names concepts that should run EARLIER than
+// this one in a job — a relation, not an ordering the
+// plan enforces: when a plan renders, a Need that is
+// absent from the plan, or sitting later in it, earns a
+// printed note (unless an After edge already encodes
+// the same relation). The matcher ignores it like the
+// rest of the plan metadata.
+//
+// Steps, when present, makes the entry a ROUTINE
+// instead of a script: a named bundle of segment texts,
+// each the kind of line that would match one of the
+// registry's commands. A routine has no Command of its
+// own — a want that matches it expands into a plan of
+// its steps. The matcher still reads the entry by its
+// description and examples, exactly like a script.
 type Declaration struct {
 	Name        string   `json:"name"`
 	Command     string   `json:"command"`
@@ -53,6 +69,8 @@ type Declaration struct {
 	Stage       string   `json:"stage,omitempty"`
 	After       []string `json:"after,omitempty"`
 	ActsOn      string   `json:"acts_on,omitempty"`
+	Needs       []string `json:"needs,omitempty"`
+	Steps       []string `json:"steps,omitempty"`
 }
 
 // Registry is a loaded registry file: an optional comment
@@ -95,7 +113,20 @@ func (r *Registry) Validate() error {
 			return fmt.Errorf("script name %q appears twice", s.Name)
 		}
 		seen[s.Name] = true
-		if strings.TrimSpace(s.Command) == "" {
+		if len(s.Steps) > 0 {
+			// A routine: segment texts instead of a
+			// command. Both at once is a contradiction —
+			// the entry either runs one command or
+			// expands into a plan of steps.
+			if strings.TrimSpace(s.Command) != "" {
+				return fmt.Errorf("routine %q declares both steps and a command", s.Name)
+			}
+			for _, step := range s.Steps {
+				if strings.TrimSpace(step) == "" {
+					return fmt.Errorf("routine %q has an empty step", s.Name)
+				}
+			}
+		} else if strings.TrimSpace(s.Command) == "" {
 			return fmt.Errorf("script %q has no command", s.Name)
 		}
 		if strings.TrimSpace(s.Description) == "" {

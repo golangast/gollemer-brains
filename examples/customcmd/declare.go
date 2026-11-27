@@ -33,24 +33,31 @@ import (
 // yielded. file is the file token as written ("" when no
 // file could be found); description is the doing-clause
 // ("" when none could be isolated — the flow asks).
+// routine is true when the entry kind word was "routine"
+// instead of "command"/"script": the entry is a bundle
+// of steps, not a command (routine.go).
 type parsedDeclaration struct {
 	name        string
 	file        string
 	description string
+	routine     bool
 }
 
 var (
-	// A command/script named or called X — covers "i have
-	// a command named X", "there's a script called X",
-	// "add a command named X", "a command named X that…".
-	reNamedCmd = regexp.MustCompile(`(?i)\b(?:command|script)\s+(?:named|called)\s+([a-z0-9][a-z0-9_-]*)`)
-	// "my command X" / "my script X".
-	reMyCmd = regexp.MustCompile(`(?i)\bmy\s+(?:command|script)\s+([a-z0-9][a-z0-9_-]*)`)
+	// A command/script/routine named or called X — covers
+	// "i have a command named X", "there's a script
+	// called X", "add a command named X", "a command
+	// named X that…", "i have a routine named X".
+	reNamedCmd = regexp.MustCompile(`(?i)\b(command|script|routine)\s+(?:named|called)\s+([a-z0-9][a-z0-9_-]*)`)
+	// "my command X" / "my script X" / "my routine X".
+	reMyCmd = regexp.MustCompile(`(?i)\bmy\s+(command|script|routine)\s+([a-z0-9][a-z0-9_-]*)`)
 	// An UNNAMED declaration: "i have a command that …",
 	// "there is a script that …" — the command/script is
 	// stated but never named; the name is derived from
-	// its file instead.
-	reHaveCmd = regexp.MustCompile(`(?i)\b(?:i have|there is|there's|i've got|we have)\s+an?\s+(?:command|script)\b`)
+	// its file instead. (A routine cannot be declared
+	// unnamed: it has no file to take a name from, so the
+	// unnamed trigger does not fire for one.)
+	reHaveCmd = regexp.MustCompile(`(?i)\b(?:i have|there is|there's|i've got|we have)\s+an?\s+(command|script|routine)\b`)
 	// A .sh token anywhere in the line.
 	reShFile = regexp.MustCompile(`[^\s,;]+\.sh\b`)
 	// The file-clause INTRODUCER: the words that open the
@@ -110,20 +117,28 @@ func parseDeclaration(line string) (parsedDeclaration, bool) {
 	viaMy := false
 	unnamed := false
 	if loc := reNamedCmd.FindStringSubmatchIndex(line); loc != nil {
-		p.name = line[loc[2]:loc[3]]
-		nameEnd = loc[3]
+		p.routine = strings.EqualFold(line[loc[2]:loc[3]], "routine")
+		p.name = line[loc[4]:loc[5]]
+		nameEnd = loc[5]
 	} else if loc := reMyCmd.FindStringSubmatchIndex(line); loc != nil {
-		cand := line[loc[2]:loc[3]]
+		cand := line[loc[4]:loc[5]]
 		if notNames[strings.ToLower(cand)] {
 			return p, false
 		}
+		p.routine = strings.EqualFold(line[loc[2]:loc[3]], "routine")
 		p.name = cand
-		nameEnd = loc[3]
+		nameEnd = loc[5]
 		viaMy = true
-	} else if loc := reHaveCmd.FindStringIndex(line); loc != nil {
+	} else if loc := reHaveCmd.FindStringSubmatchIndex(line); loc != nil {
 		// Unnamed: "i have a command that …". The name
 		// is derived from the file below; the doing-clause
-		// starts right after the command/script word.
+		// starts right after the command/script word. A
+		// routine has no file to derive a name from, so
+		// an unnamed routine is not a declaration shape
+		// this door takes.
+		if strings.EqualFold(line[loc[2]:loc[3]], "routine") {
+			return p, false
+		}
 		nameEnd = loc[1]
 		unnamed = true
 	} else {
@@ -374,6 +389,10 @@ func declarationSlots(description, command string) []string {
 // the shared persist path and confirmed in plain words —
 // name, description as understood, command, slots.
 func (d *demo) declarationFlow(p parsedDeclaration) {
+	if p.routine {
+		d.routineDeclarationFlow(p)
+		return
+	}
 	command := ""
 	if p.file != "" {
 		command = runnableCommand(p.file)
@@ -426,4 +445,53 @@ func (d *demo) declarationFlow(p parsedDeclaration) {
 	}
 	fmt.Fprintf(d.out, "%s %s — %s\n", d.paint(ansiGood, "learned:"), decl.Name, decl.Description)
 	fmt.Fprintf(d.out, "command: %s (%s). it chooses %s from now on, in this session and every later one. nothing was retrained.\n", decl.Command, slots, decl.Name)
+}
+
+// routineDeclarationFlow learns a parsed routine
+// declaration — "i have a routine named nightly and it
+// will back up my photos and migrate the database and
+// compress the logs". The doing-clause is split into
+// segments the way a plan line is, and EVERY segment
+// must already resolve to a known command: a routine is
+// a bundle of concepts the registry knows, never a way
+// to smuggle in a new one. A segment that resolves to
+// nothing refuses the whole declaration — one plain
+// line naming the segment, and nothing is saved. A
+// segment that resolves to another routine is accepted:
+// expansion is depth-capped at render time, not here.
+func (d *demo) routineDeclarationFlow(p parsedDeclaration) {
+	desc := p.description
+	if desc == "" {
+		ans, ok := d.nextLine(fmt.Sprintf("what does %s do: ", p.name))
+		if !ok || strings.TrimSpace(ans) == "" {
+			fmt.Fprintln(d.out, "ok — not saved.")
+			return
+		}
+		desc = strings.TrimSpace(ans)
+	}
+	segments := splitSegments(desc)
+	if len(segments) < 2 {
+		fmt.Fprintln(d.out, "a routine is a bundle of steps — that reads as one step, not a bundle. not saved.")
+		return
+	}
+	names := make([]string, 0, len(segments))
+	for _, seg := range segments {
+		decl, _, ok := d.matchSegment(seg)
+		if !ok {
+			fmt.Fprintf(d.out, "i don't know '%s' yet — teach me that command first\n", seg)
+			return
+		}
+		names = append(names, decl.Name)
+	}
+	decl := cmdmatch.Declaration{
+		Name:        p.name,
+		Description: desc,
+		Examples:    []string{desc},
+		Steps:       segments,
+	}
+	if !d.persist(decl) {
+		return
+	}
+	fmt.Fprintf(d.out, "%s %s — %s\n", d.paint(ansiGood, "learned:"), decl.Name, decl.Description)
+	fmt.Fprintf(d.out, "routine: %d steps (%s). it chooses %s from now on, in this session and every later one. nothing was retrained.\n", len(segments), strings.Join(names, ", "), decl.Name)
 }

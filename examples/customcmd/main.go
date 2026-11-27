@@ -113,6 +113,20 @@ type demo struct {
 	chatAnswer  func(line string) (string, error)
 	filePredict func(line string) (label string, conf float64)
 	fileExtract func(line string) (raw string, err error)
+
+	// lastPresent is the single-line match most recently
+	// presented — the only thing a correction ("no, …")
+	// can refer to. handle consumes it on the very next
+	// line, corrected or not: only the NEXT line can
+	// correct a presentation (correct.go).
+	lastPresent *presentedMatch
+}
+
+// presentedMatch is a match the REPL just presented:
+// the line that produced it and the script it chose.
+type presentedMatch struct {
+	line string
+	decl cmdmatch.Declaration
 }
 
 // stampOf identifies a registry file's current contents
@@ -157,6 +171,21 @@ func (d *demo) handle(line string) bool {
 		return false
 	}
 	d.reloadIfChanged()
+
+	// A correction ("no", "no i meant …", "wrong", "not
+	// that one") is read against the match just
+	// presented, if any. The presented state is consumed
+	// by this line whatever it is: a correction anywhere
+	// later than the next line has nothing to refer to,
+	// and a correction word with no presentation before
+	// it is an ordinary line.
+	prev := d.lastPresent
+	d.lastPresent = nil
+	if prev != nil && isCorrection(line) {
+		d.correctionFlow(prev)
+		return true
+	}
+
 	switch line {
 	case "add":
 		d.addFlow()
@@ -189,6 +218,15 @@ func (d *demo) handle(line string) bool {
 	decl, score, ok := d.matcher.Match(line)
 	if !ok {
 		ranked := d.matcher.Rank(line)
+		// A near tie between two scripts is a question,
+		// not a coin flip (tie.go): the one place the
+		// abstain path speaks before the brains. Declining
+		// — or no tie — falls through to the ordinary
+		// abstain handling below, exactly as if the
+		// question had never been asked.
+		if d.disambiguate(line, ranked) {
+			return true
+		}
 		// No script claims the line — the other brains
 		// read it (brains.go): conversation goes to the
 		// chat brain, file wants to the file brain's
@@ -210,8 +248,21 @@ func (d *demo) handle(line string) bool {
 		return true
 	}
 
-	d.present(decl, score, line)
+	d.presentMatch(decl, score, line)
 	return true
+}
+
+// presentMatch presents one matched entry for a line: a
+// script gets the understood block (present), a routine
+// expands into its plan (routine.go). Every caller that
+// answers a single-line match goes through here, so the
+// two shapes can never be confused downstream.
+func (d *demo) presentMatch(decl cmdmatch.Declaration, score float64, line string) {
+	if len(decl.Steps) > 0 {
+		d.handleRoutine(decl, line)
+		return
+	}
+	d.present(decl, score, line)
 }
 
 // present prints the understood block for a matched
@@ -220,6 +271,7 @@ func (d *demo) handle(line string) bool {
 // slots, a plain-words PREVIEW of what the command
 // would do, and the exact command line that WOULD run.
 func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
+	d.lastPresent = &presentedMatch{line: line, decl: decl}
 	fmt.Fprintf(d.out, "%s %s (%.2f) — %s\n", d.paint(ansiLabel, "understood:"), decl.Name, score, decl.Description)
 	if len(decl.Slots) == 0 {
 		d.printPreview(decl, nil)
