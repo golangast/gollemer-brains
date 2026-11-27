@@ -113,6 +113,7 @@ type demo struct {
 	// them wired the REPL behaves exactly as it did
 	// before they arrived.
 	clf         *intent.Classifier // the in-memory intent read (pairs.jsonl)
+	factorTbl   *factorTable       // the label factorization, derived lazily from clf (factor.go)
 	chatAnswer  func(line string) (string, error)
 	chatGists   map[string]string // per-label taught gist for confident question lines (brains.go)
 	filePredict func(line string) (label string, conf float64)

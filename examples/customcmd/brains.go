@@ -74,10 +74,23 @@ type intentRead struct {
 	kind      string // KindOf(label); "" when the label abstained
 	kindGuess string
 	kindConf  float64
+	// fallback marks a label composed by the factorized
+	// fallback (factor.go) after the primary read
+	// abstained. It routes and gists exactly like a
+	// primary read; the mark is internal (no annotation
+	// is ever printed) and exists for tests and tuning.
+	fallback bool
 }
 
 // readIntent asks the in-memory classifier about a line.
-// ok is false when no classifier is wired.
+// ok is false when no classifier is wired. When the label
+// read abstains, the factorized fallback (factor.go) gets
+// its one chance to compose a read from the kind guess
+// and the line's object words; the read it returns is
+// consumed at exactly the point this one is, so the
+// precedence around it — matcher first, looksLikeWant
+// before any kind-guess routing in the no-label branch —
+// is untouched.
 func (d *demo) readIntent(line string) (intentRead, bool) {
 	if d.clf == nil {
 		return intentRead{}, false
@@ -88,6 +101,13 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 		r.kind = d.clf.KindOf(r.label)
 	}
 	r.kindGuess, r.kindConf = d.clf.PredictKind(line)
+	if r.label == "" {
+		if label, ok := d.fallbackRead(line, r.kindGuess); ok {
+			r.label = label
+			r.kind = d.clf.KindOf(label)
+			r.fallback = true
+		}
+	}
 	return r, true
 }
 
