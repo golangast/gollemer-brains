@@ -119,11 +119,11 @@ func (d *demo) expandRoutineSteps(segments []string, line string, depth int) []p
 		step := planStep{segment: seg, decl: decl, score: score, matched: true}
 		if len(decl.Slots) > 0 {
 			if raw, err := d.extract(seg); err == nil {
-				step.values = strings.Fields(raw)
+				step.values = bindSlotValues(decl, seg, strings.Fields(raw))
 			}
 			if len(step.values) == 0 && line != seg {
 				if raw, err := d.extract(line); err == nil {
-					step.values = strings.Fields(raw)
+					step.values = bindSlotValues(decl, line, strings.Fields(raw))
 				}
 			}
 		}

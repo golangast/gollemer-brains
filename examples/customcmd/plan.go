@@ -146,7 +146,7 @@ func (d *demo) buildPlan(line string) ([]planStep, bool) {
 			matched++
 			if len(decl.Slots) > 0 {
 				if raw, err := d.extract(seg); err == nil {
-					step.values = strings.Fields(raw)
+					step.values = bindSlotValues(decl, seg, strings.Fields(raw))
 				}
 			}
 		}

@@ -285,10 +285,10 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 		fmt.Fprintf(d.out, "%s %s (arguments missing)\n", d.paint(ansiLabel, "would run:"), decl.Command)
 		return
 	}
-	values := strings.Fields(raw)
+	values := bindSlotValues(decl, line, strings.Fields(raw))
 	var bound []string
 	for i, slot := range decl.Slots {
-		if i < len(values) {
+		if i < len(values) && values[i] != "" {
 			bound = append(bound, fmt.Sprintf("%s=%s", slot, values[i]))
 		} else {
 			bound = append(bound, fmt.Sprintf("%s=(not heard)", slot))
