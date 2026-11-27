@@ -30,7 +30,8 @@ import (
 // migration step's from and to live in that line, not in
 // its segment). Ordered, context-shared, and rendered by
 // the same code as a typed plan, footer included: a
-// routine is printed, never run.
+// routine is printed, not run — running it takes the
+// trigger word and a yes per step (run.go).
 
 // routineDepthCap is how deep routine expansion goes:
 // the invoked routine is level one, a routine among its

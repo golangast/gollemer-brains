@@ -55,16 +55,19 @@
 // that speaks of files in the plural applies to each
 // file of the plan's folder.
 //
-// This example RUNS NOTHING. It prints the script it
-// understood, the arguments it heard, a plain-words
-// preview of what the command would do (the description
-// with the heard values worked into it — the gate any
-// future execution step would confirm against), and the
-// exact command line it WOULD run. Executing that line is a
-// separate, gated step — confirmation, allowlists, and
-// sandboxing are the host program's job, as in
-// examples/filecmd — and it is deliberately not in this
-// example.
+// A presentation on its own runs nothing: the program
+// prints the script it understood, the arguments it
+// heard, a plain-words preview of what the command
+// would do (the description with the heard values
+// worked into it), and the exact command line it WOULD
+// run. Running it is the gated step in run.go: the bare
+// line `run` (or `run it`) typed as the very next line
+// after a presentation offers each step for its own
+// explicit y/n confirmation; only registry scripts
+// whose files exist and are executable can run; and a
+// step runs by exec.Command with argv straight from
+// the presented line — no shell anywhere. Without the
+// trigger word, nothing ever runs.
 //
 // Every brain ships trained (custombrain.gob, brain.gob,
 // and filebrain.gob at the repo root), so the example
@@ -121,6 +124,21 @@ type demo struct {
 	// line, corrected or not: only the NEXT line can
 	// correct a presentation (correct.go).
 	lastPresent *presentedMatch
+
+	// pendingRun is the presentation most recently made —
+	// a single command, a plan, a routine — in runnable
+	// form: the only thing the execution trigger ("run",
+	// "run it") can act on. handle consumes it on the
+	// very next line, run or not, with the same adjacency
+	// discipline as lastPresent (run.go).
+	pendingRun *runnable
+
+	// interactive reports whether the REPL is talking to
+	// a person at a terminal. Execution requires it: a
+	// piped or scripted session can present all it likes,
+	// but the gate's confirmation must come from the
+	// interactive prompt (run.go).
+	interactive bool
 }
 
 // presentedMatch is a match the REPL just presented:
@@ -182,6 +200,18 @@ func (d *demo) handle(line string) bool {
 	// it is an ordinary line.
 	prev := d.lastPresent
 	d.lastPresent = nil
+	pending := d.pendingRun
+	d.pendingRun = nil
+	if isRunTrigger(line) {
+		// The execution trigger (run.go): it acts on the
+		// presentation before it and nothing else. With
+		// no presentation before it the trigger word is
+		// unclaimed — silence, like any unclaimed line.
+		if pending != nil {
+			d.runFlow(pending)
+		}
+		return true
+	}
 	if prev != nil && isCorrection(line) {
 		d.correctionFlow(prev)
 		return true
@@ -277,6 +307,7 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 	if len(decl.Slots) == 0 {
 		d.printPreview(decl, nil)
 		fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "would run:"), decl.Command)
+		d.pendingRun = singleRunnable(decl, decl.Command)
 		return
 	}
 	raw, err := d.extract(line)
@@ -284,6 +315,10 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 		fmt.Fprintf(d.out, "but the extractor brain failed: %v — no arguments read.\n", err)
 		d.printPreview(decl, nil)
 		fmt.Fprintf(d.out, "%s %s (arguments missing)\n", d.paint(ansiLabel, "would run:"), decl.Command)
+		// A presentation whose arguments were never read
+		// is not runnable: the would-run line it showed
+		// is not a command anyone should confirm.
+		d.pendingRun = nil
 		return
 	}
 	values := bindSlotValues(decl, line, strings.Fields(raw))
@@ -300,7 +335,9 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 		fmt.Fprintf(d.out, "(also heard, with no slot to bind: %s)\n", strings.Join(values[len(decl.Slots):], " "))
 	}
 	d.printPreview(decl, values)
-	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "would run:"), wouldRun(decl, values))
+	rendered := wouldRun(decl, values)
+	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "would run:"), rendered)
+	d.pendingRun = singleRunnable(decl, rendered)
 }
 
 // printPreview prints the preview block between the
@@ -312,9 +349,8 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 // nothing has run. A command whose name or description
 // carries a remove-family word — it deletes, cleans,
 // wipes, throws away — earns one more line: the caution.
-// The preview is the gate any future execution step
-// would confirm against: this is what the user would be
-// saying yes to.
+// The preview is the gate the execution step (run.go)
+// confirms against: this is what the user says yes to.
 func (d *demo) printPreview(decl cmdmatch.Declaration, values []string) {
 	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "preview:"), previewText(decl, values))
 	fmt.Fprintf(d.out, "  %s %s\n", d.paint(ansiLabel, "runs:"), wouldRun(decl, values))
@@ -561,6 +597,15 @@ func main() {
 	sc := bufio.NewScanner(os.Stdin)
 	sc.Buffer(make([]byte, 0, 64*1024), 4*1024*1024)
 
+	// Execution (run.go) requires a person at a terminal:
+	// stdin a character device is what makes this session
+	// interactive. A piped session still presents and
+	// teaches — it just can never run anything.
+	interactive := false
+	if fi, err := os.Stdin.Stat(); err == nil && fi.Mode()&os.ModeCharDevice != 0 {
+		interactive = true
+	}
+
 	d := &demo{
 		registryPath: *registryFlag,
 		reg:          reg,
@@ -568,6 +613,7 @@ func main() {
 		regStamp:     stampOf(*registryFlag),
 		out:          os.Stdout,
 		color:        colorEnabled(),
+		interactive:  interactive,
 	}
 
 	// The intent classifier trains IN MEMORY from the

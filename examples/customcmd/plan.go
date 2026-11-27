@@ -23,10 +23,10 @@ import (
 // segments no command knows are shown as gaps (with one
 // offer to teach the first of them), and the result is a
 // checklist whose every step carries the same preview
-// the single-line path prints — the gate any future
-// execution step would confirm against, step by step.
-// A plan is printed, never run: execution stays the
-// separate, gated step it has always been here.
+// the single-line path prints — the gate the execution
+// step (run.go) confirms against, step by step. A plan
+// is printed, not run: running it takes the trigger
+// word and a yes per step, as run.go lays out.
 //
 // Steps in a plan also SHARE CONTEXT, the way the steps
 // of a job do: a step that is missing a value inherits
@@ -761,6 +761,10 @@ func (d *demo) printPlan(steps []planStep, notes []string) {
 		fmt.Fprintln(d.out, n)
 	}
 	fmt.Fprintln(d.out, "nothing has run yet.")
+	// The printed plan is a presentation: it leaves its
+	// runnable behind for the execution trigger (run.go),
+	// steps in the order just printed, gaps included.
+	d.pendingRun = planRunnable(steps)
 }
 
 // containsString reports whether xs holds x exactly.
