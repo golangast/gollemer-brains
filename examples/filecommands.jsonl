@@ -1632,3 +1632,46 @@
 {"input": "tell me about animals", "intent": "chat", "kind": "talk"}
 {"input": "tell me a fun fact", "intent": "chat", "kind": "talk"}
 {"input": "tell me about the moon", "intent": "chat", "kind": "talk"}
+{"input": "start a new file called ledger.csv", "output": "ledger.csv", "intent": "create_file", "kind": "make"}
+{"input": "make a fresh file named poems.txt", "output": "poems.txt", "intent": "create_file", "kind": "make"}
+{"input": "create a file and call it agenda.md", "output": "agenda.md", "intent": "create_file", "kind": "make"}
+{"input": "i need a file named routes.json", "output": "routes.json", "intent": "create_file", "kind": "make"}
+{"input": "new file: harbor.txt", "output": "harbor.txt", "intent": "create_file", "kind": "make"}
+{"input": "please create notes-draft.md", "output": "notes-draft.md", "intent": "create_file", "kind": "make"}
+{"input": "make a file with the name budget-2027.csv", "output": "budget-2027.csv", "intent": "create_file", "kind": "make"}
+{"input": "create file songs.txt for me", "output": "songs.txt", "intent": "create_file", "kind": "make"}
+{"input": "a file called winter.md, please", "output": "winter.md", "intent": "create_file", "kind": "make"}
+{"input": "set up a file named config.yaml", "output": "config.yaml", "intent": "create_file", "kind": "make"}
+{"input": "i want to make a file called ideas.txt", "output": "ideas.txt", "intent": "create_file", "kind": "make"}
+{"input": "create a brand new file, name it journal.md", "output": "journal.md", "intent": "create_file", "kind": "make"}
+{"input": "delete the file called ledger.csv", "output": "ledger.csv", "intent": "delete_file", "kind": "remove"}
+{"input": "remove poems.txt please", "output": "poems.txt", "intent": "delete_file", "kind": "remove"}
+{"input": "get rid of the file agenda.md", "output": "agenda.md", "intent": "delete_file", "kind": "remove"}
+{"input": "i want routes.json deleted", "output": "routes.json", "intent": "delete_file", "kind": "remove"}
+{"input": "trash the file harbor.txt", "output": "harbor.txt", "intent": "delete_file", "kind": "remove"}
+{"input": "please delete notes-draft.md", "output": "notes-draft.md", "intent": "delete_file", "kind": "remove"}
+{"input": "erase budget-2027.csv for me", "output": "budget-2027.csv", "intent": "delete_file", "kind": "remove"}
+{"input": "delete songs.txt from the folder", "output": "songs.txt", "intent": "delete_file", "kind": "remove"}
+{"input": "remove the winter.md file", "output": "winter.md", "intent": "delete_file", "kind": "remove"}
+{"input": "i do not need config.yaml anymore, delete it", "output": "config.yaml", "intent": "delete_file", "kind": "remove"}
+{"input": "throw away ideas.txt", "output": "ideas.txt", "intent": "delete_file", "kind": "remove"}
+{"input": "delete journal.md, it is finished", "output": "journal.md", "intent": "delete_file", "kind": "remove"}
+{"input": "list the files here", "intent": "list_files", "kind": "show"}
+{"input": "list files in this folder", "intent": "list_files", "kind": "show"}
+{"input": "show the contents of this folder", "intent": "list_files", "kind": "show"}
+{"input": "what is inside this folder", "intent": "list_files", "kind": "show"}
+{"input": "list all files please", "intent": "list_files", "kind": "show"}
+{"input": "which files do i have here", "intent": "list_files", "kind": "show"}
+{"input": "list my files in downloads", "intent": "list_files", "kind": "show"}
+{"input": "what documents are in the folder", "intent": "list_files", "kind": "show"}
+{"input": "what files exist here", "intent": "list_files", "kind": "show"}
+{"input": "list out the files", "intent": "list_files", "kind": "show"}
+{"input": "show me the folder contents", "intent": "list_files", "kind": "show"}
+{"input": "what is stored in this folder", "intent": "list_files", "kind": "show"}
+{"input": "list the files in the folder", "intent": "list_files", "kind": "show"}
+{"input": "show all files in this directory", "intent": "list_files", "kind": "show"}
+{"input": "what files are saved here", "intent": "list_files", "kind": "show"}
+{"input": "list my documents please", "intent": "list_files", "kind": "show"}
+{"input": "show me my documents", "intent": "list_files", "kind": "show"}
+{"input": "what have i got in this folder", "intent": "list_files", "kind": "show"}
+{"input": "list everything please", "intent": "list_files", "kind": "show"}

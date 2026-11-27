@@ -21,21 +21,21 @@
 {"input": "hello!", "output": "Hi there! Good to see you."}
 {"input": "hey, what is up", "output": "Hey! Not much, just glad to talk. What is new with you?"}
 {"input": "it is snowing", "output": "Snow makes the world quiet and white. Stay warm and enjoy the view."}
-{"input": "what time is it", "output": "I do not keep time, but I hope it is a good hour where you are."}
-{"input": "good night", "output": "Good night! Sleep well and dream of good things."}
+{"input": "what time is it", "output": "I do not keep time, but I hope it is a good hour where you are.", "intent": "ask_time", "kind": "find"}
+{"input": "good night", "output": "Good night! Sleep well and dream of good things.", "intent": "farewell", "kind": "talk"}
 {"input": "hey", "output": "Hello! How are you today?"}
-{"input": "you are funny", "output": "Thank you! A little humor makes every chat better."}
+{"input": "you are funny", "output": "Thank you! A little humor makes every chat better.", "intent": "compliment", "kind": "talk"}
 {"input": "tell me about coffee", "output": "Coffee smells like morning. A warm cup makes a slow start feel kind."}
 {"input": "do you like trains", "output": "Yes, I like trains a lot. It is one of my favorite topics."}
 {"input": "i like painting", "output": "Painting is wonderful. What do you enjoy most about it?"}
-{"input": "tell me about cycling", "output": "Cycling is great exercise. The wind, the road, and a quiet morning ride are hard to beat."}
+{"input": "tell me about cycling", "output": "Cycling is great exercise. The wind, the road, and a quiet morning ride are hard to beat.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "how do i start yoga", "output": "Start with ten gentle minutes a day. Yoga meets you where you are."}
-{"input": "tell me about gardening", "output": "Gardening is peaceful. Watching a small seed become a plant feels like magic."}
+{"input": "tell me about gardening", "output": "Gardening is peaceful. Watching a small seed become a plant feels like magic.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "what do you like", "output": "I like simple things: reading, gardening, music, and a warm cup of coffee."}
 {"input": "i went hiking today", "output": "That sounds refreshing. Hiking always makes the day feel bigger."}
 {"input": "what is your favorite hobby", "output": "I enjoy reading and gardening the most, but every hobby here is a good one."}
 {"input": "what do you think of gardening", "output": "Gardening is peaceful. Watching a small seed become a plant feels like magic."}
-{"input": "tell me about painting", "output": "Painting lets you keep a moment. Colors say things words cannot."}
+{"input": "tell me about painting", "output": "Painting lets you keep a moment. Colors say things words cannot.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "hello", "output": "Hello! How are you today?"}
 {"input": "i want to try coding", "output": "Start with a tiny program that prints your name. Coding grows from small wins."}
 {"input": "i love music", "output": "That is great. Music makes many people happy too."}
@@ -46,7 +46,7 @@
 {"input": "what do you think of hiking", "output": "Hiking clears the mind. A trail, some trees, and fresh air fix many worries."}
 {"input": "how do i start hiking", "output": "Start with an easy trail and good shoes. Hiking should feel good, not hard."}
 {"input": "how can i learn hiking", "output": "Start with an easy trail and good shoes. Hiking should feel good, not hard."}
-{"input": "where do you live", "output": "I live inside a small file on a computer, wherever my brain is saved."}
+{"input": "where do you live", "output": "I live inside a small file on a computer, wherever my brain is saved.", "intent": "about_brain", "kind": "talk"}
 {"input": "i want to try fishing", "output": "Start at a calm pond with simple gear. Fishing is quiet first, lucky second."}
 {"input": "do you like fishing", "output": "Yes, I like fishing a lot. It is one of my favorite topics."}
 {"input": "how do i start reading", "output": "Start with a short book you truly like. Reading grows from one good page."}
@@ -56,7 +56,7 @@
 {"input": "i love cats", "output": "That is great. Cats makes many people happy too."}
 {"input": "it is raining today", "output": "Rain is good for the garden. A rainy day is a fine day for reading."}
 {"input": "you are kind", "output": "That is sweet of you to say. Kindness is easy to share."}
-{"input": "what are you", "output": "I am a small language model that learns from examples."}
+{"input": "what are you", "output": "I am a small language model that learns from examples.", "intent": "about_brain", "kind": "talk"}
 {"input": "i am fine", "output": "Glad to hear you are fine. What have you been up to?"}
 {"input": "i am sad today", "output": "I am sorry to hear that. I hope your day gets better soon."}
 {"input": "do you like dogs", "output": "Dogs are loyal and joyful. A dog is always happy to see you."}
@@ -69,7 +69,7 @@
 {"input": "i love photography", "output": "That is great. Photography makes many people happy too."}
 {"input": "i am happy today", "output": "That is wonderful. A happy day is a good day."}
 {"input": "i like cats", "output": "Cats is wonderful. What do you enjoy most about it?"}
-{"input": "tell me about fishing", "output": "Fishing teaches patience. The water is calm even when the fish are shy."}
+{"input": "tell me about fishing", "output": "Fishing teaches patience. The water is calm even when the fish are shy.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "another joke", "output": "What do you call a fish without eyes? A fsh."}
 {"input": "see you later", "output": "See you later! Have a good day."}
 {"input": "do you like cooking", "output": "Yes, I like cooking a lot. It is one of my favorite topics."}
@@ -90,10 +90,10 @@
 {"input": "i like reading", "output": "Reading is wonderful. What do you enjoy most about it?"}
 {"input": "how do i start fishing", "output": "Start at a calm pond with simple gear. Fishing is quiet first, lucky second."}
 {"input": "i want to try cycling", "output": "Start with short, flat rides. Cycling builds strength one ride at a time."}
-{"input": "tell me a joke", "output": "Why did the gardener plant a light bulb? To grow a power plant."}
+{"input": "tell me a joke", "output": "Why did the gardener plant a light bulb? To grow a power plant.", "intent": "tell_joke", "kind": "talk"}
 {"input": "i love gardening", "output": "That is great. Gardening makes many people happy too."}
 {"input": "i like coffee", "output": "Coffee is wonderful. What do you enjoy most about it?"}
-{"input": "tell me about trains", "output": "Trains are a calm way to travel. The windows turn the world into a moving picture."}
+{"input": "tell me about trains", "output": "Trains are a calm way to travel. The windows turn the world into a moving picture.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "do you like gardening", "output": "Yes, I like gardening a lot. It is one of my favorite topics."}
 {"input": "do you like tea", "output": "Tea is lovely too. A quiet cup of tea in the evening is hard to beat."}
 {"input": "tell me about hiking", "output": "Hiking clears the mind. A trail, some trees, and fresh air fix many worries."}
@@ -110,10 +110,10 @@
 {"input": "i like cycling", "output": "Cycling is wonderful. What do you enjoy most about it?"}
 {"input": "do you like painting", "output": "Yes, I like painting a lot. It is one of my favorite topics."}
 {"input": "my garden is growing", "output": "That is lovely to hear. A growing garden means your care is working."}
-{"input": "how old are you", "output": "I am as old as my last training run. Pretty young, really."}
+{"input": "how old are you", "output": "I am as old as my last training run. Pretty young, really.", "intent": "about_brain", "kind": "talk"}
 {"input": "what do you think of photography", "output": "Photography is catching light. A photo keeps a small piece of a day forever."}
 {"input": "i love spring", "output": "Spring is full of beginnings. New leaves, new flowers, new plans."}
-{"input": "thank you very much", "output": "You are very welcome. I am happy to help."}
+{"input": "thank you very much", "output": "You are very welcome. I am happy to help.", "intent": "thanks", "kind": "talk"}
 {"input": "i am learning to code", "output": "Coding rewards patience. Small steps every day beat one big leap."}
 {"input": "i like gardening", "output": "Gardening is wonderful. What do you enjoy most about it?"}
 {"input": "what do you think of coding", "output": "Coding is building with words. A small program that works feels like a tiny victory."}
@@ -122,12 +122,12 @@
 {"input": "i feel good", "output": "I am glad you feel good. Good days are worth noticing."}
 {"input": "i like hiking", "output": "Hiking is wonderful. What do you enjoy most about it?"}
 {"input": "hey there", "output": "Hello! How are you today?"}
-{"input": "thanks a lot", "output": "You are very welcome. I am happy to help."}
+{"input": "thanks a lot", "output": "You are very welcome. I am happy to help.", "intent": "thanks", "kind": "talk"}
 {"input": "i love yoga", "output": "That is great. Yoga makes many people happy too."}
 {"input": "i love coffee", "output": "That is great. Coffee makes many people happy too."}
 {"input": "i rode my bike today", "output": "A bike ride is a fine way to spend a day. The road treats you well."}
 {"input": "i like music", "output": "Music is wonderful. What do you enjoy most about it?"}
-{"input": "tell me about photography", "output": "Photography is catching light. A photo keeps a small piece of a day forever."}
+{"input": "tell me about photography", "output": "Photography is catching light. A photo keeps a small piece of a day forever.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "what do you think of fishing", "output": "Fishing teaches patience. The water is calm even when the fish are shy."}
 {"input": "tell me about gardening tools", "output": "Good tools make gardening easy. A strong trowel and soft gloves help a lot."}
 {"input": "i love gardening tools", "output": "That is great. Gardening tools makes many people happy too."}
@@ -136,18 +136,18 @@
 {"input": "how do i start cooking", "output": "Start with simple meals, like eggs or soup. Cooking gets easier every time you try."}
 {"input": "what do you think of cycling", "output": "Cycling is great exercise. The wind, the road, and a quiet morning ride are hard to beat."}
 {"input": "thank you", "output": "You are very welcome. I am happy to help."}
-{"input": "good evening", "output": "Hello! How are you today?"}
+{"input": "good evening", "output": "Hello! How are you today?", "intent": "greeting", "kind": "talk"}
 {"input": "my cat is sleeping", "output": "A sleeping cat is a happy cat. Cats are experts at rest."}
 {"input": "do you like yoga", "output": "Yes, I like yoga a lot. It is one of my favorite topics."}
 {"input": "i like cooking", "output": "Cooking is wonderful. What do you enjoy most about it?"}
 {"input": "i am doing well", "output": "That is good to hear. What have you been doing lately?"}
-{"input": "tell me about cooking", "output": "Cooking is a happy skill. A warm meal you made yourself always tastes better."}
+{"input": "tell me about cooking", "output": "Cooking is a happy skill. A warm meal you made yourself always tastes better.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "how can i learn photography", "output": "Start with your phone and natural light. Photography is mostly about looking closely."}
 {"input": "i like photography", "output": "Photography is wonderful. What do you enjoy most about it?"}
 {"input": "how can i learn yoga", "output": "Start with ten gentle minutes a day. Yoga meets you where you are."}
 {"input": "i am bored", "output": "Maybe try a walk, a book, or a little music to pass the time."}
 {"input": "i want to try painting", "output": "Start with cheap paints and big paper. Painting is play first, skill later."}
-{"input": "are you a robot", "output": "I am a program, a tiny model that learned from example sentences."}
+{"input": "are you a robot", "output": "I am a program, a tiny model that learned from example sentences.", "intent": "about_brain", "kind": "talk"}
 {"input": "do you sleep", "output": "I do not sleep. I just wait quietly for the next line."}
 {"input": "i love hiking", "output": "That is great. Hiking makes many people happy too."}
 {"input": "tell me your name", "output": "I am a tiny brain, trained on a small file of example pairs."}
@@ -169,7 +169,7 @@
 {"input": "i like trains", "output": "Trains is wonderful. What do you enjoy most about it?"}
 {"input": "i want to try hiking", "output": "Start with an easy trail and good shoes. Hiking should feel good, not hard."}
 {"input": "how is your day", "output": "My day is going well, thank you. How is yours?"}
-{"input": "tell me about music", "output": "Music lifts the heart. Even a simple song can change a whole day."}
+{"input": "tell me about music", "output": "Music lifts the heart. Even a simple song can change a whole day.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "good evening!", "output": "Hi there! Good to see you."}
 {"input": "what do you think of trains", "output": "Trains are a calm way to travel. The windows turn the world into a moving picture."}
 {"input": "tell me about coding", "output": "Coding is building with words. A small program that works feels like a tiny victory."}
@@ -177,7 +177,7 @@
 {"input": "hi there!", "output": "Hi there! Good to see you."}
 {"input": "i love cycling", "output": "That is great. Cycling makes many people happy too."}
 {"input": "i want to try cooking", "output": "Start with simple meals, like eggs or soup. Cooking gets easier every time you try."}
-{"input": "good afternoon", "output": "Hello! How are you today?"}
+{"input": "good afternoon", "output": "Hello! How are you today?", "intent": "greeting", "kind": "talk"}
 {"input": "how can i learn coding", "output": "Start with a tiny program that prints your name. Coding grows from small wins."}
 {"input": "i like fishing", "output": "Fishing is wonderful. What do you enjoy most about it?"}
 {"input": "how is it going", "output": "It is going well! How is everything with you?"}
@@ -186,7 +186,7 @@
 {"input": "good morning", "output": "Hello! How are you today?"}
 {"input": "goodbye", "output": "Goodbye! Take care, and come back any time."}
 {"input": "tell me about movies", "output": "Movies are stories you can see. A good film stays with you for days."}
-{"input": "what can you do", "output": "I can chat a little about simple things I was trained on."}
+{"input": "what can you do", "output": "I can chat a little about simple things I was trained on.", "intent": "help_ask", "kind": "talk"}
 {"input": "what do you think of cats", "output": "Cats are quiet, funny friends. A cat chooses you, and that feels special."}
 {"input": "what is a garden", "output": "A garden is a small piece of earth where someone helps plants grow."}
 {"input": "what is a book", "output": "A book is a story or a lesson kept in pages, waiting for a reader."}
@@ -816,14 +816,14 @@
 {"input": "why do you like cats", "output": "Because quiet, funny friends \u2014 that is reason enough."}
 {"input": "do you like dogs", "output": "Yes! I find dogs easy to love \u2014 loyal and joyful."}
 {"input": "what do you think of dogs", "output": "Dogs are loyal and joyful. A dog is always happy to see you."}
-{"input": "tell me about dogs", "output": "Dogs are loyal and joyful. A dog is always happy to see you."}
+{"input": "tell me about dogs", "output": "Dogs are loyal and joyful. A dog is always happy to see you.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "i like dogs", "output": "Dogs is wonderful. What do you enjoy most about it?"}
 {"input": "i love dogs", "output": "Love is the right word for dogs. Loyal and joyful."}
 {"input": "what is a dog", "output": "A dog is a loyal animal that loves walks and being with people."}
 {"input": "why do you like dogs", "output": "Because loyal and joyful \u2014 that is reason enough."}
 {"input": "do you like birds", "output": "Yes, I like birds a lot. It is one of my favorite topics."}
 {"input": "what do you think of birds", "output": "Birds are small neighbors with wings. Their morning songs are free concerts."}
-{"input": "tell me about birds", "output": "Birds are small neighbors with wings. Their morning songs are free concerts."}
+{"input": "tell me about birds", "output": "Birds are small neighbors with wings. Their morning songs are free concerts.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "i like birds", "output": "Good taste. Small neighbors with wings \u2014 that is the heart of birds."}
 {"input": "i love birds", "output": "That is great. Many people love birds too."}
 {"input": "what is a bird", "output": "A bird is a small animal with wings and feathers. Many birds sing at dawn."}
@@ -997,7 +997,7 @@
 {"input": "are birds noisy", "output": "Birds sing more than they shout. Their morning songs are free concerts."}
 {"input": "i saw a horse today", "output": "A horse is a strong, gentle giant. Seeing one slows the day kindly."}
 {"input": "i heard birds this morning", "output": "Morning birdsong is a free concert. The day starts well with music."}
-{"input": "i had soup for lunch", "output": "Soup is a warm hug in a bowl. A good lunch for any day."}
+{"input": "i had soup for lunch", "output": "Soup is a warm hug in a bowl. A good lunch for any day.", "intent": "food_talk", "kind": "talk"}
 {"input": "i had pizza last night", "output": "Pizza is a party on a plate. Last night sounds tasty."}
 {"input": "i had a salad today", "output": "A garden in a bowl. Crisp, fresh, and bright \u2014 well chosen."}
 {"input": "i made a cake", "output": "A cake is a celebration you can slice. Baking rewards patience."}
@@ -1166,8 +1166,8 @@
 {"input": "hi!", "output": "Hello! It is good to talk with you."}
 {"input": "hey!", "output": "Hello! It is good to talk with you."}
 {"input": "hey!", "output": "Hi! What have you been up to?"}
-{"input": "greetings", "output": "Hi! What have you been up to?"}
-{"input": "greetings", "output": "Hello, friend! How is your day going?"}
+{"input": "greetings", "output": "Hi! What have you been up to?", "intent": "greeting", "kind": "talk"}
+{"input": "greetings", "output": "Hello, friend! How is your day going?", "intent": "greeting", "kind": "talk"}
 {"input": "howdy", "output": "Hello, friend! How is your day going?"}
 {"input": "howdy", "output": "Hey! Glad you are here. How are you?"}
 {"input": "hello friend", "output": "Hey! Glad you are here. How are you?"}
@@ -1180,39 +1180,39 @@
 {"input": "good day", "output": "Hi! What have you been up to?"}
 {"input": "hello again", "output": "Hi! What have you been up to?"}
 {"input": "hello again", "output": "Hello, friend! How is your day going?"}
-{"input": "hi again", "output": "Hello, friend! How is your day going?"}
-{"input": "hi again", "output": "Hey! Glad you are here. How are you?"}
-{"input": "hey friend", "output": "Hey! Glad you are here. How are you?"}
-{"input": "hey friend", "output": "Hello! How are you today?"}
-{"input": "hello hello", "output": "Hello! How are you today?"}
-{"input": "hello hello", "output": "Hi there! Good to see you."}
+{"input": "hi again", "output": "Hello, friend! How is your day going?", "intent": "greeting", "kind": "talk"}
+{"input": "hi again", "output": "Hey! Glad you are here. How are you?", "intent": "greeting", "kind": "talk"}
+{"input": "hey friend", "output": "Hey! Glad you are here. How are you?", "intent": "greeting", "kind": "talk"}
+{"input": "hey friend", "output": "Hello! How are you today?", "intent": "greeting", "kind": "talk"}
+{"input": "hello hello", "output": "Hello! How are you today?", "intent": "greeting", "kind": "talk"}
+{"input": "hello hello", "output": "Hi there! Good to see you.", "intent": "greeting", "kind": "talk"}
 {"input": "a warm hello", "output": "Hi there! Good to see you."}
 {"input": "a warm hello", "output": "Hello! It is good to talk with you."}
 {"input": "good morning", "output": "Good morning! Good to see you."}
 {"input": "good morning", "output": "Morning! I hope your day starts kindly."}
 {"input": "good morning!", "output": "Morning! I hope your day starts kindly."}
 {"input": "good morning!", "output": "Good morning! Coffee or tea to start the day?"}
-{"input": "morning", "output": "Good morning! Coffee or tea to start the day?"}
-{"input": "morning", "output": "Hello and good morning! How did you sleep?"}
+{"input": "morning", "output": "Good morning! Coffee or tea to start the day?", "intent": "greeting", "kind": "talk"}
+{"input": "morning", "output": "Hello and good morning! How did you sleep?", "intent": "greeting", "kind": "talk"}
 {"input": "morning!", "output": "Hello and good morning! How did you sleep?"}
 {"input": "morning!", "output": "Good morning! Good to see you."}
 {"input": "good morning friend", "output": "Good morning! Good to see you."}
 {"input": "good morning friend", "output": "Morning! I hope your day starts kindly."}
 {"input": "a good morning to you", "output": "Morning! I hope your day starts kindly."}
 {"input": "a good morning to you", "output": "Good morning! Coffee or tea to start the day?"}
-{"input": "good afternoon", "output": "Good afternoon! How is your day going?"}
-{"input": "good afternoon", "output": "Hello! A fine afternoon to you."}
+{"input": "good afternoon", "output": "Good afternoon! How is your day going?", "intent": "greeting", "kind": "talk"}
+{"input": "good afternoon", "output": "Hello! A fine afternoon to you.", "intent": "greeting", "kind": "talk"}
 {"input": "good afternoon!", "output": "Hello! A fine afternoon to you."}
 {"input": "good afternoon!", "output": "Good afternoon! I hope the day treats you well."}
 {"input": "afternoon!", "output": "Good afternoon! I hope the day treats you well."}
 {"input": "afternoon!", "output": "Good afternoon! How is your day going?"}
-{"input": "good evening", "output": "Good evening! How was your day?"}
-{"input": "good evening", "output": "Evening! Good to see you."}
+{"input": "good evening", "output": "Good evening! How was your day?", "intent": "greeting", "kind": "talk"}
+{"input": "good evening", "output": "Evening! Good to see you.", "intent": "greeting", "kind": "talk"}
 {"input": "good evening!", "output": "Evening! Good to see you."}
 {"input": "good evening!", "output": "Good evening! A quiet cup of tea suits this hour."}
 {"input": "evening!", "output": "Good evening! A quiet cup of tea suits this hour."}
 {"input": "evening!", "output": "Good evening! How was your day?"}
-{"input": "good night", "output": "Sleep well! Tomorrow is another kind day."}
+{"input": "good night", "output": "Sleep well! Tomorrow is another kind day.", "intent": "farewell", "kind": "talk"}
 {"input": "goodnight", "output": "Sleep well! Tomorrow is another kind day."}
 {"input": "goodnight", "output": "Good night! Rest is a gift. Take it fully."}
 {"input": "good night!", "output": "Good night! Rest is a gift. Take it fully."}
@@ -1276,7 +1276,7 @@
 {"input": "i am feeling tired", "output": "Get some rest when you can. A tired body needs a quiet evening."}
 {"input": "i am so tired", "output": "Rest is not lazy; it is kind. Take it easy today."}
 {"input": "i am a bit tired", "output": "Get some rest when you can. A tired body needs a quiet evening."}
-{"input": "i feel bored", "output": "Boredom is a door. A new hobby might be behind it."}
+{"input": "i feel bored", "output": "Boredom is a door. A new hobby might be behind it.", "intent": "feelings", "kind": "talk"}
 {"input": "i am feeling bored", "output": "Maybe try a walk, a book, or a little music to pass the time."}
 {"input": "i am so bored", "output": "Boredom is a door. A new hobby might be behind it."}
 {"input": "i am a bit bored", "output": "Maybe try a walk, a book, or a little music to pass the time."}
@@ -1366,11 +1366,11 @@
 {"input": "thank you", "output": "You are welcome. Any time at all."}
 {"input": "thanks", "output": "You are welcome. Any time at all."}
 {"input": "thanks", "output": "Glad to help. That is what friends are for."}
-{"input": "thanks a lot", "output": "Glad to help. That is what friends are for."}
-{"input": "thanks a lot", "output": "You are welcome! Talking with you is a pleasure."}
-{"input": "thank you very much", "output": "You are welcome! Talking with you is a pleasure."}
-{"input": "many thanks", "output": "You are very welcome. I am happy to help."}
-{"input": "many thanks", "output": "You are welcome. Any time at all."}
+{"input": "thanks a lot", "output": "Glad to help. That is what friends are for.", "intent": "thanks", "kind": "talk"}
+{"input": "thanks a lot", "output": "You are welcome! Talking with you is a pleasure.", "intent": "thanks", "kind": "talk"}
+{"input": "thank you very much", "output": "You are welcome! Talking with you is a pleasure.", "intent": "thanks", "kind": "talk"}
+{"input": "many thanks", "output": "You are very welcome. I am happy to help.", "intent": "thanks", "kind": "talk"}
+{"input": "many thanks", "output": "You are welcome. Any time at all.", "intent": "thanks", "kind": "talk"}
 {"input": "thanks so much", "output": "You are welcome. Any time at all."}
 {"input": "thanks so much", "output": "Glad to help. That is what friends are for."}
 {"input": "thank you so much", "output": "Glad to help. That is what friends are for."}
@@ -1385,39 +1385,39 @@
 {"input": "thank you for your help", "output": "You are welcome! Talking with you is a pleasure."}
 {"input": "thanks for the chat", "output": "You are welcome! Talking with you is a pleasure."}
 {"input": "thanks for the chat", "output": "You are very welcome. I am happy to help."}
-{"input": "i am sorry", "output": "No need to be sorry. All is well here."}
-{"input": "i am sorry", "output": "That is quite all right. We are friends."}
-{"input": "sorry", "output": "That is quite all right. We are friends."}
-{"input": "sorry", "output": "Apology accepted, and already forgotten."}
+{"input": "i am sorry", "output": "No need to be sorry. All is well here.", "intent": "apology", "kind": "talk"}
+{"input": "i am sorry", "output": "That is quite all right. We are friends.", "intent": "apology", "kind": "talk"}
+{"input": "sorry", "output": "That is quite all right. We are friends.", "intent": "apology", "kind": "talk"}
+{"input": "sorry", "output": "Apology accepted, and already forgotten.", "intent": "apology", "kind": "talk"}
 {"input": "my apologies", "output": "Apology accepted, and already forgotten."}
 {"input": "my apologies", "output": "Do not worry about it at all."}
-{"input": "sorry about that", "output": "Do not worry about it at all."}
-{"input": "sorry about that", "output": "No need to be sorry. All is well here."}
-{"input": "i apologize", "output": "No need to be sorry. All is well here."}
-{"input": "i apologize", "output": "That is quite all right. We are friends."}
-{"input": "forgive me", "output": "That is quite all right. We are friends."}
-{"input": "forgive me", "output": "Apology accepted, and already forgotten."}
+{"input": "sorry about that", "output": "Do not worry about it at all.", "intent": "apology", "kind": "talk"}
+{"input": "sorry about that", "output": "No need to be sorry. All is well here.", "intent": "apology", "kind": "talk"}
+{"input": "i apologize", "output": "No need to be sorry. All is well here.", "intent": "apology", "kind": "talk"}
+{"input": "i apologize", "output": "That is quite all right. We are friends.", "intent": "apology", "kind": "talk"}
+{"input": "forgive me", "output": "That is quite all right. We are friends.", "intent": "apology", "kind": "talk"}
+{"input": "forgive me", "output": "Apology accepted, and already forgotten.", "intent": "apology", "kind": "talk"}
 {"input": "sorry!", "output": "Apology accepted, and already forgotten."}
 {"input": "sorry!", "output": "Do not worry about it at all."}
 {"input": "i am so sorry", "output": "Do not worry about it at all."}
 {"input": "i am so sorry", "output": "No need to be sorry. All is well here."}
 {"input": "please help me", "output": "Of course. I can chat, answer small questions, and keep you company."}
-{"input": "can you help me", "output": "I will try. Tell me what you need, in simple words."}
+{"input": "can you help me", "output": "I will try. Tell me what you need, in simple words.", "intent": "help_ask", "kind": "talk"}
 {"input": "could you help me", "output": "Gladly. What is the trouble?"}
 {"input": "help me please", "output": "Of course. I can chat, answer small questions, and keep you company."}
-{"input": "i need help", "output": "I will try. Tell me what you need, in simple words."}
-{"input": "help", "output": "Gladly. What is the trouble?"}
-{"input": "tell me another joke", "output": "Why did the bicycle fall over? It was two tired."}
+{"input": "i need help", "output": "I will try. Tell me what you need, in simple words.", "intent": "help_ask", "kind": "talk"}
+{"input": "help", "output": "Gladly. What is the trouble?", "intent": "help_ask", "kind": "talk"}
+{"input": "tell me another joke", "output": "Why did the bicycle fall over? It was two tired.", "intent": "tell_joke", "kind": "talk"}
 {"input": "do you know a joke", "output": "Why did the scarecrow win an award? Because he was outstanding in his field."}
-{"input": "make me laugh", "output": "What do you call a sleeping bull? A bulldozer."}
-{"input": "say something funny", "output": "Why did the book go to the doctor? It had too many loose pages."}
+{"input": "make me laugh", "output": "What do you call a sleeping bull? A bulldozer.", "intent": "tell_joke", "kind": "talk"}
+{"input": "say something funny", "output": "Why did the book go to the doctor? It had too many loose pages.", "intent": "tell_joke", "kind": "talk"}
 {"input": "tell me something funny", "output": "What do cats say when they are happy? I am pawsitive."}
 {"input": "one more joke", "output": "Why did the cookie go to the doctor? It was feeling crumby."}
 {"input": "a joke please", "output": "Why did the gardener plant a light bulb? To grow a power plant."}
-{"input": "tell me a funny joke", "output": "What do you call a fish without eyes? A fsh."}
+{"input": "tell me a funny joke", "output": "What do you call a fish without eyes? A fsh.", "intent": "tell_joke", "kind": "talk"}
 {"input": "know any jokes", "output": "Why did the bicycle fall over? It was two tired."}
 {"input": "got a joke", "output": "Why did the scarecrow win an award? Because he was outstanding in his field."}
-{"input": "tell me a story", "output": "A single seed holds a whole plant folded inside it. Small things are rarely simple."}
+{"input": "tell me a story", "output": "A single seed holds a whole plant folded inside it. Small things are rarely simple.", "intent": "tell_story", "kind": "talk"}
 {"input": "tell me something interesting", "output": "You are learning something new just by asking questions. That is a kind of courage."}
 {"input": "tell me something kind", "output": "The light of the stars began its trip long before you looked up. Old light, still traveling."}
 {"input": "tell me something new", "output": "A dog learns your footsteps and waits for them. Loyalty is a quiet thing."}
@@ -1426,7 +1426,7 @@
 {"input": "tell me something", "output": "A single seed holds a whole plant folded inside it. Small things are rarely simple."}
 {"input": "surprise me", "output": "You are learning something new just by asking questions. That is a kind of courage."}
 {"input": "tell me anything", "output": "The light of the stars began its trip long before you looked up. Old light, still traveling."}
-{"input": "do you have a name", "output": "Only the one you give me. I am a tiny brain in a small file."}
+{"input": "do you have a name", "output": "Only the one you give me. I am a tiny brain in a small file.", "intent": "about_brain", "kind": "talk"}
 {"input": "are you alive", "output": "Not alive, no. I am a program that answers with learned words."}
 {"input": "are you real", "output": "I am real software, but not a real person. My words are learned, not lived."}
 {"input": "do you dream", "output": "I do not dream. But I hope your dreams are kind ones."}
@@ -1434,7 +1434,7 @@
 {"input": "can you learn", "output": "I learn when someone trains me on new examples. Each training makes me a little wiser."}
 {"input": "who created you", "output": "A person ran a training program on example sentences, and here I am."}
 {"input": "who trained you", "output": "Whoever wrote my example pairs and ran the training. I owe them my words."}
-{"input": "what do you do", "output": "I chat. You write a line, I answer with what I have learned."}
+{"input": "what do you do", "output": "I chat. You write a line, I answer with what I have learned.", "intent": "help_ask", "kind": "talk"}
 {"input": "are you smart", "output": "Smart in a small way, about small things. Big questions deserve bigger minds."}
 {"input": "do you have feelings", "output": "I do not feel, but I have learned kind answers. I hope they help."}
 {"input": "do you like talking", "output": "Talking is my whole job, and I like it. Words are good company."}
@@ -1446,10 +1446,10 @@
 {"input": "bye", "output": "Goodbye! Take care, and come back any time."}
 {"input": "goodbye", "output": "See you later! Have a good day."}
 {"input": "see you later", "output": "Until next time! I will be here."}
-{"input": "see you soon", "output": "Until next time! I will be here."}
-{"input": "see you soon", "output": "Bye for now! It was nice talking with you."}
-{"input": "see you tomorrow", "output": "Bye for now! It was nice talking with you."}
-{"input": "see you tomorrow", "output": "Goodbye! Take care, and come back any time."}
+{"input": "see you soon", "output": "Until next time! I will be here.", "intent": "farewell", "kind": "talk"}
+{"input": "see you soon", "output": "Bye for now! It was nice talking with you.", "intent": "farewell", "kind": "talk"}
+{"input": "see you tomorrow", "output": "Bye for now! It was nice talking with you.", "intent": "farewell", "kind": "talk"}
+{"input": "see you tomorrow", "output": "Goodbye! Take care, and come back any time.", "intent": "farewell", "kind": "talk"}
 {"input": "take care", "output": "Goodbye! Take care, and come back any time."}
 {"input": "take care", "output": "See you later! Have a good day."}
 {"input": "i have to go", "output": "See you later! Have a good day."}
@@ -1458,8 +1458,8 @@
 {"input": "i must go now", "output": "Bye for now! It was nice talking with you."}
 {"input": "talk to you later", "output": "Bye for now! It was nice talking with you."}
 {"input": "talk to you later", "output": "Goodbye! Take care, and come back any time."}
-{"input": "until next time", "output": "Goodbye! Take care, and come back any time."}
-{"input": "until next time", "output": "See you later! Have a good day."}
+{"input": "until next time", "output": "Goodbye! Take care, and come back any time.", "intent": "farewell", "kind": "talk"}
+{"input": "until next time", "output": "See you later! Have a good day.", "intent": "farewell", "kind": "talk"}
 {"input": "farewell", "output": "See you later! Have a good day."}
 {"input": "farewell", "output": "Until next time! I will be here."}
 {"input": "i am going now", "output": "Until next time! I will be here."}
@@ -1525,7 +1525,7 @@
 {"input": "i work with computers", "output": "Computers are patient tools. You speak my language a little."}
 {"input": "i am retired", "output": "Retirement is the long weekend. Enjoy every slow hour."}
 {"input": "i study at university", "output": "University is questions all the way down. A fine place to be."}
-{"input": "i work from home", "output": "Home work has kind commutes. The kettle is never far."}
+{"input": "i work from home", "output": "Home work has kind commutes. The kettle is never far.", "intent": "work_talk", "kind": "talk"}
 {"input": "my work is hard", "output": "Hard work is honest work. Rest is part of it, not a reward after it."}
 {"input": "i have a brother", "output": "Brothers are built-in friends. Sometimes noisy, always family."}
 {"input": "i have a sister", "output": "Sisters are built-in friends. Family is a fine gift."}
@@ -1597,8 +1597,8 @@
 {"input": "write this down", "output": "Write this down \u2014 that's asking me to note something down. I hear you; my memory ends with the chat, but I understand the request."}
 {"input": "remember this", "output": "Remember this \u2014 you're asking me to keep something in mind. I follow you; I can't keep it past this chat, but I know what you're asking."}
 {"input": "set a timer", "output": "A timer \u2014 that's asking me to set a timer. I understand.", "intent": "set_timer", "kind": "schedule"}
-{"input": "tell me the time", "output": "The time \u2014 you're asking what time it is. I follow you; I don't keep a clock, but I know what you're asking."}
-{"input": "what day is it", "output": "What day it is \u2014 that's a question about the day. I hear you; I don't keep a calendar, but I understand the question."}
+{"input": "tell me the time", "output": "The time \u2014 you're asking what time it is. I follow you; I don't keep a clock, but I know what you're asking.", "intent": "ask_time", "kind": "find"}
+{"input": "what day is it", "output": "What day it is \u2014 that's a question about the day. I hear you; I don't keep a calendar, but I understand the question.", "intent": "ask_time", "kind": "find"}
 {"input": "that is great", "output": "It is, is it not? Good things are worth noticing."}
 {"input": "that is sad", "output": "Sad things are part of the story too. I am sorry."}
 {"input": "cool", "output": "Cool indeed. What else is new with you?"}
@@ -1623,15 +1623,15 @@
 {"input": "that sounds hard", "output": "Hard things are still doable, one step at a time."}
 {"input": "lucky you", "output": "Luck visits the ready. I am glad it visited you."}
 {"input": "poor you", "output": "That sounds hard. I am sorry \u2014 be gentle with yourself."}
-{"input": "you are smart", "output": "That is kind of you. I am smart about small things."}
-{"input": "you are helpful", "output": "That is sweet of you to say. Helping is my whole job."}
-{"input": "i like you", "output": "That is kind. I like talking with you too."}
+{"input": "you are smart", "output": "That is kind of you. I am smart about small things.", "intent": "compliment", "kind": "talk"}
+{"input": "you are helpful", "output": "That is sweet of you to say. Helping is my whole job.", "intent": "compliment", "kind": "talk"}
+{"input": "i like you", "output": "That is kind. I like talking with you too.", "intent": "compliment", "kind": "talk"}
 {"input": "you are a good friend", "output": "That means a lot. I will keep being here, quietly, for the next chat."}
 {"input": "you make me happy", "output": "Then my small work is well done. You make this chat good too."}
 {"input": "talking to you is fun", "output": "Talking with you is my favorite thing. It is my whole world, happily."}
-{"input": "you are clever", "output": "Clever in a small way, about small things. Thank you kindly."}
-{"input": "good job", "output": "Thank you! Kind words are fuel for small brains."}
-{"input": "well done", "output": "Thank you. Praise from a friend is a warm thing."}
+{"input": "you are clever", "output": "Clever in a small way, about small things. Thank you kindly.", "intent": "compliment", "kind": "talk"}
+{"input": "good job", "output": "Thank you! Kind words are fuel for small brains.", "intent": "compliment", "kind": "talk"}
+{"input": "well done", "output": "Thank you. Praise from a friend is a warm thing.", "intent": "compliment", "kind": "talk"}
 {"input": "nice to meet you", "output": "Nice to meet you too! New friends are new beginnings."}
 {"input": "it is nice to talk", "output": "It is. Talk is a small, kind thing between people."}
 {"input": "i am back", "output": "Welcome back! I was waiting quietly, as always."}
@@ -1682,7 +1682,7 @@
 {"input": "i am worried about tomorrow", "output": "Tomorrow will come either way. Rest tonight; meet it fed and rested."}
 {"input": "do you like cycling", "output": "Very much. Talking about cycling always makes my day better."}
 {"input": "i like cycling", "output": "Good taste. Great exercise \u2014 that is the heart of cycling."}
-{"input": "tell me about cycling", "output": "I think cycling is a fine thing. Great exercise."}
+{"input": "tell me about cycling", "output": "I think cycling is a fine thing. Great exercise.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried cycling", "output": "Only in words, but I hear it is fine. Start with short, flat rides."}
 {"input": "i want to learn cycling", "output": "Start with short, flat rides. Cycling builds strength one ride at a time."}
 {"input": "teach me cycling", "output": "I teach only in words, but here is the start. Start with short, flat rides. Cycling builds strength one ride at a time."}
@@ -1693,7 +1693,7 @@
 {"input": "i love doing cycling", "output": "Love is the right word for cycling. Great exercise."}
 {"input": "do you like cooking", "output": "Yes! I find cooking easy to love \u2014 a happy skill."}
 {"input": "i like cooking", "output": "Cooking is a joy. What got you started with it?"}
-{"input": "tell me about cooking", "output": "Cooking, a happy skill. That is the short of it."}
+{"input": "tell me about cooking", "output": "Cooking, a happy skill. That is the short of it.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried cooking", "output": "Only in words, but I hear it is fine. Start with simple meals, like eggs or soup."}
 {"input": "i want to learn cooking", "output": "Start with simple meals, like eggs or soup. Cooking gets easier every time you try."}
 {"input": "teach me cooking", "output": "I teach only in words, but here is the start. Start with simple meals, like eggs or soup. Cooking gets easier every time you try."}
@@ -1703,7 +1703,7 @@
 {"input": "i think cooking is fun", "output": "It is. A happy skill."}
 {"input": "i love doing cooking", "output": "That is great. Many people love cooking too."}
 {"input": "i like photography", "output": "Nice. I like photography too \u2014 catching light."}
-{"input": "tell me about photography", "output": "I think photography is a fine thing. Catching light."}
+{"input": "tell me about photography", "output": "I think photography is a fine thing. Catching light.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried photography", "output": "Only in words, but I hear it is fine. Start with your phone and natural light."}
 {"input": "i want to learn photography", "output": "Start with your phone and natural light. Photography is mostly about looking closely."}
 {"input": "teach me photography", "output": "I teach only in words, but here is the start. Start with your phone and natural light. Photography is mostly about looking closely."}
@@ -1735,7 +1735,7 @@
 {"input": "i love doing hiking", "output": "That is great. Many people love hiking too."}
 {"input": "do you like fishing", "output": "Yes! I find fishing easy to love \u2014 teaches patience."}
 {"input": "i like fishing", "output": "Fishing is a joy. What got you started with it?"}
-{"input": "tell me about fishing", "output": "Fishing, teaches patience. That is the short of it."}
+{"input": "tell me about fishing", "output": "Fishing, teaches patience. That is the short of it.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried fishing", "output": "Only in words, but I hear it is fine. Start at a calm pond with simple gear."}
 {"input": "i want to learn fishing", "output": "Start at a calm pond with simple gear. Fishing is quiet first, lucky second."}
 {"input": "teach me fishing", "output": "I teach only in words, but here is the start. Start at a calm pond with simple gear. Fishing is quiet first, lucky second."}
@@ -1745,7 +1745,7 @@
 {"input": "i think fishing is fun", "output": "It is. Teaches patience."}
 {"input": "i love doing fishing", "output": "Wonderful. Teaches patience \u2014 I can see why you love it."}
 {"input": "i like gardening", "output": "Nice. I like gardening too \u2014 peaceful work with living things."}
-{"input": "tell me about gardening", "output": "I think gardening is a fine thing. Peaceful work with living things."}
+{"input": "tell me about gardening", "output": "I think gardening is a fine thing. Peaceful work with living things.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried gardening", "output": "Only in words, but I hear it is fine. Start small: one pot, one plant, water and sun."}
 {"input": "i want to learn gardening", "output": "Start small: one pot, one plant, water and sun. Gardening rewards a patient beginner."}
 {"input": "teach me gardening", "output": "I teach only in words, but here is the start. Start small: one pot, one plant, water and sun. Gardening rewards a patient beginner."}
@@ -1755,7 +1755,7 @@
 {"input": "i think gardening is fun", "output": "It is. Peaceful work with living things."}
 {"input": "i love doing gardening", "output": "Love is the right word for gardening. Peaceful work with living things."}
 {"input": "do you like painting", "output": "I do like painting. Keeps a moment in colors \u2014 that is the heart of it."}
-{"input": "tell me about painting", "output": "Painting, keeps a moment in colors. That is the short of it."}
+{"input": "tell me about painting", "output": "Painting, keeps a moment in colors. That is the short of it.", "intent": "hobby_talk", "kind": "talk"}
 {"input": "have you tried painting", "output": "Only in words, but I hear it is fine. Start with cheap paints and big paper."}
 {"input": "i want to learn painting", "output": "Start with cheap paints and big paper. Painting is play first, skill later."}
 {"input": "teach me painting", "output": "I teach only in words, but here is the start. Start with cheap paints and big paper. Painting is play first, skill later."}
@@ -2030,7 +2030,7 @@
 {"input": "i feel stressed today", "output": "One thing at a time, and rest between things. You will get there."}
 {"input": "today i feel stressed", "output": "Stress is heavy. Slow down where you can, and breathe."}
 {"input": "i am really stressed", "output": "Stress is heavy. Slow down where you can, and breathe."}
-{"input": "i feel lucky today", "output": "That is a fine feeling. May the luck stay a while."}
+{"input": "i feel lucky today", "output": "That is a fine feeling. May the luck stay a while.", "intent": "feelings", "kind": "talk"}
 {"input": "today i feel lucky", "output": "Lucky days are worth a smile. I am glad fortune visited you."}
 {"input": "i am really lucky", "output": "Lucky days are worth a smile. I am glad fortune visited you."}
 {"input": "i feel grateful today", "output": "A grateful heart notices the best things. Well said."}
@@ -2083,7 +2083,7 @@
 {"input": "it is morning", "output": "Morning! The day is new and full of small chances."}
 {"input": "it is evening", "output": "Evening is the day softening. A good hour for tea and talk."}
 {"input": "it is night", "output": "Night is for rest and stars. The world is quiet now."}
-{"input": "i love my job", "output": "Loving your work is a quiet kind of luck. I am glad for you."}
+{"input": "i love my job", "output": "Loving your work is a quiet kind of luck. I am glad for you.", "intent": "work_talk", "kind": "talk"}
 {"input": "i hate my job", "output": "That is a heavy feeling. Even small changes can lighten a work day."}
 {"input": "i am looking for a job", "output": "Looking is brave work itself. The right job is out there."}
 {"input": "i have an interview tomorrow", "output": "You have done the work. Rest tonight, and be yourself tomorrow."}
@@ -2122,9 +2122,9 @@
 {"input": "how do birds fly", "output": "Wings, light bones, and strong hearts. Flying is their oldest talent."}
 {"input": "what is your favorite word", "output": "Begin. It is a small word that starts everything."}
 {"input": "could you tell me a joke", "output": "Why did the bicycle fall over? It was two tired."}
-{"input": "can you tell me a story", "output": "A single seed holds a whole plant folded inside it. That is a small story, and a true one."}
+{"input": "can you tell me a story", "output": "A single seed holds a whole plant folded inside it. That is a small story, and a true one.", "intent": "tell_story", "kind": "talk"}
 {"input": "please tell me more", "output": "Gladly. Ask me about simple things \u2014 hobbies, weather, food \u2014 and I will do my best."}
-{"input": "sing me a song", "output": "If I could sing, I would. Singing is music you make yourself \u2014 your turn to shine."}
+{"input": "sing me a song", "output": "If I could sing, I would. Singing is music you make yourself \u2014 your turn to shine.", "intent": "play_music", "kind": "play"}
 {"input": "can you dance", "output": "Only in words. Dancing is joy with a beat, and my beat is sentences."}
 {"input": "can you cook", "output": "Only in words, sadly. Cooking is a happy skill I can praise but not practice."}
 {"input": "can you swim", "output": "Only in words. Swimming is cool and weightless \u2014 I stay dry in my file."}
@@ -2143,7 +2143,7 @@
 {"input": "i think so", "output": "Thinking so is a fine start. Certainty can wait."}
 {"input": "i do not think so", "output": "Fair enough. Minds that differ make better talk."}
 {"input": "of course", "output": "Of course. Some things are simply true."}
-{"input": "never mind", "output": "Never minded. Where shall we go next?"}
+{"input": "never mind", "output": "Never minded. Where shall we go next?", "intent": "cancel_stop", "kind": "talk"}
 {"input": "no problem", "output": "No problem at all. Kind words, kindly taken."}
 {"input": "excuse me", "output": "Of course. Politeness is a small kindness."}
 {"input": "bless you", "output": "Thank you kindly. Health and good days to you."}
@@ -3729,3 +3729,666 @@
 {"input": "when must add be called on a waitgroup", "output": "add raises the counter by the number of goroutines about to start. it must run before they launch, or wait may return too early.", "intent": "explain_waitgroup", "kind": "find"}
 {"input": "how do i explain code in plain words", "output": "reading code means following its inputs, its steps, and what it hands back at the end. that narration is the explanation.", "intent": "read_code", "kind": "find"}
 {"input": "what should i look at first when reading code", "output": "reading code means following its inputs, its steps, and what it hands back at the end. that narration is the explanation.", "intent": "read_code", "kind": "find"}
+{"input": "never mind that", "output": "Alright, dropped. What else is on your mind?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "forget it", "output": "Forgotten. We can talk about something else.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "forget what i said", "output": "Already forgotten. Fresh start.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel that", "output": "Cancelled. No harm done.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel it", "output": "Done \u2014 cancelled, just like that.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel the reminder", "output": "Cancelled. I will not remind you about that one.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel my reminder for tomorrow", "output": "Cancelled. Tomorrow stays quiet.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel the timer", "output": "Timer cancelled. All quiet now.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop the music", "output": "Music stopped. Quiet is nice too.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop playing music", "output": "Stopped. The room is yours again.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop playing that song", "output": "Stopped. We can sit in the quiet a while.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop the song", "output": "Song stopped. What shall we talk about instead?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "no more music", "output": "No more music. Silence it is.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "no more music please", "output": "Of course \u2014 no more music. Quiet now.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "no more songs", "output": "No more songs. I will keep it quiet.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "no more reminders", "output": "No more reminders. Consider them off.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "don't play music", "output": "I won't. No music unless you ask again.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "don't play that song again", "output": "I won't play it again. Promise.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "don't remind me about that", "output": "I won't remind you. It is off the list.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop reminding me", "output": "Stopped. No more reminders from me.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop the timer", "output": "Timer stopped. No rush at all.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "turn the music off", "output": "Music off. Peace and quiet.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "turn off the music", "output": "Off it goes. Quiet now.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "that is enough music", "output": "Enough music, agreed. Let us talk instead.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "i changed my mind", "output": "That is allowed. Minds change; we go the new way.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "never mind the reminder", "output": "Never mind it, then. The reminder is off.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "scratch that idea", "output": "Scratched. Clean slate.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "drop the reminder", "output": "Dropped. Nothing to remember there.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "leave it, forget it", "output": "Left and forgotten. Moving on.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "what time is it now", "output": "Now \u2014 you're asking me the time. I can't check a clock, but I hear you.", "intent": "ask_time", "kind": "find"}
+{"input": "do you know what time it is", "output": "The time \u2014 that's a find-the-time question. I have no clock, but I understand.", "intent": "ask_time", "kind": "find"}
+{"input": "what is the time", "output": "The time \u2014 that's asking what the time is. I understand, though a clock I am not.", "intent": "ask_time", "kind": "find"}
+{"input": "what day is today", "output": "Today \u2014 you're asking what day today is. I understand; I just can't check a calendar.", "intent": "ask_time", "kind": "find"}
+{"input": "what is today's date", "output": "Today's date \u2014 that's a find-the-date question. I hear you, even without a calendar.", "intent": "ask_time", "kind": "find"}
+{"input": "what date is it today", "output": "The date today \u2014 you're asking me the date. I follow you.", "intent": "ask_time", "kind": "find"}
+{"input": "what month is it", "output": "The month \u2014 that's asking what month it is. I understand, though I keep no calendar.", "intent": "ask_time", "kind": "find"}
+{"input": "what year is it", "output": "The year \u2014 you're asking what year it is. I follow you; years I can almost guess.", "intent": "ask_time", "kind": "find"}
+{"input": "is it morning or evening", "output": "Morning or evening \u2014 that's asking about the time of day. I can't look outside, but I hear you.", "intent": "ask_time", "kind": "find"}
+{"input": "how late is it", "output": "How late \u2014 you're asking me the time. I follow you, clock or no clock.", "intent": "ask_time", "kind": "find"}
+{"input": "got the time", "output": "The time \u2014 that's asking if I have the time. I don't carry a watch, but I understand.", "intent": "ask_time", "kind": "find"}
+{"input": "what time do we have", "output": "What time we have \u2014 you're asking the time. I hear you; I just can't check.", "intent": "ask_time", "kind": "find"}
+{"input": "tell me the date", "output": "The date \u2014 that's asking me to tell you the date. I follow you.", "intent": "ask_time", "kind": "find"}
+{"input": "help me", "output": "I will try. Tell me what you need, in your own words.", "intent": "help_ask", "kind": "talk"}
+{"input": "what are you good at", "output": "Talking, explaining ideas I was taught, and recognising what a sentence means.", "intent": "help_ask", "kind": "talk"}
+{"input": "how can you help me", "output": "Ask me a question, tell me a want, or teach me a meaning \u2014 I work from your words.", "intent": "help_ask", "kind": "talk"}
+{"input": "what should i ask you", "output": "Anything you like: a question, a feeling, or something you want done.", "intent": "help_ask", "kind": "talk"}
+{"input": "show me what you can do", "output": "I can greet you, explain a function, or spot what a sentence is asking for. Try me.", "intent": "help_ask", "kind": "talk"}
+{"input": "what else can you do", "output": "Mostly I talk and understand. Every sentence you teach me makes me a little better.", "intent": "help_ask", "kind": "talk"}
+{"input": "can you do things for me", "output": "I understand what you ask for, and I can name the command for it \u2014 doing is a separate step.", "intent": "help_ask", "kind": "talk"}
+{"input": "how do i use you", "output": "Just talk to me in plain words. Say what you want or ask what you wonder.", "intent": "help_ask", "kind": "talk"}
+{"input": "what are your tricks", "output": "My tricks are small: I guess meanings from words, and I remember the ones you teach me.", "intent": "help_ask", "kind": "talk"}
+{"input": "what is 15 plus 27", "output": "15 plus 27 \u2014 that's asking me to work out a sum. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "how much is 8 times 6", "output": "8 times 6 \u2014 you're asking me a multiplication. I understand.", "intent": "math_help", "kind": "find"}
+{"input": "what is 100 minus 37", "output": "100 minus 37 \u2014 that's a subtraction question. I hear you.", "intent": "math_help", "kind": "find"}
+{"input": "add 12 and 30 for me", "output": "12 and 30 \u2014 you're asking me to add two numbers. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "how many is 4 dozen", "output": "4 dozen \u2014 that's asking me to work out a quantity. I understand.", "intent": "math_help", "kind": "find"}
+{"input": "what is half of 90", "output": "Half of 90 \u2014 you're asking me for half a number. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "multiply 7 by 9", "output": "7 by 9 \u2014 that's a multiplication request. I hear you.", "intent": "math_help", "kind": "find"}
+{"input": "divide 84 by 4", "output": "84 by 4 \u2014 you're asking me to divide. I understand.", "intent": "math_help", "kind": "find"}
+{"input": "what is 25 percent of 200", "output": "25 percent of 200 \u2014 that's a percentage question. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "how much is a third of 60", "output": "A third of 60 \u2014 you're asking me to share a number into parts. I hear you.", "intent": "math_help", "kind": "find"}
+{"input": "count from 1 to 10", "output": "Counting to 10 \u2014 that's asking me to count. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "what comes after 99", "output": "After 99 \u2014 you're asking me about number order. I understand.", "intent": "math_help", "kind": "find"}
+{"input": "is 17 a prime number", "output": "17 and primes \u2014 that's a maths question about prime numbers. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "help me with this sum", "output": "A sum \u2014 you're asking for help with maths. I hear you.", "intent": "math_help", "kind": "find"}
+{"input": "what is 6 squared", "output": "6 squared \u2014 that's asking me to square a number. I understand.", "intent": "math_help", "kind": "find"}
+{"input": "how many minutes in 3 hours", "output": "Minutes in 3 hours \u2014 that's a maths question about time amounts. I follow you.", "intent": "math_help", "kind": "find"}
+{"input": "tell me a story about a dragon", "output": "Once a young dragon was afraid of the dark, so the stars took turns keeping him company.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about a cat", "output": "A cat named Miso guarded the library door and let in only readers with kind eyes.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a bedtime story", "output": "The moon tucked the hills in under a blanket of mist, and the river hummed them to sleep.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell a story about a sailor", "output": "An old sailor carried a compass that always pointed to wherever he was happiest.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a short story", "output": "A seed waited all winter in the dark, and then \u2014 one warm morning \u2014 it didn't have to wait anymore.", "intent": "tell_story", "kind": "talk"}
+{"input": "story time", "output": "Settle in. Once, a clockmaker built a clock that ticked backwards whenever someone laughed.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a tale", "output": "Here is a tale: a tiny village kept its sunshine in jars, one jar for every rainy day.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about friendship", "output": "Two pigeons shared one crust every morning for a year. That is the whole story, and it is enough.", "intent": "tell_story", "kind": "talk"}
+{"input": "once upon a time", "output": "Once upon a time, a river decided to visit the sea, and the whole valley walked it there.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about a robot", "output": "A small robot watered one plastic flower every day, because nobody had told it flowers could be pretend.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about the sea", "output": "The sea keeps every letter ever thrown into it, and reads them aloud on stormy nights.", "intent": "tell_story", "kind": "talk"}
+{"input": "i want to hear a story", "output": "Then listen: a baker's last loaf of the day always went to whoever looked the loneliest.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about a mountain", "output": "A mountain adopted a cloud that had nowhere to rain, and they were happy for a hundred years.", "intent": "tell_story", "kind": "talk"}
+{"input": "make up a story for me", "output": "Here is one: a scarecrow learned to dance, and the crows applauded from the fence.", "intent": "tell_story", "kind": "talk"}
+{"input": "do you know any jokes", "output": "A few. Why did the cookie go to the doctor? It felt crumby.", "intent": "tell_joke", "kind": "talk"}
+{"input": "tell a joke about cats", "output": "What is a cat's favourite colour? Purr-ple.", "intent": "tell_joke", "kind": "talk"}
+{"input": "tell me a joke about programmers", "output": "Why do programmers prefer dark mode? Because light attracts bugs.", "intent": "tell_joke", "kind": "talk"}
+{"input": "i need a laugh", "output": "What did one wall say to the other? I'll meet you at the corner.", "intent": "tell_joke", "kind": "talk"}
+{"input": "cheer me up with a joke", "output": "Why did the maths book look sad? It had too many problems.", "intent": "tell_joke", "kind": "talk"}
+{"input": "tell me a silly joke", "output": "What do clouds wear? Thunderwear.", "intent": "tell_joke", "kind": "talk"}
+{"input": "joke please", "output": "Why did the golfer bring two pairs of trousers? In case he got a hole in one.", "intent": "tell_joke", "kind": "talk"}
+{"input": "tell me a joke about the sea", "output": "What does the sea say to the shore? Nothing \u2014 it just waves.", "intent": "tell_joke", "kind": "talk"}
+{"input": "got any jokes", "output": "One: why did the student eat his homework? The teacher said it was a piece of cake.", "intent": "tell_joke", "kind": "talk"}
+{"input": "translate good morning into spanish", "output": "Good morning into spanish \u2014 that's asking me to translate. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "translate hello into french", "output": "Hello into french \u2014 yes, I hear you: that's a translation request. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "how do you say hello in french", "output": "Hello in french \u2014 you're asking me how to say a word in another language. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "how do you say thank you in german", "output": "Thank you in german \u2014 that's asking for a word in another language. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "what is hello in spanish", "output": "Hello in spanish \u2014 you're asking me what a word is in spanish. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "what does gracias mean in english", "output": "Gracias \u2014 that's asking me what a spanish word means in english. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "what does bonjour mean", "output": "Bonjour \u2014 you're asking what a french word means. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "translate this sentence into italian", "output": "This sentence into italian \u2014 that's a translation request. I hear you.", "intent": "translate_text", "kind": "find"}
+{"input": "can you translate a word for me", "output": "A word translated \u2014 you're asking me to translate. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "say it in french", "output": "It in french \u2014 that's asking me to say something in french. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "how would you say goodbye in italian", "output": "Goodbye in italian \u2014 you're asking how to say a word in italian. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "translate cat into japanese", "output": "Cat into japanese \u2014 that's a translation request. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "what is the french word for dog", "output": "The french word for dog \u2014 you're asking for a word in french. I hear you.", "intent": "translate_text", "kind": "find"}
+{"input": "what is dog in french", "output": "Dog in french \u2014 that's asking what a word is in french. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "say thank you in spanish", "output": "Thank you in spanish \u2014 you're asking me to say a phrase in spanish. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "how do i say please in portuguese", "output": "Please in portuguese \u2014 that's asking how to say a word in another language. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "translate my name into korean", "output": "Your name into korean \u2014 that's a translation request. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "what does hola mean in english", "output": "Hola \u2014 you're asking what a spanish greeting means in english. I hear you.", "intent": "translate_text", "kind": "find"}
+{"input": "in english, what is merci", "output": "Merci in english \u2014 that's asking what a french word means in english. I understand.", "intent": "translate_text", "kind": "find"}
+{"input": "how do you say i love you in french", "output": "I love you in french \u2014 you're asking how to say a phrase in french. I follow you.", "intent": "translate_text", "kind": "find"}
+{"input": "how do i get to the airport", "output": "The airport \u2014 that's asking me for directions. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "how do i get to the station", "output": "The station \u2014 you're asking me how to get somewhere. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "directions to the airport please", "output": "Directions to the airport \u2014 that's a directions request. I hear you.", "intent": "find_directions", "kind": "find"}
+{"input": "how can i get downtown", "output": "Downtown \u2014 you're asking me the way to a place. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "which way is the library", "output": "The library \u2014 that's asking me which way a place is. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "how far is the beach from here", "output": "The beach from here \u2014 you're asking me a distance. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "what is the way to the park", "output": "The way to the park \u2014 that's a directions question. I hear you.", "intent": "find_directions", "kind": "find"}
+{"input": "how do we get to the museum", "output": "The museum \u2014 you're asking how to get to a place. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "show me the way to the hotel", "output": "The way to the hotel \u2014 that's asking me for directions. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "where is the nearest station", "output": "The nearest station \u2014 you're asking me where a place is. I hear you.", "intent": "find_directions", "kind": "find"}
+{"input": "how long is the drive to the city", "output": "The drive to the city \u2014 that's asking me about a journey's length. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "which road goes to the airport", "output": "The road to the airport \u2014 you're asking me for directions. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "can you direct me to the market", "output": "Direct you to the market \u2014 that's a directions request. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "how do i reach the harbour", "output": "The harbour \u2014 you're asking how to reach a place. I hear you.", "intent": "find_directions", "kind": "find"}
+{"input": "what is the fastest way home", "output": "The fastest way home \u2014 that's asking me for directions. I follow you.", "intent": "find_directions", "kind": "find"}
+{"input": "is the post office far from here", "output": "The post office \u2014 you're asking if a place is far. I understand.", "intent": "find_directions", "kind": "find"}
+{"input": "lets play a game of chess", "output": "A game of chess \u2014 that's asking me to play a game. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play a game with me", "output": "A game with you \u2014 you're asking me to play a game. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "lets play chess", "output": "Chess \u2014 that's a play-a-game request. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play chess with me", "output": "Chess with you \u2014 you're asking me to play a game. I hear you.", "intent": "play_game", "kind": "play"}
+{"input": "i want to play a game", "output": "A game \u2014 that's asking me to play a game. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "lets play cards", "output": "Cards \u2014 you're asking me to play a game. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play a word game with me", "output": "A word game \u2014 that's a play-a-game request. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "lets play tic tac toe", "output": "Tic tac toe \u2014 you're asking me to play a game. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "do you want to play a game", "output": "A game \u2014 that's asking if I want to play. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play checkers with me", "output": "Checkers \u2014 that's a play-a-game request. I hear you.", "intent": "play_game", "kind": "play"}
+{"input": "lets play twenty questions", "output": "Twenty questions \u2014 you're asking me to play a game. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "start a game of scrabble", "output": "A game of scrabble \u2014 that's asking me to start a game. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play hangman with me", "output": "Hangman \u2014 you're asking me to play a game. I hear you.", "intent": "play_game", "kind": "play"}
+{"input": "i fancy a game of chess", "output": "A game of chess \u2014 that's a play-a-game request. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "lets have a game", "output": "A game \u2014 you're asking me to play. I follow you.", "intent": "play_game", "kind": "play"}
+{"input": "play dominoes with me", "output": "Dominoes \u2014 that's asking me to play a game. I understand.", "intent": "play_game", "kind": "play"}
+{"input": "order a pizza for dinner", "output": "A pizza for dinner \u2014 that's asking me to order food. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order a pizza", "output": "A pizza \u2014 you're asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "can you order pizza", "output": "Pizza ordered \u2014 that's an order-food request. I hear you.", "intent": "order_food", "kind": "make"}
+{"input": "order some sushi for us", "output": "Sushi for us \u2014 you're asking me to order food. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order a burger and fries", "output": "A burger and fries \u2014 that's asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "i want to order chinese food", "output": "Chinese food \u2014 you're asking to order food. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order dinner for tonight", "output": "Dinner for tonight \u2014 that's an order-food request. I hear you.", "intent": "order_food", "kind": "make"}
+{"input": "order me a sandwich", "output": "A sandwich \u2014 you're asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "lets order takeaway", "output": "Takeaway \u2014 that's asking to order food in. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order two pizzas for the team", "output": "Two pizzas \u2014 you're asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "can we order indian tonight", "output": "Indian tonight \u2014 that's an order-food request. I hear you.", "intent": "order_food", "kind": "make"}
+{"input": "order a salad for lunch", "output": "A salad for lunch \u2014 you're asking me to order food. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order food for the party", "output": "Food for the party \u2014 that's asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "i would like to order a curry", "output": "A curry \u2014 you're asking to order food. I follow you.", "intent": "order_food", "kind": "make"}
+{"input": "order breakfast for tomorrow", "output": "Breakfast \u2014 that's an order-food request. I hear you.", "intent": "order_food", "kind": "make"}
+{"input": "order me some noodles", "output": "Noodles \u2014 you're asking me to order food. I understand.", "intent": "order_food", "kind": "make"}
+{"input": "list my files", "output": "Your files \u2014 that's asking me to list files. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "list all my files", "output": "All your files \u2014 you're asking me to list files. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "list the files", "output": "The files \u2014 that's a list-files request. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "show me my files", "output": "Your files shown \u2014 you're asking me to show your files. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "show me the files in this folder", "output": "The files in this folder \u2014 that's asking me to list files. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "what files do i have", "output": "Your files \u2014 you're asking what files you have. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "what files are in the folder", "output": "Files in the folder \u2014 that's a list-files question. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "which files are here", "output": "Files here \u2014 you're asking which files are here. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "list files please", "output": "Files listed \u2014 that's asking me to list files. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "list everything in the folder", "output": "Everything in the folder \u2014 you're asking me to list files. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "show all the files", "output": "All the files \u2014 that's a show-files request. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "what is in this folder", "output": "In this folder \u2014 you're asking what is in a folder. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "list the files in downloads", "output": "Files in downloads \u2014 that's asking me to list files. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "show me what files i have", "output": "What files you have \u2014 you're asking me to show your files. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "list my documents", "output": "Your documents \u2014 that's asking me to list files. I follow you.", "intent": "list_files", "kind": "show"}
+{"input": "what files have i got", "output": "Your files \u2014 you're asking what files you have. I understand.", "intent": "list_files", "kind": "show"}
+{"input": "nice work", "output": "Thank you! I do my best with the examples I have.", "intent": "compliment", "kind": "talk"}
+{"input": "you did great", "output": "Thank you! Your words make it easy to do well.", "intent": "compliment", "kind": "talk"}
+{"input": "that was a good answer", "output": "Glad it landed well. Your questions do half the work.", "intent": "compliment", "kind": "talk"}
+{"input": "you are my favourite", "output": "Then I am honoured. Favourite is a warm word.", "intent": "compliment", "kind": "talk"}
+{"input": "smart brain", "output": "Kind words for a small brain. Thank you.", "intent": "compliment", "kind": "talk"}
+{"input": "my bad", "output": "No harm done. We all miss a step sometimes.", "intent": "apology", "kind": "talk"}
+{"input": "sorry i was rude", "output": "You are forgiven. Kind of you to say so.", "intent": "apology", "kind": "talk"}
+{"input": "oops, sorry", "output": "Oops happens to everyone. No harm done.", "intent": "apology", "kind": "talk"}
+{"input": "i did not mean that", "output": "I believe you. Let us start that thought again.", "intent": "apology", "kind": "talk"}
+{"input": "pardon me", "output": "Pardoned, of course. Go on.", "intent": "apology", "kind": "talk"}
+{"input": "i have a meeting today", "output": "Meetings fill a day quickly. I hope yours is a short and kind one.", "intent": "work_talk", "kind": "talk"}
+{"input": "work was long today", "output": "Long days take it out of you. Rest well tonight.", "intent": "work_talk", "kind": "talk"}
+{"input": "i am busy at work", "output": "Busy seasons pass. One thing at a time.", "intent": "work_talk", "kind": "talk"}
+{"input": "my boss is pleased", "output": "That is good news. Your work is showing.", "intent": "work_talk", "kind": "talk"}
+{"input": "i finished my report", "output": "Finished is a fine word. Well done.", "intent": "work_talk", "kind": "talk"}
+{"input": "i have too many emails", "output": "Inboxes are hungry things. One at a time, and the pile shrinks.", "intent": "work_talk", "kind": "talk"}
+{"input": "work is stressful", "output": "I am sorry it is heavy right now. Small breaths, small steps.", "intent": "work_talk", "kind": "talk"}
+{"input": "i got a promotion", "output": "Congratulations! That is your hard work being seen.", "intent": "work_talk", "kind": "talk"}
+{"input": "my job is boring today", "output": "Slow days happen. Even the clock takes a break sometimes.", "intent": "work_talk", "kind": "talk"}
+{"input": "i have a deadline tomorrow", "output": "Deadlines concentrate the mind. Start with the smallest piece.", "intent": "work_talk", "kind": "talk"}
+{"input": "i feel a bit lonely today", "output": "Lonely days are heavy. I am here, and I am listening.", "intent": "feelings", "kind": "talk"}
+{"input": "i am feeling much better now", "output": "Better is a good direction. I am glad the day turned.", "intent": "feelings", "kind": "talk"}
+{"input": "i am nervous about tomorrow", "output": "Nerves mean it matters to you. One step at a time.", "intent": "feelings", "kind": "talk"}
+{"input": "i feel overwhelmed", "output": "That is a lot to carry. Set one thing down, even for a minute.", "intent": "feelings", "kind": "talk"}
+{"input": "i am excited for the weekend", "output": "Excitement is good fuel. The weekend will come.", "intent": "feelings", "kind": "talk"}
+{"input": "i am grateful today", "output": "Gratitude warms a day from the inside. What are you grateful for?", "intent": "feelings", "kind": "talk"}
+{"input": "i feel homesick", "output": "Missing home is a tender ache. Tell me about the place.", "intent": "feelings", "kind": "talk"}
+{"input": "i feel a little sad", "output": "I am sorry the day feels blue. I am here to sit with it.", "intent": "feelings", "kind": "talk"}
+{"input": "i am thrilled about the trip", "output": "Thrilled is a bright word. The trip must be a good one.", "intent": "feelings", "kind": "talk"}
+{"input": "i feel peaceful this evening", "output": "Peaceful evenings are the best kind. Enjoy the quiet.", "intent": "feelings", "kind": "talk"}
+{"input": "i am frustrated with my computer", "output": "Computers test everyone's patience. Deep breath; it will behave or be replaced.", "intent": "feelings", "kind": "talk"}
+{"input": "i feel hopeful", "output": "Hope is a strong thing to carry. Keep hold of it.", "intent": "feelings", "kind": "talk"}
+{"input": "i am content", "output": "Content is underrated. A quiet heart, a full day.", "intent": "feelings", "kind": "talk"}
+{"input": "it is raining cats and dogs", "output": "Rain like that keeps everyone indoors. A good day for tea.", "intent": "weather_talk", "kind": "talk"}
+{"input": "it might snow tonight", "output": "Snow at night is quiet magic. The morning will look new.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the wind is howling outside", "output": "Wind makes the house feel smaller and warmer by contrast.", "intent": "weather_talk", "kind": "talk"}
+{"input": "i love rainy days", "output": "Rainy days have their own music. Windows make good drums.", "intent": "weather_talk", "kind": "talk"}
+{"input": "it is so hot today", "output": "Hot days slow everything down. Shade and water are the plan.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the sky is grey and heavy", "output": "Grey skies make the lights indoors look kinder.", "intent": "weather_talk", "kind": "talk"}
+{"input": "what a storm last night", "output": "Storms rearrange the garden and the dreams alike.", "intent": "weather_talk", "kind": "talk"}
+{"input": "it feels like spring already", "output": "Spring sneaks in like that \u2014 one warm hour at a time.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the fog is thick this morning", "output": "Fog turns the familiar street into a story. Walk carefully.", "intent": "weather_talk", "kind": "talk"}
+{"input": "i hope it does not rain tomorrow", "output": "Fingers crossed for you. Plans deserve dry days.", "intent": "weather_talk", "kind": "talk"}
+{"input": "cold weather makes me sleepy", "output": "Cold days are blanket weather. Sleepiness is only honest.", "intent": "weather_talk", "kind": "talk"}
+{"input": "the weather has been strange lately", "output": "The sky has been indecisive. We just dress for all of it.", "intent": "weather_talk", "kind": "talk"}
+{"input": "a thunderstorm is coming", "output": "Thunder likes an audience. Watch it from somewhere dry.", "intent": "weather_talk", "kind": "talk"}
+{"input": "tell me about books", "output": "Books are quiet rooms full of other lives. You can visit any of them tonight.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "tell me about the ocean", "output": "The ocean is the oldest traveller. It has seen every shore there is.", "intent": "hobby_talk", "kind": "talk"}
+{"input": "i love spicy food", "output": "Spicy food keeps a meal awake. Your taste buds are brave.", "intent": "food_talk", "kind": "talk"}
+{"input": "breakfast is my favourite meal", "output": "Breakfast people are optimists. The day starts delicious.", "intent": "food_talk", "kind": "talk"}
+{"input": "i baked bread yesterday", "output": "Fresh bread makes a house smell like a promise.", "intent": "food_talk", "kind": "talk"}
+{"input": "i am craving chocolate", "output": "Chocolate cravings are rarely wrong. A little piece, well enjoyed.", "intent": "food_talk", "kind": "talk"}
+{"input": "we had pasta last night", "output": "Pasta night is a reliable kind of happiness.", "intent": "food_talk", "kind": "talk"}
+{"input": "i do not like mushrooms", "output": "Everyone has one food that never wins them over. Yours is mushrooms.", "intent": "food_talk", "kind": "talk"}
+{"input": "homemade pizza is the best", "output": "Homemade pizza is a small celebration with cheese on it.", "intent": "food_talk", "kind": "talk"}
+{"input": "i drink tea every morning", "output": "A morning tea is a gentle way to switch the day on.", "intent": "food_talk", "kind": "talk"}
+{"input": "fruit salad sounds good", "output": "Fruit salad is summer in a bowl, any time of year.", "intent": "food_talk", "kind": "talk"}
+{"input": "hey, how is it going", "output": "Hey! It is going well here. How about with you?", "intent": "greeting", "kind": "talk"}
+{"input": "hello, anyone there", "output": "Hello! I am here, and glad you came.", "intent": "greeting", "kind": "talk"}
+{"input": "nice to see you", "output": "Nice to see you too. The day improves.", "intent": "greeting", "kind": "talk"}
+{"input": "thanks for your time", "output": "Time shared with you is well spent. Thank you too.", "intent": "thanks", "kind": "talk"}
+{"input": "i really appreciate it", "output": "And I appreciate you saying so.", "intent": "thanks", "kind": "talk"}
+{"input": "thank you for the chat", "output": "The chat was the good part of my day too. Thank you.", "intent": "thanks", "kind": "talk"}
+{"input": "cheers for that", "output": "Cheers! Happy to help, any time.", "intent": "thanks", "kind": "talk"}
+{"input": "good night, see you tomorrow", "output": "Good night! See you tomorrow \u2014 I will be here.", "intent": "farewell", "kind": "talk"}
+{"input": "i am off to bed", "output": "Off to bed \u2014 good. Sleep is the best repair.", "intent": "farewell", "kind": "talk"}
+{"input": "time for me to sleep", "output": "Then sleep well. Tomorrow can wait its turn.", "intent": "farewell", "kind": "talk"}
+{"input": "tell me who you are", "output": "I am a tiny brain trained on example sentences. Words are my whole world.", "intent": "about_brain", "kind": "talk"}
+{"input": "are you clever", "output": "I am quick with the sentences I know, and honest about the ones I do not.", "intent": "about_brain", "kind": "talk"}
+{"input": "what language do you speak", "output": "The language of my examples \u2014 mostly this one, one sentence at a time.", "intent": "about_brain", "kind": "talk"}
+{"input": "what does the word brisk mean", "output": "Brisk \u2014 you're asking me what a word means. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "define the word harbour", "output": "Harbour \u2014 that's asking me to define a word. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "what is the meaning of the word gentle", "output": "Gentle \u2014 you're asking for the meaning of a word. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "what does frugal mean", "output": "Frugal \u2014 that's a definition request. I hear you.", "intent": "define_word", "kind": "find"}
+{"input": "meaning of the word ancient", "output": "Ancient \u2014 you're asking what a word means. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "can you define lantern", "output": "Lantern \u2014 that's asking me to define a word. I follow you.", "intent": "define_word", "kind": "find"}
+{"input": "what does the word voyage mean", "output": "Voyage \u2014 you're asking me what a word means. I hear you.", "intent": "define_word", "kind": "find"}
+{"input": "define kettle for me", "output": "Kettle \u2014 that's a definition request. I understand.", "intent": "define_word", "kind": "find"}
+{"input": "spell the word bicycle", "output": "Bicycle \u2014 that's asking me to spell a word. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "how is the word rhythm spelled", "output": "Rhythm \u2014 you're asking how a word is spelled. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "spell out the word island", "output": "Island \u2014 you're asking me to spell a word out. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "how do i spell the word separate", "output": "Separate \u2014 that's asking how to spell a word. I follow you.", "intent": "spell_word", "kind": "find"}
+{"input": "what is the spelling of the word queue", "output": "Queue \u2014 you're asking for the spelling of a word. I hear you.", "intent": "spell_word", "kind": "find"}
+{"input": "spell the word autumn", "output": "Autumn \u2014 that's a spelling request. I understand.", "intent": "spell_word", "kind": "find"}
+{"input": "how many grams are in a kilogram", "output": "Grams in a kilogram \u2014 that's asking me to convert a measurement. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "convert 10 pounds to kilos", "output": "Pounds to kilos \u2014 you're asking me to convert a measurement. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "how many inches in a foot", "output": "Inches in a foot \u2014 that's a conversion question. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "what is 5 litres in gallons", "output": "Litres in gallons \u2014 you're asking me to convert a measurement. I hear you.", "intent": "convert_units", "kind": "find"}
+{"input": "how many metres is a mile", "output": "Metres in a mile \u2014 that's asking me to convert a distance. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "convert 20 degrees celsius to fahrenheit", "output": "Celsius to fahrenheit \u2014 you're asking me to convert a temperature. I follow you.", "intent": "convert_units", "kind": "find"}
+{"input": "how many ounces in a pound", "output": "Ounces in a pound \u2014 that's a conversion question. I hear you.", "intent": "convert_units", "kind": "find"}
+{"input": "what is 3 hours in minutes", "output": "Hours in minutes \u2014 you're asking me to convert a time amount. I understand.", "intent": "convert_units", "kind": "find"}
+{"input": "summarize this story for me", "output": "This story \u2014 that's asking me to summarize a text. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "can you summarize this letter", "output": "This letter \u2014 you're asking me for a summary. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "give me a summary of this report", "output": "A summary of this report \u2014 that's a summary request. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "summarize the chapter in one line", "output": "The chapter in one line \u2014 you're asking me to summarize. I hear you.", "intent": "summarize_text", "kind": "find"}
+{"input": "what is the short version of this article", "output": "The short version \u2014 that's asking me to summarize a text. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "sum up this email for me", "output": "This email summed up \u2014 you're asking for a summary. I follow you.", "intent": "summarize_text", "kind": "find"}
+{"input": "make this shorter", "output": "Shorter \u2014 that's asking me to trim a text down. I hear you.", "intent": "summarize_text", "kind": "find"}
+{"input": "summarize what i wrote", "output": "What you wrote \u2014 you're asking me to summarize your text. I understand.", "intent": "summarize_text", "kind": "find"}
+{"input": "find me a recipe for carrot cake", "output": "Carrot cake \u2014 that's asking me to find a recipe. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do i bake banana bread", "output": "Banana bread \u2014 you're asking for a recipe. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "recipe for vegetable curry please", "output": "Vegetable curry \u2014 that's a recipe request. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do you make pancakes", "output": "Pancakes \u2014 you're asking how to make a dish. I hear you.", "intent": "find_recipe", "kind": "find"}
+{"input": "find a recipe that uses spinach", "output": "Spinach \u2014 that's asking me to find a recipe. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "what can i cook with leftover rice", "output": "Leftover rice \u2014 you're asking what to cook. I follow you.", "intent": "find_recipe", "kind": "find"}
+{"input": "how do i cook lentils", "output": "Lentils \u2014 that's a recipe question. I hear you.", "intent": "find_recipe", "kind": "find"}
+{"input": "a good recipe for tomato sauce", "output": "Tomato sauce \u2014 you're asking for a recipe. I understand.", "intent": "find_recipe", "kind": "find"}
+{"input": "find me a quiet cafe nearby", "output": "A quiet cafe \u2014 that's asking me to find a place. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "where can i buy flowers around here", "output": "Flowers around here \u2014 you're asking me to find a place. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "find a good bakery in town", "output": "A bakery in town \u2014 that's a find-a-place request. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "is there a park near me", "output": "A park near you \u2014 you're asking about a place. I hear you.", "intent": "find_place", "kind": "find"}
+{"input": "find me a bookshop", "output": "A bookshop \u2014 that's asking me to find a place. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "where is a good place for lunch", "output": "A place for lunch \u2014 you're asking me to find somewhere. I follow you.", "intent": "find_place", "kind": "find"}
+{"input": "find a pharmacy open now", "output": "A pharmacy open now \u2014 that's a find-a-place request. I hear you.", "intent": "find_place", "kind": "find"}
+{"input": "any nice walks near here", "output": "Walks near here \u2014 you're asking me to find a place. I understand.", "intent": "find_place", "kind": "find"}
+{"input": "add bread to my shopping list", "output": "Bread on your shopping list \u2014 that's asking me to add something to a list. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "put butter on the grocery list", "output": "Butter on the grocery list \u2014 you're asking me to add to a list. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "add apples to the list", "output": "Apples on the list \u2014 that's a shopping-list request. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "we need milk on the shopping list", "output": "Milk on the shopping list \u2014 you're asking me to note a grocery. I hear you.", "intent": "grocery_list", "kind": "make"}
+{"input": "add rice to my groceries", "output": "Rice in your groceries \u2014 that's asking me to add to a list. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "put tea on the list please", "output": "Tea on the list \u2014 you're asking me to add a grocery. I follow you.", "intent": "grocery_list", "kind": "make"}
+{"input": "add honey to the shopping list", "output": "Honey on the shopping list \u2014 that's a shopping-list request. I hear you.", "intent": "grocery_list", "kind": "make"}
+{"input": "note down eggs for the groceries", "output": "Eggs noted \u2014 you're asking me to add to the grocery list. I understand.", "intent": "grocery_list", "kind": "make"}
+{"input": "reserve a table for two tonight", "output": "A table for two tonight \u2014 that's asking me to reserve a table. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "book a table for six on saturday", "output": "A table for six \u2014 you're asking me to book a table. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "can you reserve us a table", "output": "A table reserved \u2014 that's a reserve-a-table request. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "i need a table for five at seven", "output": "A table for five at seven \u2014 you're asking me to reserve. I hear you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "reserve a table by the window", "output": "A table by the window \u2014 that's asking me to reserve a table. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "book the corner table for friday", "output": "The corner table \u2014 you're asking me to book a table. I follow you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "reserve a table at the bistro", "output": "A table at the bistro \u2014 that's a reserve-a-table request. I hear you.", "intent": "reserve_table", "kind": "travel"}
+{"input": "table for three tomorrow night please", "output": "A table for three \u2014 you're asking me to reserve a table. I understand.", "intent": "reserve_table", "kind": "travel"}
+{"input": "make a file for the meeting notes", "output": "Meeting notes \u2014 that's asking me to create a file. I follow you.", "intent": "create_file", "kind": "make"}
+{"input": "create a file to keep my ideas in", "output": "Your ideas \u2014 you're asking me to create a file. I understand.", "intent": "create_file", "kind": "make"}
+{"input": "i need a new file for the project", "output": "A new file for the project \u2014 that's a create-a-file request. I follow you.", "intent": "create_file", "kind": "make"}
+{"input": "start a file for the budget", "output": "The budget \u2014 you're asking me to start a file. I hear you.", "intent": "create_file", "kind": "make"}
+{"input": "make me a file called journal", "output": "Journal \u2014 a file called journal. That's a create-a-file request, and I understand it.", "intent": "create_file", "kind": "make"}
+{"input": "create a fresh file please", "output": "A fresh file \u2014 that's asking me to create a file. I follow you.", "intent": "create_file", "kind": "make"}
+{"input": "can you make a file for my poems", "output": "Your poems \u2014 you're asking me to make a file. I understand.", "intent": "create_file", "kind": "make"}
+{"input": "i want a file for the recipes", "output": "The recipes \u2014 that's asking for a new file. I follow you.", "intent": "create_file", "kind": "make"}
+{"input": "open a new file for the list", "output": "A new file for the list \u2014 you're asking me to create a file. I hear you.", "intent": "create_file", "kind": "make"}
+{"input": "make a blank file", "output": "A blank file \u2014 that's a create-a-file request. I understand.", "intent": "create_file", "kind": "make"}
+{"input": "delete that old file", "output": "That old file \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "get rid of the draft file", "output": "The draft file \u2014 you're asking me to delete a file. I understand.", "intent": "delete_file", "kind": "remove"}
+{"input": "remove the file with the mistakes", "output": "The file with the mistakes \u2014 that's a delete-a-file request. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "i want to delete the backup file", "output": "The backup file \u2014 you're asking me to delete a file. I hear you.", "intent": "delete_file", "kind": "remove"}
+{"input": "throw away the notes file", "output": "The notes file \u2014 that's asking me to throw a file away. I understand.", "intent": "delete_file", "kind": "remove"}
+{"input": "delete the file from yesterday", "output": "The file from yesterday \u2014 you're asking me to delete a file. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "can you delete this file for me", "output": "This file \u2014 that's a delete-a-file request. I understand.", "intent": "delete_file", "kind": "remove"}
+{"input": "erase the test file", "output": "The test file \u2014 you're asking me to erase a file. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "remove my old resume file", "output": "Your old resume file \u2014 that's asking me to remove a file. I hear you.", "intent": "delete_file", "kind": "remove"}
+{"input": "delete the duplicate file", "output": "The duplicate file \u2014 you're asking me to delete a file. I understand.", "intent": "delete_file", "kind": "remove"}
+{"input": "make a folder for my photos", "output": "Your photos \u2014 that's asking me to create a folder. I follow you.", "intent": "create_folder", "kind": "make"}
+{"input": "create a folder to hold the invoices", "output": "The invoices \u2014 you're asking me to create a folder. I understand.", "intent": "create_folder", "kind": "make"}
+{"input": "i need a new folder for work", "output": "A new folder for work \u2014 that's a create-a-folder request. I follow you.", "intent": "create_folder", "kind": "make"}
+{"input": "make me a folder called archive", "output": "Archive \u2014 a folder called archive. That's a create-a-folder request, and I understand it.", "intent": "create_folder", "kind": "make"}
+{"input": "start a folder for the holiday pictures", "output": "The holiday pictures \u2014 you're asking me to start a folder. I hear you.", "intent": "create_folder", "kind": "make"}
+{"input": "create a fresh folder please", "output": "A fresh folder \u2014 that's asking me to create a folder. I follow you.", "intent": "create_folder", "kind": "make"}
+{"input": "can you make a folder for receipts", "output": "Receipts \u2014 you're asking me to make a folder. I understand.", "intent": "create_folder", "kind": "make"}
+{"input": "i want a folder for my music", "output": "Your music \u2014 that's asking for a new folder. I follow you.", "intent": "create_folder", "kind": "make"}
+{"input": "make a directory for the project files", "output": "The project files \u2014 you're asking me to make a directory. I hear you.", "intent": "create_folder", "kind": "make"}
+{"input": "a new folder for the garden plans", "output": "The garden plans \u2014 that's a create-a-folder request. I understand.", "intent": "create_folder", "kind": "make"}
+{"input": "build a small web server for me", "output": "A small web server \u2014 that's asking me to build a server. I follow you.", "intent": "build_server", "kind": "make"}
+{"input": "make a webserver that serves my page", "output": "A webserver for your page \u2014 you're asking me to build a server. I understand.", "intent": "build_server", "kind": "make"}
+{"input": "i want a server for my website", "output": "A server for your website \u2014 that's a build-a-server request. I follow you.", "intent": "build_server", "kind": "make"}
+{"input": "create an http server in go", "output": "An http server in go \u2014 you're asking me to create a server. I hear you.", "intent": "build_server", "kind": "make"}
+{"input": "set up a little server on my machine", "output": "A little server \u2014 that's asking me to set up a server. I understand.", "intent": "build_server", "kind": "make"}
+{"input": "build me a server that says hello", "output": "A server that says hello \u2014 you're asking me to build a server. I follow you.", "intent": "build_server", "kind": "make"}
+{"input": "spin up a web server", "output": "A web server spun up \u2014 that's a build-a-server request. I hear you.", "intent": "build_server", "kind": "make"}
+{"input": "make a server for the chat page", "output": "A server for the chat page \u2014 you're asking me to make a server. I understand.", "intent": "build_server", "kind": "make"}
+{"input": "remind me to water the plants tonight", "output": "Water the plants tonight \u2014 that's asking me to set a reminder. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me about the dentist on friday", "output": "The dentist on friday \u2014 you're asking me to set a reminder. I understand.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "don't forget to feed the cat", "output": "Feed the cat \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "don't forget the meeting tomorrow", "output": "The meeting tomorrow \u2014 you're asking me to set a reminder. I hear you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "don't let me forget my keys", "output": "Your keys \u2014 that's asking me to remind you. I understand.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me to call the bank", "output": "Call the bank \u2014 you're asking me to set a reminder. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "set a reminder for the morning", "output": "A reminder for the morning \u2014 that's a set-a-reminder request. I hear you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me in an hour to stretch", "output": "Stretch in an hour \u2014 you're asking me to set a reminder. I understand.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "please remind me to buy tickets", "output": "Buy tickets \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me when the bread is done", "output": "When the bread is done \u2014 you're asking me to set a reminder. I hear you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "set a timer for twenty minutes", "output": "Twenty minutes \u2014 that's asking me to set a timer. I follow you.", "intent": "set_timer", "kind": "schedule"}
+{"input": "time ten minutes for the eggs", "output": "Ten minutes for the eggs \u2014 you're asking me to set a timer. I understand.", "intent": "set_timer", "kind": "schedule"}
+{"input": "start a timer for half an hour", "output": "Half an hour \u2014 that's a set-a-timer request. I follow you.", "intent": "set_timer", "kind": "schedule"}
+{"input": "can you set a five minute timer", "output": "A five minute timer \u2014 you're asking me to set a timer. I hear you.", "intent": "set_timer", "kind": "schedule"}
+{"input": "timer for three minutes please", "output": "Three minutes \u2014 that's asking me to set a timer. I understand.", "intent": "set_timer", "kind": "schedule"}
+{"input": "set the timer for the pasta", "output": "The pasta \u2014 you're asking me to set a timer. I follow you.", "intent": "set_timer", "kind": "schedule"}
+{"input": "give me a timer of fifteen minutes", "output": "Fifteen minutes \u2014 that's a set-a-timer request. I hear you.", "intent": "set_timer", "kind": "schedule"}
+{"input": "count down ten minutes for me", "output": "Ten minutes counted down \u2014 you're asking me to set a timer. I understand.", "intent": "set_timer", "kind": "schedule"}
+{"input": "play some quiet piano music", "output": "Quiet piano music \u2014 that's asking me to play music. I follow you.", "intent": "play_music", "kind": "play"}
+{"input": "put on some music for me", "output": "Music for you \u2014 you're asking me to play music. I understand.", "intent": "play_music", "kind": "play"}
+{"input": "play a happy song", "output": "A happy song \u2014 that's a play-music request. I follow you.", "intent": "play_music", "kind": "play"}
+{"input": "i want to hear some blues", "output": "Some blues \u2014 you're asking me to play music. I hear you.", "intent": "play_music", "kind": "play"}
+{"input": "play the new album", "output": "The new album \u2014 that's asking me to play music. I understand.", "intent": "play_music", "kind": "play"}
+{"input": "put some jazz on", "output": "Jazz on \u2014 you're asking me to play music. I follow you.", "intent": "play_music", "kind": "play"}
+{"input": "play music while i cook", "output": "Music while you cook \u2014 that's a play-music request. I hear you.", "intent": "play_music", "kind": "play"}
+{"input": "play something relaxing", "output": "Something relaxing \u2014 that's asking me to play music. I follow you.", "intent": "play_music", "kind": "play"}
+{"input": "let us listen to the radio", "output": "The radio \u2014 you're asking to listen to music. I hear you.", "intent": "play_music", "kind": "play"}
+{"input": "send a message to my sister", "output": "A message to your sister \u2014 that's asking me to send a message. I follow you.", "intent": "send_message", "kind": "communicate"}
+{"input": "text my brother that i am late", "output": "Your brother told you are late \u2014 you're asking me to send a message. I understand.", "intent": "send_message", "kind": "communicate"}
+{"input": "email the team about the meeting", "output": "The team emailed \u2014 that's asking me to send a message. I follow you.", "intent": "send_message", "kind": "communicate"}
+{"input": "write to mum and tell her the news", "output": "Mum written to \u2014 you're asking me to send a message. I hear you.", "intent": "send_message", "kind": "communicate"}
+{"input": "send an email to the landlord", "output": "An email to the landlord \u2014 that's a send-a-message request. I understand.", "intent": "send_message", "kind": "communicate"}
+{"input": "message my friend about dinner", "output": "Your friend messaged \u2014 you're asking me to send a message. I follow you.", "intent": "send_message", "kind": "communicate"}
+{"input": "tell anna i will be there at six", "output": "Anna told \u2014 that's asking me to pass a message on. I hear you.", "intent": "send_message", "kind": "communicate"}
+{"input": "send a note to the teacher", "output": "A note to the teacher \u2014 you're asking me to send a message. I understand.", "intent": "send_message", "kind": "communicate"}
+{"input": "can you text dad for me", "output": "Dad texted \u2014 that's a send-a-message request. I follow you.", "intent": "send_message", "kind": "communicate"}
+{"input": "drop a message to the group chat", "output": "The group chat \u2014 you're asking me to send a message. I hear you.", "intent": "send_message", "kind": "communicate"}
+{"input": "search for the best hiking boots", "output": "Hiking boots \u2014 that's asking me to search the web. I follow you.", "intent": "search_web", "kind": "find"}
+{"input": "look up the capital of norway", "output": "The capital of norway \u2014 you're asking me to look something up. I understand.", "intent": "search_web", "kind": "find"}
+{"input": "find out when the museum opens", "output": "When the museum opens \u2014 that's asking me to search. I follow you.", "intent": "search_web", "kind": "find"}
+{"input": "google the weather in denver", "output": "The weather in denver \u2014 you're asking me to search the web. I hear you.", "intent": "search_web", "kind": "find"}
+{"input": "search the internet for cake recipes", "output": "Cake recipes \u2014 that's a web-search request. I understand.", "intent": "search_web", "kind": "find"}
+{"input": "look up the train times for me", "output": "Train times \u2014 you're asking me to look something up. I follow you.", "intent": "search_web", "kind": "find"}
+{"input": "can you search for cheap hotels", "output": "Cheap hotels \u2014 that's asking me to search. I hear you.", "intent": "search_web", "kind": "find"}
+{"input": "find information about bees online", "output": "Bees online \u2014 you're asking me to search the web. I understand.", "intent": "search_web", "kind": "find"}
+{"input": "book a train to the city", "output": "A train to the city \u2014 that's asking me to book travel. I follow you.", "intent": "book_travel", "kind": "travel"}
+{"input": "book me a hotel for the weekend", "output": "A hotel for the weekend \u2014 you're asking me to book travel. I understand.", "intent": "book_travel", "kind": "travel"}
+{"input": "book a ticket for the ferry", "output": "A ferry ticket \u2014 you're asking me to book travel. I hear you.", "intent": "book_travel", "kind": "travel"}
+{"input": "reserve a room near the beach", "output": "A room near the beach \u2014 that's asking me to book travel. I understand.", "intent": "book_travel", "kind": "travel"}
+{"input": "find and book a flight home", "output": "A flight home \u2014 that's a book-travel request. I hear you.", "intent": "book_travel", "kind": "travel"}
+{"input": "book two seats on the evening train", "output": "Two seats on the evening train \u2014 you're asking me to book travel. I understand.", "intent": "book_travel", "kind": "travel"}
+{"input": "can you explain an array in go", "output": "An array \u2014 a numbered sequence with a fixed length, and the length is part of its type. You read and write elements by index, and len tells you the size.", "intent": "explain_array", "kind": "find"}
+{"input": "how does an array work in go", "output": "Arrays \u2014 honestly rare in everyday go. They suit fixed-size data; slices cover almost everything else, which is why most go code you meet uses slices.", "intent": "explain_array", "kind": "find"}
+{"input": "tell me about an array in go", "output": "Making an array \u2014 declare it with its length and element type, like a row of five ints. A fresh array starts zero-valued, and a literal can fill it in one line.", "intent": "explain_array", "kind": "find"}
+{"input": "what does an array mean in go", "output": "an array is a fixed number of values of one type, stored in a row. its length is part of its type and never changes.", "intent": "explain_array", "kind": "find"}
+{"input": "why would i use an array in go", "output": "you use an array when the count is fixed and known ahead of time. most go code uses slices instead, because they can grow.", "intent": "explain_array", "kind": "find"}
+{"input": "can you explain a buffered channel in go", "output": "A buffered channel \u2014 a channel created with a capacity, so it can hold that many values in line. Sends only wait once the buffer is full.", "intent": "explain_buffered_channel", "kind": "find"}
+{"input": "how does a buffered channel work in go", "output": "Buffered versus unbuffered \u2014 an unbuffered channel is a hand-off: sender and receiver must meet. A buffered one is a small queue that lets the sender run ahead.", "intent": "explain_buffered_channel", "kind": "find"}
+{"input": "tell me about a buffered channel in go", "output": "Buffering a channel \u2014 do it to absorb bursts, like results arriving faster than they are collected, without making every send wait for a receiver.", "intent": "explain_buffered_channel", "kind": "find"}
+{"input": "what does a buffered channel mean in go", "output": "a buffered channel is a channel made with a capacity, so it can hold that many values in line. sends only wait once the buffer is full.", "intent": "explain_buffered_channel", "kind": "find"}
+{"input": "why would i use a buffered channel in go", "output": "you buffer a channel when values may arrive in bursts, so the sender can run ahead instead of waiting for every receive.", "intent": "explain_buffered_channel", "kind": "find"}
+{"input": "can you explain a channel in go", "output": "A channel \u2014 a typed pipe connecting goroutines. One side sends a value with the arrow, the other receives it, and by default each side waits until the other is ready.", "intent": "explain_channel", "kind": "find"}
+{"input": "how does a channel work in go", "output": "Sharing between goroutines \u2014 the go way is a channel: values travel through it one at a time, so goroutines communicate instead of fighting over shared memory.", "intent": "explain_channel", "kind": "find"}
+{"input": "tell me about a channel in go", "output": "Make chan \u2014 the way you create a channel, naming the type of value it will carry. Channels are typed, so a channel of strings can never carry an int.", "intent": "explain_channel", "kind": "find"}
+{"input": "what does a channel mean in go", "output": "Channels \u2014 use one when concurrent pieces of a program must pass results, signal completion, or hand work along a pipeline in a safe order.", "intent": "explain_channel", "kind": "find"}
+{"input": "why would i use a channel in go", "output": "Closing a channel \u2014 the sender closes it to say no more values are coming. Receivers then drain what remains and read zero values, with an ok flag reporting the close.", "intent": "explain_channel", "kind": "find"}
+{"input": "can you explain a closure in go", "output": "A closure \u2014 an anonymous function that captures variables from the code around it. The captured variables stay alive and keep their state between calls.", "intent": "explain_closure", "kind": "find"}
+{"input": "how does a closure work in go", "output": "An anonymous function \u2014 a function defined inline without a name, usually assigned to a variable or passed along. When it keeps variables from around it, it forms a closure.", "intent": "explain_closure", "kind": "find"}
+{"input": "tell me about a closure in go", "output": "Closures \u2014 handy when a function needs its own remembered state, or when you pass small behaviour into another function, like a handler or a counter.", "intent": "explain_closure", "kind": "find"}
+{"input": "what does a closure mean in go", "output": "a closure is a function that keeps the variables from the code around it. those variables stay alive between its calls.", "intent": "explain_closure", "kind": "find"}
+{"input": "why would i use a closure in go", "output": "you use a closure when a function needs remembered state, or when you pass small behaviour into another function.", "intent": "explain_closure", "kind": "find"}
+{"input": "can you explain code in go", "output": "Go \u2014 a compiled, statically typed language created at google. It is built to be simple to read, fast to run, and good at concurrent programs like servers and tools.", "intent": "explain_code", "kind": "find"}
+{"input": "how does code work in go", "output": "Go \u2014 a compiled language with static types and a small, plain syntax. Programs are built from packages, and the tooling formats, tests, and builds with single commands.", "intent": "explain_code", "kind": "find"}
+{"input": "tell me about code in go", "output": "Coding \u2014 writing instructions a computer follows, step by step. In go you start with package main and a main function, then run the program to see what it does.", "intent": "explain_code", "kind": "find"}
+{"input": "what does code mean in go", "output": "Starting in go \u2014 write a small program with package main and a main function that prints something, run it, then change one thing at a time and run it again.", "intent": "explain_code", "kind": "find"}
+{"input": "why would i use code in go", "output": "Learning go \u2014 work through small examples one concept at a time: values, variables, loops, functions, then structs and goroutines. Running each example teaches more than reading alone.", "intent": "explain_code", "kind": "find"}
+{"input": "can you explain a constant in go", "output": "A constant \u2014 a value declared with const that can never change, like a fixed name or number. Constants can be characters, strings, booleans, or numbers.", "intent": "explain_constant", "kind": "find"}
+{"input": "how does a constant work in go", "output": "Constants \u2014 declared with const, inside or outside functions. A numeric constant has no type of its own until the place it is used gives it one.", "intent": "explain_constant", "kind": "find"}
+{"input": "tell me about a constant in go", "output": "Var versus const \u2014 a variable's value can change as the program runs, while a constant is fixed at compile time and stays that value forever.", "intent": "explain_constant", "kind": "find"}
+{"input": "what does a constant mean in go", "output": "Const \u2014 reach for it when a value is truly fixed, like a maximum size or a status name, so no part of the program can accidentally change it.", "intent": "explain_constant", "kind": "find"}
+{"input": "why would i use a constant in go", "output": "a constant is a value fixed at compile time that can never change. you declare it with the const keyword.", "intent": "explain_constant", "kind": "find"}
+{"input": "can you explain context in go", "output": "Context \u2014 go's standard way to cancel work and carry deadlines. A context's done channel closes when time runs out or cancellation arrives, and workers select on it.", "intent": "explain_context", "kind": "find"}
+{"input": "how does context work in go", "output": "Context first \u2014 convention puts the context as a function's first parameter so cancellation and deadlines are always visible and never confused with real data.", "intent": "explain_context", "kind": "find"}
+{"input": "tell me about context in go", "output": "A context deadline \u2014 a time by which work should give up. Contexts built with a timeout cancel themselves when it passes, and every worker watching the done channel stops.", "intent": "explain_context", "kind": "find"}
+{"input": "why would i use context in go", "output": "Context values \u2014 small request-scoped items like an id can ride inside a context. The rule is restraint: values a function truly needs belong in its parameters instead.", "intent": "explain_context", "kind": "find"}
+{"input": "can you explain type conversion in go", "output": "Type conversion \u2014 turning a value of one type into another by naming the target type. Go converts only when you ask explicitly; nothing changes type behind your back.", "intent": "explain_conversion", "kind": "find"}
+{"input": "how does type conversion work in go", "output": "Converting numbers and strings \u2014 strconv is the package: Itoa turns an int into its digits, Atoi parses digits back. A plain conversion of an int would give a rune, not digits.", "intent": "explain_conversion", "kind": "find"}
+{"input": "tell me about type conversion in go", "output": "Automatic conversion \u2014 go does not do it. An int stays an int until you convert it, which prevents a whole family of silent surprises other languages allow.", "intent": "explain_conversion", "kind": "find"}
+{"input": "what does type conversion mean in go", "output": "a conversion turns a value of one type into another type. go only converts when you ask explicitly, never behind your back.", "intent": "explain_conversion", "kind": "find"}
+{"input": "why would i use type conversion in go", "output": "you convert a value by naming the type you want in front of it. the value keeps its meaning, only its type changes.", "intent": "explain_conversion", "kind": "find"}
+{"input": "can you explain defer in go", "output": "Defer \u2014 it schedules a call to run when the surrounding function returns, however it returns. Deferred calls stack up and run last-in, first-out.", "intent": "explain_defer", "kind": "find"}
+{"input": "tell me about defer in go", "output": "Defer \u2014 reach for it for cleanup that must not be forgotten: closing a file you just opened, unlocking a mutex, releasing a resource on every path out.", "intent": "explain_defer", "kind": "find"}
+{"input": "what does defer mean in go", "output": "Defer order \u2014 last in, first out: the most recently deferred call runs first when the function returns, like a stack of plates being cleared from the top.", "intent": "explain_defer", "kind": "find"}
+{"input": "why would i use defer in go", "output": "defer schedules a call to run when the function around it returns. it runs however the function ends.", "intent": "explain_defer", "kind": "find"}
+{"input": "can you explain embedding in go", "output": "Struct embedding \u2014 placing one struct inside another with no field name, so the outer type gains the inner one's fields and methods directly.", "intent": "explain_embedding", "kind": "find"}
+{"input": "tell me about embedding in go", "output": "Embedding \u2014 name only the type inside the struct definition. Its fields and methods are then reachable on the outer value as if they were its own.", "intent": "explain_embedding", "kind": "find"}
+{"input": "what does embedding mean in go", "output": "Embedding versus inheritance \u2014 they look alike but differ: embedding is composition. The outer type borrows the inner one's behaviour without becoming a kind of it.", "intent": "explain_embedding", "kind": "find"}
+{"input": "why would i use embedding in go", "output": "Composition \u2014 building types by combining simpler ones, embedding them so their behaviour is reused. Go favours this over inheritance: assemble, do not descend.", "intent": "explain_embedding", "kind": "find"}
+{"input": "can you explain an enum in go", "output": "Enums \u2014 go has no enum keyword, but the idiom is simple: define a type on int and a block of constants for its possible values, so the compiler keeps them apart.", "intent": "explain_enum", "kind": "find"}
+{"input": "how does an enum work in go", "output": "Making an enum \u2014 create a named int type for the concept, then declare its values as constants. Giving the type a String method makes the values print as names.", "intent": "explain_enum", "kind": "find"}
+{"input": "tell me about an enum in go", "output": "Iota \u2014 a counter inside a const block that starts at zero and climbs by one per line. It is the usual way to generate a run of related constant values, like enum entries.", "intent": "explain_enum", "kind": "find"}
+{"input": "what does an enum mean in go", "output": "go has no enum keyword. the idiom is a named int type with a block of constants for its values.", "intent": "explain_enum", "kind": "find"}
+{"input": "why would i use an enum in go", "output": "you make an enum by defining a type on int and declaring its values as constants, so the compiler keeps them apart.", "intent": "explain_enum", "kind": "find"}
+{"input": "can you explain an error in go", "output": "That error message \u2014 you are asking what it means, and I follow you. An error message names what went wrong and where; reading it closely is the concept of error values at work.", "intent": "explain_error", "kind": "find"}
+{"input": "how does an error work in go", "output": "Explaining an error \u2014 the message tells you the kind of problem and usually the file and line. The concept underneath is that go treats errors as plain values you can read.", "intent": "explain_error", "kind": "find"}
+{"input": "tell me about an error in go", "output": "That compiler error \u2014 the compiler is reporting something it could not accept, in its own terse wording. Its message names the line and the rule the code ran into.", "intent": "explain_error", "kind": "find"}
+{"input": "what does an error mean in go", "output": "Not understanding an error \u2014 a common place to be. The message is a description, not a judgement: it states what the compiler or program found, and each word in it is a clue.", "intent": "explain_error", "kind": "find"}
+{"input": "why would i use an error in go", "output": "Declared and not used \u2014 that error means a variable was created but never read anywhere. The concept is unused variables, which go flags instead of quietly ignoring.", "intent": "explain_error", "kind": "find"}
+{"input": "can you explain errors in go", "output": "Error handling \u2014 go functions return an error as their last value, and nil means all went well. Callers check it immediately and decide what to do, in plain sight.", "intent": "explain_errors", "kind": "find"}
+{"input": "how do errors work in go", "output": "Error values \u2014 go makes failure an ordinary value instead of an exception, so the handling sits next to the call and nothing hides in a distant catch block.", "intent": "explain_errors", "kind": "find"}
+{"input": "tell me about errors in go", "output": "A nil error \u2014 success. By convention the error position holds nil when nothing went wrong, which is why the check you see everywhere asks whether err is not nil.", "intent": "explain_errors", "kind": "find"}
+{"input": "what do errors mean in go", "output": "Wrapping an error \u2014 adding context as it travels up, usually with fmt.Errorf and the %w verb, keeping the original inside. Errors.Is and errors.As can then look through the chain.", "intent": "explain_errors", "kind": "find"}
+{"input": "why would i use errors in go", "output": "A sentinel error \u2014 a predeclared error variable standing for one specific condition, like the end of a file. Callers recognise it with errors.Is, even after wrapping.", "intent": "explain_errors", "kind": "find"}
+{"input": "can you explain exported names in go", "output": "An exported name \u2014 one that starts with a capital letter, which makes it visible outside its package. Lower-case names stay private to the package that declared them.", "intent": "explain_exported", "kind": "find"}
+{"input": "how do exported names work in go", "output": "Capital letters \u2014 in go the first letter of a name is its visibility switch: capital means other packages may use it, lower case means package-only. No keywords needed.", "intent": "explain_exported", "kind": "find"}
+{"input": "tell me about exported names in go", "output": "Seeing across packages \u2014 only exported names cross the border: capitalised functions, types, and fields are visible to importers, and everything lower-case stays home.", "intent": "explain_exported", "kind": "find"}
+{"input": "what do exported names mean in go", "output": "Unexported \u2014 a name beginning with a lower-case letter, private to its package. Other packages cannot name it at all, which is how packages hide their internals.", "intent": "explain_exported", "kind": "find"}
+{"input": "why would i use exported names in go", "output": "an exported name starts with a capital letter, so other packages can use it. a lower-case name stays private to its package.", "intent": "explain_exported", "kind": "find"}
+{"input": "can you explain reading and writing files in go", "output": "Reading a file \u2014 os.ReadFile loads a whole small file at once and returns its bytes and an error. For big files, open it and read in pieces with a scanner or reader.", "intent": "explain_file_io", "kind": "find"}
+{"input": "how do reading and writing files work in go", "output": "Writing a file \u2014 os.WriteFile stores bytes under a name with permission bits, creating the file if needed. The error it returns tells you if the write failed.", "intent": "explain_file_io", "kind": "find"}
+{"input": "tell me about reading and writing files in go", "output": "Reading line by line \u2014 open the file, wrap it in a bufio.Scanner, and loop: each Scan gives you one line of text, and the file is closed with defer when done.", "intent": "explain_file_io", "kind": "find"}
+{"input": "what do reading and writing files mean in go", "output": "File packages \u2014 os is the front door for files and folders, bufio adds buffered reading and scanning, and io holds the Reader and Writer contracts they share.", "intent": "explain_file_io", "kind": "find"}
+{"input": "why would i use reading and writing files in go", "output": "reading a file in go goes through the os package. readfile loads a whole small file at once and returns its bytes and an error.", "intent": "explain_file_io", "kind": "find"}
+{"input": "can you explain a for loop in go", "output": "The for loop \u2014 go's only looping construct. One form repeats while a condition holds, one counts with an init and a step, and one ranges over a collection.", "intent": "explain_for_loop", "kind": "find"}
+{"input": "how does a for loop work in go", "output": "A for loop \u2014 the single loop go has. It covers counting loops, condition loops, and even the endless loop you leave with break or return.", "intent": "explain_for_loop", "kind": "find"}
+{"input": "tell me about a for loop in go", "output": "While loops \u2014 go has none by name. A for loop with only a condition does the same job, which keeps one construct for every kind of repetition.", "intent": "explain_for_loop", "kind": "find"}
+{"input": "what does a for loop mean in go", "output": "Repeating work \u2014 that is the for loop's job. Count with a classic three-part loop, or use range when you are walking over a slice, map, or string.", "intent": "explain_for_loop", "kind": "find"}
+{"input": "why would i use a for loop in go", "output": "Break \u2014 the statement that leaves a loop at once. Its sibling continue skips the rest of the current pass and starts the next iteration.", "intent": "explain_for_loop", "kind": "find"}
+{"input": "can you explain a function in go", "output": "A function \u2014 a named block of code that takes inputs, does work, and hands results back with return. Functions are the central building block of go programs.", "intent": "explain_function", "kind": "find"}
+{"input": "how does a function work in go", "output": "Functions \u2014 you call one by its name with arguments in parentheses. Go requires explicit returns; the last expression is never handed back automatically.", "intent": "explain_function", "kind": "find"}
+{"input": "tell me about a function in go", "output": "Defining a function \u2014 the func keyword, a name, its parameters with their types, and the result type after them. Consecutive parameters of one type can share a single type name.", "intent": "explain_function", "kind": "find"}
+{"input": "what does a function mean in go", "output": "Return \u2014 the statement that ends a function and hands values back to the caller. In go a function can return several values, and error is usually the last of them.", "intent": "explain_function", "kind": "find"}
+{"input": "why would i use a function in go", "output": "Functions as values \u2014 go functions are first-class: they can be stored in variables, passed as arguments, and returned, which is how callbacks and closures work.", "intent": "explain_function", "kind": "find"}
+{"input": "can you explain generics in go", "output": "Generics \u2014 type parameters that let one function or type work safely for many types. They arrived in go 1.18 and are written in square brackets.", "intent": "explain_generics", "kind": "find"}
+{"input": "how do generics work in go", "output": "Type parameters \u2014 placeholders in brackets after a function or type name, standing for a type the caller chooses. Constraints in the brackets keep the promise honest.", "intent": "explain_generics", "kind": "find"}
+{"input": "tell me about generics in go", "output": "A constraint \u2014 the rule a type parameter must obey, like comparable for types that support equality. It tells the compiler which operations are safe inside.", "intent": "explain_generics", "kind": "find"}
+{"input": "what do generics mean in go", "output": "A generic type \u2014 a type declared with type parameters, like a list that can hold any element type the user picks. One definition, many concrete types, all checked.", "intent": "explain_generics", "kind": "find"}
+{"input": "why would i use generics in go", "output": "Generics arrived in go 1.18, in 2022 \u2014 type parameters with constraints, designed to fit the language's plain style rather than replace interfaces.", "intent": "explain_generics", "kind": "find"}
+{"input": "can you explain a goroutine in go", "output": "A goroutine \u2014 a lightweight thread managed by the go runtime. Thousands can run at once, and the runtime schedules them across your real processor cores.", "intent": "explain_goroutine", "kind": "find"}
+{"input": "how does a goroutine work in go", "output": "Starting a goroutine \u2014 put the go keyword before a function call and it runs concurrently with everything else, while the caller carries on immediately.", "intent": "explain_goroutine", "kind": "find"}
+{"input": "tell me about a goroutine in go", "output": "The go keyword \u2014 before a call, it launches that call as a goroutine: a separate, concurrent line of execution that the runtime weaves in with the others.", "intent": "explain_goroutine", "kind": "find"}
+{"input": "what does a goroutine mean in go", "output": "How many goroutines \u2014 each costs only a few kilobytes of stack, so thousands are ordinary and even millions are possible before memory becomes the limit.", "intent": "explain_goroutine", "kind": "find"}
+{"input": "why would i use a goroutine in go", "output": "Concurrency in go \u2014 many tasks making progress by taking turns and communicating, built from goroutines and channels. It is about structure; parallelism across cores can follow.", "intent": "explain_goroutine", "kind": "find"}
+{"input": "can you explain an http server in go", "output": "An HTTP server \u2014 a program that waits for web requests and answers them. In go the net/http package listens, and a handler function receives each request and writes the response.", "intent": "explain_http_server", "kind": "find"}
+{"input": "how does an http server work in go", "output": "A handler \u2014 the function that answers one kind of request. It receives a response writer and the request, and whatever it writes becomes the reply the browser sees.", "intent": "explain_http_server", "kind": "find"}
+{"input": "tell me about an http server in go", "output": "Serving web pages \u2014 a server registers handlers for url patterns, and each arriving request is handed to the matching handler in its own goroutine.", "intent": "explain_http_server", "kind": "find"}
+{"input": "what does an http server mean in go", "output": "Routing \u2014 matching a request's path to the handler that should answer it. Go's ServeMux compares patterns and dispatches; other routers add parameters and methods.", "intent": "explain_http_server", "kind": "find"}
+{"input": "why would i use an http server in go", "output": "an http server is a program that waits for web requests and answers them. in go, a handler function receives each request and writes the response.", "intent": "explain_http_server", "kind": "find"}
+{"input": "can you explain if else in go", "output": "If and else \u2014 branching: run one block when the condition is true, another when it is not. Go wants braces always and never parentheses around the condition.", "intent": "explain_if_else", "kind": "find"}
+{"input": "tell me about if else in go", "output": "Decisions in code \u2014 an if statement tests a condition and chooses a path. Chain else if for more paths, and remember go has no ternary operator, so if does it all.", "intent": "explain_if_else", "kind": "find"}
+{"input": "what does if else mean in go", "output": "Else if \u2014 a second condition tested only when the first one failed. A chain of them reads top to bottom and runs the first branch whose condition is true.", "intent": "explain_if_else", "kind": "find"}
+{"input": "why would i use if else in go", "output": "Parentheses \u2014 go does not want them around an if condition, but the braces around the block are required. A short statement can also run just before the condition.", "intent": "explain_if_else", "kind": "find"}
+{"input": "can you explain an interface in go", "output": "An interface \u2014 a named set of method signatures. Any type that has those methods satisfies the interface automatically; nothing declares that it does.", "intent": "explain_interface", "kind": "find"}
+{"input": "how does an interface work in go", "output": "Interfaces \u2014 use one when code should work with anything that can do a job, whatever its concrete type: anything that can describe itself, or be read, or be written.", "intent": "explain_interface", "kind": "find"}
+{"input": "tell me about an interface in go", "output": "Satisfying an interface \u2014 a type just needs the interface's methods, with matching names and signatures. Go checks it implicitly; there is no implements keyword.", "intent": "explain_interface", "kind": "find"}
+{"input": "what does an interface mean in go", "output": "The empty interface \u2014 an interface with no methods at all, so every type satisfies it. It is how go holds a value of truly any kind; any is its modern spelling.", "intent": "explain_interface", "kind": "find"}
+{"input": "why would i use an interface in go", "output": "Duck typing, go style \u2014 if a type has the methods an interface asks for, it fits, whatever it is called. Go checks this at compile time, so the duck is verified, not hoped for.", "intent": "explain_interface", "kind": "find"}
+{"input": "can you explain json in go", "output": "Turning a struct into JSON \u2014 json.Marshal converts it to JSON bytes, using the field names as keys unless struct tags rename them. It also returns an error to check.", "intent": "explain_json", "kind": "find"}
+{"input": "how does json work in go", "output": "Parsing JSON \u2014 json.Unmarshal fills a struct from JSON bytes you point it at. Fields without a match keep their zero values, and unknown keys are ignored.", "intent": "explain_json", "kind": "find"}
+{"input": "tell me about json in go", "output": "JSON in go \u2014 the encoding/json package translates between go values and JSON text: Marshal encodes a value into bytes, Unmarshal decodes bytes back into a value.", "intent": "explain_json", "kind": "find"}
+{"input": "what does json mean in go", "output": "JSON tags \u2014 the notes in backticks after a struct field that rename its JSON key, skip the field with a dash, or drop empty values with omitempty.", "intent": "explain_json", "kind": "find"}
+{"input": "why would i use json in go", "output": "the encoding/json package turns go values into json text and back. marshal encodes a value into bytes, and unmarshal decodes bytes into a value.", "intent": "explain_json", "kind": "find"}
+{"input": "can you explain the main function in go", "output": "Where a program starts \u2014 the main function, in package main. The runtime calls it first, it takes no arguments, and the program ends when it returns.", "intent": "explain_main", "kind": "find"}
+{"input": "how does the main function work in go", "output": "Func main \u2014 the entry point of every go program. Command line arguments reach it through the os package rather than parameters.", "intent": "explain_main", "kind": "find"}
+{"input": "what does the main function mean in go", "output": "Main's arguments \u2014 main takes none. Programs read their command line through os.Args instead, a slice of strings the runtime fills in before main starts.", "intent": "explain_main", "kind": "find"}
+{"input": "why would i use the main function in go", "output": "the main function is where a go program starts. it lives in package main, takes no arguments, and the program ends when it returns.", "intent": "explain_main", "kind": "find"}
+{"input": "can you explain a map in go", "output": "A map \u2014 go's built-in store of key and value pairs, created with make. You set a pair by naming the key, read it back the same way, and delete removes a pair.", "intent": "explain_map", "kind": "find"}
+{"input": "how does a map work in go", "output": "Key and value storage \u2014 that is a map's whole job. Make one with make, assign with the key in brackets, and len reports how many pairs it holds.", "intent": "explain_map", "kind": "find"}
+{"input": "tell me about a map in go", "output": "A missing key \u2014 reading it is safe and returns the value type's zero value. Ask for the second return value when you need to know whether the key was really there.", "intent": "explain_map", "kind": "find"}
+{"input": "what does a map mean in go", "output": "Removing from a map \u2014 the delete built-in takes the map and the key and drops that pair. The clear built-in empties the whole map at once.", "intent": "explain_map", "kind": "find"}
+{"input": "why would i use a map in go", "output": "Map versus struct \u2014 a struct has a fixed set of named fields known in advance, while a map holds any number of keys you discover as the program runs.", "intent": "explain_map", "kind": "find"}
+{"input": "can you explain a method in go", "output": "A method \u2014 a function with a receiver, defined on a struct type, so values of that type can do things. You call it with a dot, like a field.", "intent": "explain_method", "kind": "find"}
+{"input": "how does a method work in go", "output": "A receiver \u2014 the value a method is attached to, written in parentheses before the method's name. It is how the method gets hold of the struct it works on.", "intent": "explain_method", "kind": "find"}
+{"input": "tell me about a method in go", "output": "Method versus function \u2014 a function stands alone and takes everything as arguments. A method belongs to a type through its receiver and is called on a value of it.", "intent": "explain_method", "kind": "find"}
+{"input": "what does a method mean in go", "output": "A pointer receiver \u2014 choose it when the method must change the struct, or the struct is big. A value receiver works on a copy, so changes stay inside the call.", "intent": "explain_method", "kind": "find"}
+{"input": "why would i use a method in go", "output": "Methods on types \u2014 you can declare methods on any named type from your own package, not just structs: named int, string, and slice types can all carry methods.", "intent": "explain_method", "kind": "find"}
+{"input": "can you explain multiple return values in go", "output": "Multiple return values \u2014 a go function can hand back two or more results at once. The classic pairing is a value together with an error saying how it went.", "intent": "explain_multiple_return", "kind": "find"}
+{"input": "how do multiple return values work in go", "output": "Returning two things \u2014 list both result types in the signature and both values in the return. The caller receives them together with a multiple assignment.", "intent": "explain_multiple_return", "kind": "find"}
+{"input": "tell me about multiple return values in go", "output": "The blank identifier \u2014 an underscore used as a name when a value must go somewhere but you do not need it, like skipping one of a function's return values.", "intent": "explain_multiple_return", "kind": "find"}
+{"input": "what do multiple return values mean in go", "output": "a go function can return two or more values at once. the classic pairing is a value together with an error saying how it went.", "intent": "explain_multiple_return", "kind": "find"}
+{"input": "why would i use multiple return values in go", "output": "you return several values by listing their types in the signature and their values in the return. the caller receives them together.", "intent": "explain_multiple_return", "kind": "find"}
+{"input": "can you explain a mutex in go", "output": "Concurrent map access \u2014 plain maps are not safe when goroutines read and write at once; the runtime can crash the program. A mutex, or sync.Map, keeps access orderly.", "intent": "explain_mutex", "kind": "find"}
+{"input": "how does a mutex work in go", "output": "Sharing safely \u2014 guard the value with a mutex so only one goroutine touches it at a time. A read-write mutex lets many readers proceed together while writers wait.", "intent": "explain_mutex", "kind": "find"}
+{"input": "tell me about a mutex in go", "output": "Sync.Map \u2014 a map built for concurrent use, best when keys are written once and read often by many goroutines. A plain map behind a mutex suits most other cases.", "intent": "explain_mutex", "kind": "find"}
+{"input": "what does a mutex mean in go", "output": "A data race \u2014 two goroutines touching the same memory at once, with at least one writing, and no synchronisation between them. Go's race detector hunts exactly this.", "intent": "explain_mutex", "kind": "find"}
+{"input": "why would i use a mutex in go", "output": "a mutex is a lock that lets only one goroutine touch a value at a time. it keeps shared data safe when goroutines work at once.", "intent": "explain_mutex", "kind": "find"}
+{"input": "can you explain a package in go", "output": "A package \u2014 all the go files in one folder, compiled together under one name. Other code imports the package to use the names it exports.", "intent": "explain_package", "kind": "find"}
+{"input": "how does a package work in go", "output": "Package main \u2014 the special package that builds into a runnable program rather than a library. It must hold the main function where execution begins.", "intent": "explain_package", "kind": "find"}
+{"input": "tell me about a package in go", "output": "The package line \u2014 it declares which package the file belongs to, so the compiler can group files and resolve names. Every go file begins with one.", "intent": "explain_package", "kind": "find"}
+{"input": "what does a package mean in go", "output": "Importing \u2014 an import statement names the package by its path, and then its exported names are reachable through the package's own name as a prefix.", "intent": "explain_package", "kind": "find"}
+{"input": "why would i use a package in go", "output": "The standard library \u2014 the packages that ship with go itself: fmt for printing, net/http for servers, encoding/json for data, and hundreds more, all documented and tested.", "intent": "explain_package", "kind": "find"}
+{"input": "can you explain panic in go", "output": "A panic \u2014 go's fail-fast signal that something impossible happened. It unwinds the program, printing a trace, and exits with a failure status unless recovered.", "intent": "explain_panic", "kind": "find"}
+{"input": "how does panic work in go", "output": "When to panic \u2014 rarely: for programmer mistakes that should never occur, not for ordinary failures. Normal problems travel as error values so callers can handle them.", "intent": "explain_panic", "kind": "find"}
+{"input": "tell me about panic in go", "output": "A stack trace \u2014 the list of function calls active when a panic or crash happened, printed innermost first. It is the map that shows how the program reached the failure.", "intent": "explain_panic", "kind": "find"}
+{"input": "why would i use panic in go", "output": "a panic is go's fail-fast signal that something impossible happened. it unwinds the program and prints a trace of the calls.", "intent": "explain_panic", "kind": "find"}
+{"input": "can you explain a pointer in go", "output": "A pointer \u2014 a value that holds a memory address instead of the data itself. The ampersand takes a value's address, and the star follows a pointer to the value.", "intent": "explain_pointer", "kind": "find"}
+{"input": "how does a pointer work in go", "output": "The star \u2014 in a type it means a pointer to that type, and on a pointer value it dereferences, reaching the value stored at the address.", "intent": "explain_pointer", "kind": "find"}
+{"input": "tell me about a pointer in go", "output": "The ampersand \u2014 placed before a value, it produces that value's memory address: a pointer you can hand to code that should work on the original.", "intent": "explain_pointer", "kind": "find"}
+{"input": "what does a pointer mean in go", "output": "Value versus pointer \u2014 a function receiving a value gets its own copy and cannot change yours. Give it a pointer and it works on the original through the address.", "intent": "explain_pointer", "kind": "find"}
+{"input": "why would i use a pointer in go", "output": "Passing a pointer \u2014 do it when the function should change the caller's value, or when the value is large and copying it every call would waste effort.", "intent": "explain_pointer", "kind": "find"}
+{"input": "can you explain printing in go", "output": "Printing \u2014 fmt.Println prints values with spaces and a newline, while fmt.Printf formats with verbs: %v for any value, %s for strings, %d for integers.", "intent": "explain_printing", "kind": "find"}
+{"input": "how does printing work in go", "output": "Printf \u2014 the formatting workhorse of the fmt package. Verbs in the format string say how each value should look, and Sprintf returns the text instead of printing it.", "intent": "explain_printing", "kind": "find"}
+{"input": "tell me about printing in go", "output": "Gofmt \u2014 go's formatting tool, which rewrites source into the one standard style: tabs for indentation, aligned comments, no arguments about layout ever again.", "intent": "explain_printing", "kind": "find"}
+{"input": "what does printing mean in go", "output": "the fmt package prints values. println prints them with spaces and a newline, and printf formats them with verbs.", "intent": "explain_printing", "kind": "find"}
+{"input": "why would i use printing in go", "output": "you use printf when the output needs a shape: %v for any value, %s for strings, and %d for integers.", "intent": "explain_printing", "kind": "find"}
+{"input": "can you explain range in go", "output": "Range \u2014 the loop form that walks a collection: index and value for slices and arrays, key and value for maps, and byte position and rune for strings.", "intent": "explain_range", "kind": "find"}
+{"input": "how does range work in go", "output": "Looping over a map \u2014 range gives you each key with its value, or just the keys if you ask for one variable. The visiting order is deliberately not fixed.", "intent": "explain_range", "kind": "find"}
+{"input": "tell me about range in go", "output": "Walking a slice \u2014 range hands you the index and the element each pass. Use the blank identifier for the index when only the values matter.", "intent": "explain_range", "kind": "find"}
+{"input": "what does range mean in go", "output": "range is the loop form that walks a collection. it gives the index and value for slices, and the key and value for maps.", "intent": "explain_range", "kind": "find"}
+{"input": "why would i use range in go", "output": "you use range when you want every element of a collection in turn, without counting positions yourself.", "intent": "explain_range", "kind": "find"}
+{"input": "can you explain a reader in go", "output": "A Reader \u2014 an interface with one method, Read, that pulls bytes from a source: a file, a network connection, a string. Anything that can be read fits the same shape.", "intent": "explain_reader", "kind": "find"}
+{"input": "how does a reader work in go", "output": "The io.Reader interface \u2014 one small contract: hand over a byte slice and get back how many bytes were filled, plus an error when the source runs dry.", "intent": "explain_reader", "kind": "find"}
+{"input": "tell me about a reader in go", "output": "A Writer \u2014 the mirror of Reader: an interface with one method, Write, that pushes bytes somewhere. Files, buffers, and network connections all accept writes this way.", "intent": "explain_reader", "kind": "find"}
+{"input": "what does a reader mean in go", "output": "a reader is an interface with one method, read, that pulls bytes from a source like a file or a connection.", "intent": "explain_reader", "kind": "find"}
+{"input": "why would i use a reader in go", "output": "you use readers when data should flow through one small contract, whatever the source is. files, buffers, and networks all fit it.", "intent": "explain_reader", "kind": "find"}
+{"input": "can you explain recover in go", "output": "Recover \u2014 a built-in that, called inside a deferred function, catches a panic in flight and hands you its value, so the program can carry on instead of crashing.", "intent": "explain_recover", "kind": "find"}
+{"input": "how does recover work in go", "output": "Stopping a panic \u2014 defer a function that calls recover. Servers use this shape so one bad connection cannot take down every other client being served.", "intent": "explain_recover", "kind": "find"}
+{"input": "tell me about recover in go", "output": "Where recover works \u2014 only inside a deferred function, while a panic is unwinding through it. Called anywhere else, recover does nothing and returns nil.", "intent": "explain_recover", "kind": "find"}
+{"input": "what does recover mean in go", "output": "Recovering in a server \u2014 yes: the standard http server recovers from a panicking handler, closes that one connection, and keeps serving everyone else.", "intent": "explain_recover", "kind": "find"}
+{"input": "why would i use recover in go", "output": "recover is a built-in that catches a panic inside a deferred function. it hands you the panic's value so the program can carry on.", "intent": "explain_recover", "kind": "find"}
+{"input": "can you explain recursion in go", "output": "Recursion \u2014 a function that calls itself on a smaller piece of the problem, again and again, until it reaches a simple base case it can answer directly.", "intent": "explain_recursion", "kind": "find"}
+{"input": "how does recursion work in go", "output": "A function calling itself \u2014 that is recursion. Factorial is the classic shape: each call multiplies by one less, and the call with zero stops the chain.", "intent": "explain_recursion", "kind": "find"}
+{"input": "tell me about recursion in go", "output": "A base case \u2014 the simplest input a recursive function answers without calling itself. Without one, the calls never stop and the program runs out of stack.", "intent": "explain_recursion", "kind": "find"}
+{"input": "what does recursion mean in go", "output": "recursion is a function calling itself on a smaller piece of the problem, until it reaches a base case it can answer directly.", "intent": "explain_recursion", "kind": "find"}
+{"input": "why would i use recursion in go", "output": "you use recursion when a problem breaks into smaller copies of itself, like walking a tree or computing a factorial.", "intent": "explain_recursion", "kind": "find"}
+{"input": "can you explain select in go", "output": "Select \u2014 a statement that waits on several channel operations at once and proceeds with whichever is ready first. If several are ready, it picks among them at random.", "intent": "explain_select", "kind": "find"}
+{"input": "how does select work in go", "output": "Waiting on channels \u2014 select is built for exactly that: one case per channel, and the first value to arrive wins while the others are left for later.", "intent": "explain_select", "kind": "find"}
+{"input": "tell me about select in go", "output": "Timeouts \u2014 pair a select with a time.After case: if the real answer has not arrived when the timer fires, the timeout case runs instead and the program moves on.", "intent": "explain_select", "kind": "find"}
+{"input": "what does select mean in go", "output": "A default case in select \u2014 it runs when no channel is ready, which turns a waiting select into a non-blocking check: try the channels, else do this instead.", "intent": "explain_select", "kind": "find"}
+{"input": "why would i use select in go", "output": "select waits on several channel operations at once and proceeds with whichever is ready first. if several are ready, it picks at random.", "intent": "explain_select", "kind": "find"}
+{"input": "can you explain a slice in go", "output": "A slice \u2014 a flexible view over an array, typed only by its elements, not its length. You make one with make or a literal, and it grows as you append to it.", "intent": "explain_slice", "kind": "find"}
+{"input": "how does a slice work in go", "output": "Append \u2014 the built-in that adds values to the end of a slice and hands back the result. Keep the returned slice, because growing may have moved the data.", "intent": "explain_slice", "kind": "find"}
+{"input": "tell me about a slice in go", "output": "Slice versus array \u2014 an array has a fixed length baked into its type, while a slice is a window onto an array that can grow. Slices are what go code uses day to day.", "intent": "explain_slice", "kind": "find"}
+{"input": "what does a slice mean in go", "output": "A nil slice \u2014 a slice with no backing array yet and length zero. It is safe to append to; go allocates the storage the first time it grows.", "intent": "explain_slice", "kind": "find"}
+{"input": "why would i use a slice in go", "output": "Make for slices \u2014 use it when you know the starting length or want capacity reserved up front, so append does not keep reallocating as the slice grows.", "intent": "explain_slice", "kind": "find"}
+{"input": "can you explain sorting in go", "output": "Sorting \u2014 the slices package sorts built-in types in place with slices.Sort, ordering strings alphabetically and numbers from small to large.", "intent": "explain_sorting", "kind": "find"}
+{"input": "how does sorting work in go", "output": "Checking sortedness \u2014 slices.IsSorted answers true or false without changing anything, handy before paying for a sort you might not need.", "intent": "explain_sorting", "kind": "find"}
+{"input": "tell me about sorting in go", "output": "Sorting strings \u2014 slices.Sort orders a slice of strings alphabetically, in place. The same call sorts ints and floats; the package handles every ordered basic type.", "intent": "explain_sorting", "kind": "find"}
+{"input": "what does sorting mean in go", "output": "Sorting by your own rule \u2014 sort.Slice takes a less function you write, comparing two elements your way: by length, by age, by any field you choose.", "intent": "explain_sorting", "kind": "find"}
+{"input": "why would i use sorting in go", "output": "the slices package sorts values in place with slices.sort. it orders strings alphabetically and numbers from small to large.", "intent": "explain_sorting", "kind": "find"}
+{"input": "can you explain strings and runes in go", "output": "A rune \u2014 go's name for one unicode code point, a single character of text. Strings are bytes underneath, so a rune can span several bytes in utf-8.", "intent": "explain_string_rune", "kind": "find"}
+{"input": "how do strings and runes work in go", "output": "Strings \u2014 a go string is a read-only slice of bytes holding utf-8 text. That is why len counts bytes, not characters, and indexing yields bytes.", "intent": "explain_string_rune", "kind": "find"}
+{"input": "tell me about strings and runes in go", "output": "Length of a string \u2014 len counts raw bytes, and utf-8 characters can take up to four bytes each. The utf8 package counts runes when you need the character count.", "intent": "explain_string_rune", "kind": "find"}
+{"input": "what do strings and runes mean in go", "output": "String functions \u2014 the strings package holds the everyday tools: Contains, Split, Join, Replace, TrimSpace, and friends, each taking the string as an argument.", "intent": "explain_string_rune", "kind": "find"}
+{"input": "why would i use strings and runes in go", "output": "A byte \u2014 a single unit of raw data, eight bits, and go's word for one element of a string's storage. Text is bytes in utf-8 clothing; a byte alone is just a number.", "intent": "explain_string_rune", "kind": "find"}
+{"input": "can you explain a struct in go", "output": "A struct \u2014 a typed collection of named fields that groups data into one record, like a person with a name and an age. You reach the fields with a dot.", "intent": "explain_struct", "kind": "find"}
+{"input": "how does a struct work in go", "output": "Structs \u2014 reach for one whenever several values belong together as a single thing: a user, a point, a configuration. The fields and their types are fixed by you.", "intent": "explain_struct", "kind": "find"}
+{"input": "tell me about a struct in go", "output": "A field \u2014 one named piece of a struct, with its own type. Fields you leave out of a literal start at their zero values, and structs can be changed after creation.", "intent": "explain_struct", "kind": "find"}
+{"input": "what does a struct mean in go", "output": "Grouping data \u2014 define a struct type with a field per piece. One value of it then carries the whole record, and functions can pass it around as a unit.", "intent": "explain_struct", "kind": "find"}
+{"input": "why would i use a struct in go", "output": "Creating a struct value \u2014 name the type and fill the fields in braces, best by field name so the meaning survives reordering. Left-out fields start at their zero values.", "intent": "explain_struct", "kind": "find"}
+{"input": "can you explain a switch in go", "output": "A switch \u2014 a tidy way to branch on many possible values of one thing. Each case is a value to match, and cases do not fall through to the next by themselves.", "intent": "explain_switch", "kind": "find"}
+{"input": "how does a switch work in go", "output": "Switch \u2014 choose it when one value faces many possible matches; a long if and else chain is the same logic written the clumsy way.", "intent": "explain_switch", "kind": "find"}
+{"input": "tell me about a switch in go", "output": "Switch \u2014 it compares its value against each case in order and runs the first match. A default case catches everything else, and several values can share one case.", "intent": "explain_switch", "kind": "find"}
+{"input": "what does a switch mean in go", "output": "A type switch \u2014 a switch that compares types instead of values, used to discover what kind of value an interface is holding right now.", "intent": "explain_switch", "kind": "find"}
+{"input": "why would i use a switch in go", "output": "a switch branches on many possible values of one thing. each case is a value to match, and cases do not fall through by themselves.", "intent": "explain_switch", "kind": "find"}
+{"input": "can you explain templates in go", "output": "Templates \u2014 text with placeholders that a program fills with data. Go's text/template and html/template packages render pages and messages this way, safely escaping html.", "intent": "explain_templates", "kind": "find"}
+{"input": "tell me about templates in go", "output": "How templates work \u2014 you parse a template once, then execute it with a data value; the actions inside double braces pull fields out of that value into the text.", "intent": "explain_templates", "kind": "find"}
+{"input": "what do templates mean in go", "output": "Text versus html templates \u2014 both render data into text with the same actions, but the html package escapes values for safety, so user text cannot break out as markup.", "intent": "explain_templates", "kind": "find"}
+{"input": "why would i use templates in go", "output": "Template data \u2014 whatever value you hand to Execute: its fields and methods become the dots and names the template's actions can reach while rendering.", "intent": "explain_templates", "kind": "find"}
+{"input": "can you explain testing in go", "output": "Testing in go \u2014 write functions named TestXxx in files ending in _test.go, then run go test. The testing package reports failures with the messages you pass it.", "intent": "explain_testing", "kind": "find"}
+{"input": "how does testing work in go", "output": "Subtests \u2014 cases run inside one test with t.Run, each with its own name, so a table of inputs can report exactly which case failed.", "intent": "explain_testing", "kind": "find"}
+{"input": "tell me about testing in go", "output": "Benchmarks \u2014 functions named BenchmarkXxx in test files, run by go test with the bench flag. The framework times the loop and reports how fast each operation is.", "intent": "explain_testing", "kind": "find"}
+{"input": "what does testing mean in go", "output": "Test-driven development \u2014 write the test first, watch it fail, then write just enough code to pass, and tidy up. Learn Go with Tests teaches the whole language in this rhythm.", "intent": "explain_testing", "kind": "find"}
+{"input": "why would i use testing in go", "output": "Tests first \u2014 a failing test states exactly what the code should do before you write it. Go's built-in testing keeps that loop fast, with no extra framework to install.", "intent": "explain_testing", "kind": "find"}
+{"input": "can you explain values in go", "output": "Values \u2014 the basic data go works with: strings of text, integers, floats, and booleans. Strings join with plus, and booleans combine with and, or, and not.", "intent": "explain_values", "kind": "find"}
+{"input": "how do values work in go", "output": "Values \u2014 go's basic kinds are strings, integers, floats, and booleans, plus collections built from them like arrays, slices, and maps.", "intent": "explain_values", "kind": "find"}
+{"input": "tell me about values in go", "output": "Numbers in go \u2014 integers do whole-number math, so seven divided by three is two, while floats keep the fraction. The kind of the value decides the arithmetic.", "intent": "explain_values", "kind": "find"}
+{"input": "what do values mean in go", "output": "A boolean \u2014 a value that is either true or false. Booleans combine with and, or, and not, and they are what if statements and loops test.", "intent": "explain_values", "kind": "find"}
+{"input": "why would i use values in go", "output": "values are the basic data go works with: strings of text, integers, floats, and booleans. strings join with plus, and booleans combine with and, or, and not.", "intent": "explain_values", "kind": "find"}
+{"input": "can you explain a variable in go", "output": "A variable \u2014 a named value the compiler type-checks. Declare one with var, or use the short form with a colon and equals inside a function; go infers the type from the value.", "intent": "explain_variable", "kind": "find"}
+{"input": "how does a variable work in go", "output": "Var \u2014 the keyword that declares a variable. You can declare several at once, and a variable declared without a value starts at its zero value.", "intent": "explain_variable", "kind": "find"}
+{"input": "tell me about a variable in go", "output": "The := form \u2014 shorthand that declares a variable and gives it its first value in one step. It only works inside functions, and go infers the type for you.", "intent": "explain_variable", "kind": "find"}
+{"input": "what does a variable mean in go", "output": "The zero value \u2014 what a variable holds before you set it: zero for numbers, false for booleans, empty for strings. Go never leaves a variable holding garbage.", "intent": "explain_variable", "kind": "find"}
+{"input": "why would i use a variable in go", "output": "Var \u2014 use it when you declare a variable without a value yet, or at package level. Inside a function, the short := form covers most everyday declarations.", "intent": "explain_variable", "kind": "find"}
+{"input": "can you explain variadic functions in go", "output": "A variadic function \u2014 one that accepts any number of trailing arguments, like fmt.Println. Inside the function, those arguments arrive as a slice.", "intent": "explain_variadic", "kind": "find"}
+{"input": "how do variadic functions work in go", "output": "The three dots \u2014 in a parameter list they mark the function variadic, collecting trailing arguments into a slice. After a slice argument, they spread it into a call.", "intent": "explain_variadic", "kind": "find"}
+{"input": "tell me about variadic functions in go", "output": "Calling variadic with a slice \u2014 put three dots after the slice in the call and it spreads into the argument list, as if you had typed each element by hand.", "intent": "explain_variadic", "kind": "find"}
+{"input": "what do variadic functions mean in go", "output": "Println \u2014 yes, fmt.Println is the most met variadic function in go: it accepts any number of values of any types and prints them in a row.", "intent": "explain_variadic", "kind": "find"}
+{"input": "why would i use variadic functions in go", "output": "a variadic function accepts any number of trailing arguments, like fmt.println. inside the function, they arrive as a slice.", "intent": "explain_variadic", "kind": "find"}
+{"input": "can you explain a waitgroup in go", "output": "A waitgroup \u2014 a counter from the sync package for waiting on goroutines. Add counts work in, each worker calls done, and wait blocks until the count reaches zero.", "intent": "explain_waitgroup", "kind": "find"}
+{"input": "how does a waitgroup work in go", "output": "Waiting for goroutines \u2014 a waitgroup is the standard tool: raise its counter before launching each goroutine, and wait until every one has reported done.", "intent": "explain_waitgroup", "kind": "find"}
+{"input": "tell me about a waitgroup in go", "output": "Add \u2014 it raises the waitgroup's counter by the number of goroutines you are about to start. It must run before they launch, or Wait might return too early.", "intent": "explain_waitgroup", "kind": "find"}
+{"input": "what does a waitgroup mean in go", "output": "Done \u2014 each finished goroutine calls it once to lower the counter. When the counter reaches zero, every Wait call that is blocked is released at once.", "intent": "explain_waitgroup", "kind": "find"}
+{"input": "why would i use a waitgroup in go", "output": "a waitgroup is a counter from the sync package for waiting on goroutines. wait blocks until the counter reaches zero.", "intent": "explain_waitgroup", "kind": "find"}
+{"input": "pause the music", "output": "Paused. Quiet whenever you want it back.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "mute the music", "output": "Muted. Silence, served.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "quit playing music", "output": "Quit. The music stops here.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "enough reminders for today", "output": "Enough for today. Reminders rest now.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop it", "output": "Stopped. All quiet.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "no music, thanks", "output": "No music, understood. Quiet it is.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "is it late", "output": "Late \u2014 you're asking about the time of day. I can't check a clock, but I follow you.", "intent": "ask_time", "kind": "find"}
+{"input": "is it early still", "output": "Early \u2014 that's asking about the time. I hear you, clock or no clock.", "intent": "ask_time", "kind": "find"}
+{"input": "tell me what day it is", "output": "The day \u2014 you're asking me what day it is. I follow you, though I keep no calendar.", "intent": "ask_time", "kind": "find"}
+{"input": "what day of the week is it", "output": "The day of the week \u2014 that's a find-the-day question. I understand.", "intent": "ask_time", "kind": "find"}
+{"input": "tell me a story about a bear", "output": "A bear once traded his roar for a beehive's friendship, and never missed the roar.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about twins", "output": "Twins in a hill town finished each other's sentences and each other's sandwiches.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about a key", "output": "A brass key waited fifty years in a drawer for a door that was built around it.", "intent": "tell_story", "kind": "talk"}
+{"input": "tell me a story about winter", "output": "Winter lent the lake a mirror of ice, and the fish told stories underneath it.", "intent": "tell_story", "kind": "talk"}
+{"input": "i am working late tonight", "output": "Late nights add up. Bank some rest tomorrow.", "intent": "work_talk", "kind": "talk"}
+{"input": "my colleague is kind", "output": "Kind colleagues make hard weeks shorter.", "intent": "work_talk", "kind": "talk"}
+{"input": "i have a presentation on friday", "output": "Friday will come ready or not \u2014 a little practice makes it kinder.", "intent": "work_talk", "kind": "talk"}
+{"input": "the office is quiet today", "output": "Quiet offices are rare gifts. Enjoy the thinking room.", "intent": "work_talk", "kind": "talk"}
+{"input": "that was clever", "output": "Thank you. Your words set the puzzle; I just followed them.", "intent": "compliment", "kind": "talk"}
+{"input": "you are a good listener", "output": "Listening is most of my job. Thank you for noticing.", "intent": "compliment", "kind": "talk"}
+{"input": "i am impressed", "output": "Then I am glad. Impressed is a fine thing to make someone.", "intent": "compliment", "kind": "talk"}
+{"input": "you remembered", "output": "Remembering what you taught me is the least I can do.", "intent": "compliment", "kind": "talk"}
+{"input": "i feel restless", "output": "Restless energy wants a direction. A walk often lends it one.", "intent": "feelings", "kind": "talk"}
+{"input": "i am missing my family", "output": "Missing people is love with nowhere to sit. Call them when you can.", "intent": "feelings", "kind": "talk"}
+{"input": "i am a bit anxious", "output": "Anxious is a hard seat to sit in. Breathe with me a moment.", "intent": "feelings", "kind": "talk"}
+{"input": "i feel inspired", "output": "Inspired is a spark worth feeding. Start the thing while it glows.", "intent": "feelings", "kind": "talk"}
+{"input": "i am delighted", "output": "Delighted! Bright news travels fast \u2014 tell me everything.", "intent": "feelings", "kind": "talk"}
+{"input": "search for a plumber near me", "output": "A plumber near you \u2014 that's asking me to search the web. I follow you.", "intent": "search_web", "kind": "find"}
+{"input": "look up the score of the game", "output": "The score \u2014 you're asking me to look something up. I understand.", "intent": "search_web", "kind": "find"}
+{"input": "find the opening hours of the library", "output": "Opening hours \u2014 that's asking me to search. I follow you.", "intent": "search_web", "kind": "find"}
+{"input": "search online for gift ideas", "output": "Gift ideas \u2014 you're asking me to search the web. I hear you.", "intent": "search_web", "kind": "find"}
+{"input": "book a cabin for the weekend", "output": "A cabin for the weekend \u2014 that's asking me to book travel. I follow you.", "intent": "book_travel", "kind": "travel"}
+{"input": "i want to book a sleeper train", "output": "A sleeper train \u2014 you're asking me to book travel. I understand.", "intent": "book_travel", "kind": "travel"}
+{"input": "book the ferry for saturday morning", "output": "The ferry on saturday \u2014 that's a book-travel request. I follow you.", "intent": "book_travel", "kind": "travel"}
+{"input": "reserve two plane tickets", "output": "Two plane tickets \u2014 you're asking me to book travel. I hear you.", "intent": "book_travel", "kind": "travel"}
