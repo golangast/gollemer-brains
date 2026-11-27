@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/golangast/gollemer-brains/cmdmatch"
+	"github.com/golangast/gollemer-brains/data"
 )
 
 // All the brains: the matcher is the first call on a line,
@@ -157,13 +158,102 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 	return false
 }
 
+// modalGists computes, per intent label, the concept's
+// taught gist: the most frequent output among the
+// label's pairs (ties keep the earliest in file order).
+// The speaking data was built convergent -- a handful of
+// canonical gists reused across many phrasings -- so the
+// mode is the concept's canonical answer, not an average.
+func modalGists(pairs []data.Pair) map[string]string {
+	counts := map[string]map[string]int{}
+	for _, p := range pairs {
+		if p.Intent == "" || strings.TrimSpace(p.Output) == "" {
+			continue
+		}
+		if counts[p.Intent] == nil {
+			counts[p.Intent] = map[string]int{}
+		}
+		counts[p.Intent][p.Output]++
+	}
+	gists := make(map[string]string, len(counts))
+	for _, p := range pairs {
+		if p.Intent == "" {
+			continue
+		}
+		if _, counted := counts[p.Intent]; !counted {
+			continue
+		}
+		if _, done := gists[p.Intent]; done {
+			continue
+		}
+		best, bestN := "", 0
+		seen := map[string]bool{}
+		for _, q := range pairs {
+			if q.Intent != p.Intent || seen[q.Output] {
+				continue
+			}
+			seen[q.Output] = true
+			if counts[p.Intent][q.Output] > bestN {
+				best, bestN = q.Output, counts[p.Intent][q.Output]
+			}
+		}
+		gists[p.Intent] = best
+	}
+	return gists
+}
+
+// questionOpeners are the line-initial forms that mark a
+// line as a question even without a "?": the probe lines
+// and most typed questions arrive unpunctuated.
+var questionOpeners = []string{
+	"what", "why", "how", "when", "which", "who",
+	"can you", "could you", "tell me", "explain",
+	"is", "are", "does", "do",
+}
+
+// looksLikeQuestion reports whether a line has a
+// question's shape: a trailing "?" or a question opener.
+func looksLikeQuestion(line string) bool {
+	s := strings.ToLower(strings.TrimSpace(line))
+	if strings.HasSuffix(s, "?") {
+		return true
+	}
+	for _, o := range questionOpeners {
+		if s == o || strings.HasPrefix(s, o+" ") {
+			return true
+		}
+	}
+	return false
+}
+
+// answerChat produces the chat brain's answer to a line
+// the read routed here. The classifier reads concept
+// lines far better than the chat brain answers them, so
+// a confident label (a non-empty label IS at/above the
+// classifier's standing threshold) on a question-shaped
+// line is answered with the concept's taught gist --
+// the modal output of the label's own training rows --
+// instead of free generation. (Prepending the label as
+// a marker to the decoder input was measured first and
+// lifted nothing; see the build notes.) Every other
+// line -- no label, no gist, not a question -- takes the
+// plain generation path, unchanged.
+func (d *demo) answerChat(line string, read intentRead) (string, error) {
+	if read.label != "" && looksLikeQuestion(line) {
+		if gist, ok := d.chatGists[read.label]; ok && strings.TrimSpace(gist) != "" {
+			return gist, nil
+		}
+	}
+	return d.chatAnswer(line)
+}
+
 // chatRoute hands a conversational line to the chat
 // brain and prints its answer, labelled. The intent read
 // that sent it there steers the routing but is not
 // printed (John's rule, 2026-11-26: no annotations —
 // just the answer).
 func (d *demo) chatRoute(line string, read intentRead) {
-	ans, err := d.chatAnswer(line)
+	ans, err := d.answerChat(line, read)
 	if err != nil || strings.TrimSpace(ans) == "" {
 		fmt.Fprintf(d.out, "%s (it could not answer that)\n", d.paint(ansiLabel, "chat brain:"))
 	} else {

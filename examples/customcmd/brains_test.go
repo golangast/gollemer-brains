@@ -160,3 +160,74 @@ func TestBrainsUnwiredIsTheOldBehaviour(t *testing.T) {
 		t.Errorf("unwired greeting should get silence (no brain, no want — just the next prompt):\n%q", got)
 	}
 }
+
+// TestModalGists: the gist is the label's most frequent
+// output; ties keep the earliest in file order; unlabelled
+// and empty-output rows never contribute.
+func TestModalGists(t *testing.T) {
+	pairs := []data.Pair{
+		{Input: "a", Output: "gist one", Intent: "explain_x"},
+		{Input: "b", Output: "gist two", Intent: "explain_x"},
+		{Input: "c", Output: "gist one", Intent: "explain_x"},
+		{Input: "d", Output: "first", Intent: "explain_y"},
+		{Input: "e", Output: "second", Intent: "explain_y"},
+		{Input: "f", Output: "no label here"},
+		{Input: "g", Output: "", Intent: "explain_z"},
+	}
+	g := modalGists(pairs)
+	if g["explain_x"] != "gist one" {
+		t.Errorf("explain_x gist = %q, want %q", g["explain_x"], "gist one")
+	}
+	if g["explain_y"] != "first" {
+		t.Errorf("explain_y gist = %q, want the tie's earliest %q", g["explain_y"], "first")
+	}
+	if _, ok := g["explain_z"]; ok {
+		t.Errorf("explain_z has only an empty output and must have no gist")
+	}
+	if len(g) != 2 {
+		t.Errorf("gists = %v, want exactly explain_x and explain_y", g)
+	}
+}
+
+// TestLooksLikeQuestion: punctuation or an opener marks
+// the shape; plain statements do not.
+func TestLooksLikeQuestion(t *testing.T) {
+	for _, q := range []string{
+		"what is a widget", "what is a widget?", "how do you run it",
+		"tell me about widgets", "explain the widget", "is it ready",
+		"can you explain the widget",
+	} {
+		if !looksLikeQuestion(q) {
+			t.Errorf("looksLikeQuestion(%q) = false, want true", q)
+		}
+	}
+	for _, s := range []string{
+		"this error message is confusing me", "hello there friend",
+		"i do not understand this error message",
+	} {
+		if looksLikeQuestion(s) {
+			t.Errorf("looksLikeQuestion(%q) = true, want false", s)
+		}
+	}
+}
+
+// TestBrainsGistRoute: a confident label on a
+// question-shaped line is answered with the concept's
+// taught gist, not the brain's generation; a statement
+// with the same label keeps the generation path.
+func TestBrainsGistRoute(t *testing.T) {
+	d, out := brainsDemo(t, nil)
+	d.chatGists = map[string]string{"explain_widget": "a widget is the taught gist."}
+	d.handle("what is a widget")
+	if !strings.Contains(out.String(), "chat brain: a widget is the taught gist.") {
+		t.Errorf("question line did not get the gist answer:\n%s", out.String())
+	}
+
+	d2, out2 := brainsDemo(t, nil)
+	d2.chatGists = map[string]string{"explain_widget": "a widget is the taught gist."}
+	ans, err := d2.answerChat("this error message is confusing me", intentRead{label: "explain_widget"})
+	if err != nil || ans != "stub chat reply" {
+		t.Errorf("statement answerChat = %q, %v; want the generated stub reply", ans, err)
+	}
+	_ = out2
+}

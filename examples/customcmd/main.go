@@ -111,6 +111,7 @@ type demo struct {
 	// before they arrived.
 	clf         *intent.Classifier // the in-memory intent read (pairs.jsonl)
 	chatAnswer  func(line string) (string, error)
+	chatGists   map[string]string // per-label taught gist for confident question lines (brains.go)
 	filePredict func(line string) (label string, conf float64)
 	fileExtract func(line string) (raw string, err error)
 
@@ -582,6 +583,10 @@ func main() {
 		if clf, err := intent.Train(pairs, intent.DefaultThreshold); err == nil {
 			d.clf = clf
 		}
+		// The taught gists ride the same pairs: the modal
+		// output per label, for the chat route's gist
+		// answers (brains.go: modalGists).
+		d.chatGists = modalGists(pairs)
 	}
 
 	// The chat brain: conversation and questions. Loaded
