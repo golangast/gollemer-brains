@@ -213,20 +213,68 @@ func (p *profile) has(w string) (defining bool, ok bool) {
 
 // expand adds the synonym cousins of one profile word to
 // the profile's expanded set. A word that is in the
-// profile exactly is never demoted to expanded status,
-// and when two source words claim the same cousin, a
-// defining source beats an example-only one (the cousin
-// borrows the stronger word's evidence).
-func (p *profile) expand(source string, defining bool) {
+// profile exactly is never demoted to expanded status.
+// When two source words claim the same cousin, exactly
+// one claim wins, by a rule that does not depend on the
+// order the sources are visited in:
+//
+//   - a defining source beats an example-only one (the
+//     cousin borrows the stronger word's evidence);
+//   - within one class, the source with the higher idf
+//     wins — again the stronger evidence, and the class
+//     factor is constant within a class, so idf is the
+//     whole comparison;
+//   - a remaining tie goes to the lexicographically
+//     smaller source word.
+//
+// The rule matters because the cousin borrows its
+// source's idf: which source wins changes scores. An
+// earlier version kept the first claim visited, and the
+// expansion loops ranged over maps — so the same line
+// against the same registry could score differently in
+// different processes ("save" in backup-photos' profile
+// is claimed by both "back" and "backup", and the winner
+// flipped per process, flipping verdicts with it). The
+// claim comparison below is total, so every visit order
+// settles on the same winner; NewMatcher also visits the
+// sources in sorted order, so the construction itself
+// reads the same way it computes.
+func (p *profile) expand(source string, defining bool, idf func(string) float64) {
 	for _, c := range cousinsOf(source) {
 		if p.defining[c] || p.example[c] {
 			continue
 		}
-		if have, ok := p.expanded[c]; ok && (have.defining || !defining) {
+		if have, ok := p.expanded[c]; ok && !claimWins(source, defining, have, idf) {
 			continue
 		}
 		p.expanded[c] = expandedWord{source: source, defining: defining}
 	}
+}
+
+// claimWins reports whether the claim of (source,
+// defining) on a cousin beats the claim already stored
+// for it, under the rule expand documents: class first,
+// then the source's idf, then the source's name.
+func claimWins(source string, defining bool, have expandedWord, idf func(string) float64) bool {
+	if defining != have.defining {
+		return defining
+	}
+	if mine, theirs := idf(source), idf(have.source); mine != theirs {
+		return mine > theirs
+	}
+	return source < have.source
+}
+
+// sortedKeys returns a string set's keys in sorted
+// order, for iterations whose order must not depend on
+// Go's map ranging.
+func sortedKeys(set map[string]bool) []string {
+	out := make([]string, 0, len(set))
+	for w := range set {
+		out = append(out, w)
+	}
+	sort.Strings(out)
+	return out
 }
 
 // Matcher scores lines against a registry's profiles. Build
@@ -241,7 +289,15 @@ type Matcher struct {
 }
 
 // NewMatcher builds the profiles and document frequencies
-// of a registry.
+// of a registry, in two passes: the exact profiles and
+// their document frequencies first (df is counted over
+// the exact sets alone — expansion changes what a profile
+// can match, not what words are worth), then the synonym
+// expansion of every profile, which needs the finished
+// idf table to settle competing cousin claims (see
+// expand). The passes keep the result independent of
+// construction order: a Matcher built from the same
+// registry is the same matcher in every process.
 func NewMatcher(r *Registry) *Matcher {
 	m := &Matcher{df: map[string]int{}, vocab: map[string]bool{}, expandedVocab: map[string]bool{}}
 	for _, s := range r.Scripts {
@@ -259,15 +315,6 @@ func NewMatcher(r *Registry) *Matcher {
 				}
 			}
 		}
-		// Expansion comes last and only fills gaps: the
-		// exact sets are already final, and df below is
-		// counted over them alone.
-		for w := range p.defining {
-			p.expand(w, true)
-		}
-		for w := range p.example {
-			p.expand(w, false)
-		}
 		for w := range p.defining {
 			m.df[w]++
 			m.vocab[w] = true
@@ -275,13 +322,28 @@ func NewMatcher(r *Registry) *Matcher {
 		for w := range p.example {
 			m.df[w]++
 			m.vocab[w] = true
-		}
-		for w := range p.expanded {
-			m.expandedVocab[w] = true
 		}
 		m.profiles = append(m.profiles, p)
 	}
 	m.idfMax = math.Log(float64(len(r.Scripts)+1)) + 0.5
+	// Expansion comes last and only fills gaps: the
+	// exact sets are final, and sources are visited in
+	// sorted order (the claim rule in expand is total,
+	// so the winner would be the same in any order —
+	// sorted visiting keeps the construction as
+	// deterministic as its result).
+	for i := range m.profiles {
+		p := &m.profiles[i]
+		for _, w := range sortedKeys(p.defining) {
+			p.expand(w, true, m.idf)
+		}
+		for _, w := range sortedKeys(p.example) {
+			p.expand(w, false, m.idf)
+		}
+		for w := range p.expanded {
+			m.expandedVocab[w] = true
+		}
+	}
 	return m
 }
 
