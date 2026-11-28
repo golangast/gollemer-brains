@@ -34,11 +34,16 @@ import (
 // composition runs among the parent's children. A weak
 // narrow read thus inherits its parent kind's candidates
 // systematically instead of the composition depending on
-// the kind guess alone. Two levels only — label and
-// kind — by design: no deeper hierarchy, no transitive
-// closure. Ambiguity is final: a step that finds two or
-// more candidates abstains outright, and the walk never
-// rescues an ambiguous step by trying another kind.
+// the kind guess alone. The tree runs at most three
+// levels — kind → sub-kind → label — and the walk climbs
+// the label's whole chain, composing at each level; no
+// deeper hierarchy, no transitive closure. Ambiguity is
+// final: a step that finds two or more candidates
+// abstains outright, and the walk never rescues an
+// ambiguous step by trying another kind. (Sub-kind
+// narrowing is the one refinement: ambiguity at KIND
+// level may be resolved inside the narrow read's own
+// sub-kind, a narrower question — see FallbackRead.)
 //
 // The walk fills a SILENCE, it does not override a
 // statement: when the kind read spoke and its
@@ -62,6 +67,7 @@ import (
 // action prefix).
 type LabelFactor struct {
 	Kind    string
+	SubKind string // the middle level, when the label's rows carried one
 	Objects []string
 }
 
@@ -88,13 +94,35 @@ type FactorTable struct {
 type KindTree struct {
 	Parent   map[string]string   // label -> kind
 	Children map[string][]string // kind -> sorted labels
+
+	// The third level, present only when the corpus
+	// declared sub-kinds: label -> sub-kind, sub-kind ->
+	// its parent kind, sub-kind -> its sorted labels.
+	// Three levels at most — kind → sub-kind → concept —
+	// by design, the same bound the corpus format states.
+	SubParent     map[string]string   // label -> sub-kind
+	SubKindParent map[string]string   // sub-kind -> kind
+	SubChildren   map[string][]string // sub-kind -> sorted labels
 }
 
 // DeriveKindTree builds the tree from a label→kind map.
 func DeriveKindTree(kinds map[string]string) *KindTree {
+	return DeriveKindTreeDeep(kinds, nil, nil)
+}
+
+// DeriveKindTreeDeep builds the tree with its sub-kind
+// level: subs maps label -> sub-kind, subParents maps
+// sub-kind -> kind. A label with a sub-kind keeps its
+// kind as Parent (the top level never moves); the
+// sub-kind level is additional structure the walk can
+// climb through, not a replacement for the kind.
+func DeriveKindTreeDeep(kinds, subs, subParents map[string]string) *KindTree {
 	t := &KindTree{
-		Parent:   make(map[string]string, len(kinds)),
-		Children: make(map[string][]string),
+		Parent:        make(map[string]string, len(kinds)),
+		Children:      make(map[string][]string),
+		SubParent:     make(map[string]string, len(subs)),
+		SubKindParent: make(map[string]string, len(subParents)),
+		SubChildren:   make(map[string][]string),
 	}
 	for label, kind := range kinds {
 		t.Parent[label] = kind
@@ -103,7 +131,51 @@ func DeriveKindTree(kinds map[string]string) *KindTree {
 	for kind := range t.Children {
 		sort.Strings(t.Children[kind])
 	}
+	for sub, kind := range subParents {
+		t.SubKindParent[sub] = kind
+	}
+	for label, sub := range subs {
+		t.SubParent[label] = sub
+		t.SubChildren[sub] = append(t.SubChildren[sub], label)
+	}
+	for sub := range t.SubChildren {
+		sort.Strings(t.SubChildren[sub])
+	}
 	return t
+}
+
+// Climb returns a label's ancestry in the tree, nearest
+// first: its sub-kind (when it has one), then its kind.
+// The parent walk climbs this chain — more than one
+// step, where round 4's walk climbed exactly one.
+func (t *KindTree) Climb(label string) []string {
+	var out []string
+	if sub := t.SubParent[label]; sub != "" {
+		out = append(out, sub)
+	}
+	if kind := t.Parent[label]; kind != "" {
+		out = append(out, kind)
+	}
+	return out
+}
+
+// TopKind resolves any tree node — a label, a sub-kind,
+// or a kind — to the KIND at the top of its chain. It
+// is the inheritance lookup: a sub-kind's labels answer
+// disjointness and kind questions with their top kind,
+// because the pairs and neighbourhoods are stated at
+// kind level unless a sub-kind declares its own.
+func (t *KindTree) TopKind(node string) string {
+	if kind, ok := t.SubKindParent[node]; ok {
+		return kind
+	}
+	if kind := t.Parent[node]; kind != "" {
+		return kind
+	}
+	if _, isKind := t.Children[node]; isKind {
+		return node
+	}
+	return ""
 }
 
 // ParentOf returns a label's kind — the one step up the
@@ -119,9 +191,16 @@ func (t *KindTree) ParentOf(label string) string {
 // object.
 func DeriveFactors(clf *intent.Classifier) *FactorTable {
 	kinds := clf.LabelKinds()
+	subs := clf.LabelSubKinds()
+	subParents := map[string]string{}
+	for _, label := range clf.Labels {
+		if sub := subs[label]; sub != "" {
+			subParents[sub] = clf.SubKindParent(sub)
+		}
+	}
 	t := &FactorTable{
 		ByLabel: make(map[string]LabelFactor, len(clf.Labels)),
-		Tree:    DeriveKindTree(kinds),
+		Tree:    DeriveKindTreeDeep(kinds, subs, subParents),
 	}
 	for _, label := range clf.Labels {
 		kind := kinds[label]
@@ -129,7 +208,7 @@ func DeriveFactors(clf *intent.Classifier) *FactorTable {
 		if kind == "" || len(parts) < 2 {
 			continue
 		}
-		t.ByLabel[label] = LabelFactor{Kind: kind, Objects: parts[1:]}
+		t.ByLabel[label] = LabelFactor{Kind: kind, SubKind: subs[label], Objects: parts[1:]}
 	}
 	return t
 }
@@ -212,7 +291,10 @@ func (t *FactorTable) ComposeIn(words map[string]bool, kind string) (string, int
 	n := 0
 	for _, label := range labels {
 		f := t.ByLabel[label]
-		if f.Kind != kind {
+		// A node matches a label when it is the label's
+		// kind OR its sub-kind: composition runs inside
+		// whichever level of the tree it is given.
+		if f.Kind != kind && f.SubKind != kind {
 			continue
 		}
 		ok := true
@@ -255,6 +337,23 @@ func (t *FactorTable) FallbackRead(clf *intent.Classifier, line, kindGuess strin
 			return label, true, fmt.Sprintf("fallback: kind guess %s + the line's objects compose %s (%s)", kindGuess, label, t.ExplainComposition(words, label))
 		}
 		if n > 1 {
+			// Sub-kind narrowing: ambiguity at KIND level
+			// is not the end when the narrow read's top
+			// label lives in a sub-kind of the guessed
+			// kind — composition inside the sub-kind is a
+			// different, narrower question, and exactly
+			// one candidate there adopts. A corpus with no
+			// sub-kinds never reaches this: ambiguity
+			// stays final, as round 4 left it.
+			if clf != nil {
+				if ranked := clf.RankedLabels(line); len(ranked) > 0 {
+					if sub := t.Tree.SubParent[ranked[0].Label]; sub != "" && t.Tree.TopKind(sub) == kindGuess {
+						if subLabel, m := t.ComposeIn(words, sub); m == 1 {
+							return subLabel, true, fmt.Sprintf("fallback: %d candidates inside kind %s — narrowed by top label %s to sub-kind %s, whose children compose %s (%s)", n, kindGuess, ranked[0].Label, sub, subLabel, t.ExplainComposition(words, subLabel))
+						}
+					}
+				}
+			}
 			return "", false, fmt.Sprintf("fallback: %d candidates inside kind %s — ambiguity is final, no walk", n, kindGuess)
 		}
 		return "", false, ""
@@ -271,13 +370,28 @@ func (t *FactorTable) FallbackRead(clf *intent.Classifier, line, kindGuess strin
 	if len(ranked) == 0 {
 		return "", false, ""
 	}
-	parent := t.Tree.ParentOf(ranked[0].Label)
-	if parent == "" || parent == kindGuess {
-		return "", false, ""
-	}
-	label, n := t.ComposeIn(words, parent)
-	if n == 1 {
-		return label, true, fmt.Sprintf("fallback: parent walk — top label %s (%.2f) up to parent kind %s, whose children compose %s (%s)", ranked[0].Label, ranked[0].Prob, parent, label, t.ExplainComposition(words, label))
+	// The climb: the top label's ancestry, nearest level
+	// first — its sub-kind, then its kind. Composition
+	// runs at each level; exactly one candidate adopts,
+	// ambiguity at any level is final, and an empty level
+	// climbs on. With no sub-kinds the chain is the one
+	// parent kind round 4's walk climbed, worded as it
+	// always was.
+	chain := t.Tree.Climb(ranked[0].Label)
+	for _, node := range chain {
+		if node == "" || node == kindGuess {
+			continue
+		}
+		label, n := t.ComposeIn(words, node)
+		if n == 1 {
+			if _, isSub := t.Tree.SubKindParent[node]; isSub {
+				return label, true, fmt.Sprintf("fallback: parent walk — top label %s (%.2f) up to sub-kind %s, whose children compose %s (%s)", ranked[0].Label, ranked[0].Prob, node, label, t.ExplainComposition(words, label))
+			}
+			return label, true, fmt.Sprintf("fallback: parent walk — top label %s (%.2f) up to parent kind %s, whose children compose %s (%s)", ranked[0].Label, ranked[0].Prob, node, label, t.ExplainComposition(words, label))
+		}
+		if n > 1 {
+			return "", false, fmt.Sprintf("fallback: parent walk — %d candidates inside %s — ambiguity is final, no climb", n, node)
+		}
 	}
 	return "", false, ""
 }

@@ -81,6 +81,7 @@ line is an error that names its line number.
 | `output` | yes, unless `intent` is present | The reply or result the line should produce. For command/extractor corpora the output is the argument values, in slot order, space-separated (`{"input": "copy the archive from adam to winter", "output": "adam winter"}`). |
 | `intent` | no | The meaning label this line belongs to. A row with an `intent` but no `output` is a **label-only row**: a pure meaning example. |
 | `kind` | no | The broad family the row's `intent` belongs to — the meaning's neighbourhood (`make`, `schedule`, `talk`, …). A kind only ever annotates an intent; it never replaces one. |
+| `subkind` | no | A family *within* the row's kind (`explain` inside `find`): the tree runs kind → sub-kind → concept, three levels at most. A sub-kind belongs to exactly one kind and one label to exactly one sub-kind — violations are data errors, named like kind conflicts. Sub-kinds inherit their kind's fallback candidates and disjointness pairs; the fallback's walk climbs through them, and ambiguity at kind level can be resolved by composition inside the narrow read's sub-kind. |
 
 Further fields are ignored by the loaders, so a file carrying extra
 annotation still loads.

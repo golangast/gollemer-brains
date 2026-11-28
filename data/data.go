@@ -52,6 +52,14 @@ type Pair struct {
 	Output string `json:"output"`
 	Intent string `json:"intent,omitempty"`
 	Kind   string `json:"kind,omitempty"`
+	// SubKind is the optional middle level of the kind
+	// tree: a family WITHIN a kind ("explain" inside
+	// "find"), so the tree runs kind → sub-kind →
+	// concept, three levels at most. It only annotates
+	// an intent, exactly as Kind does, and a row that
+	// carries one must carry (or share its label's)
+	// kind: a sub-kind sits under exactly one kind.
+	SubKind string `json:"subkind,omitempty"`
 }
 
 // LoadPairs reads a JSONL pairs file. Blank lines are skipped.
@@ -89,6 +97,7 @@ func LoadPairs(path string) ([]Pair, error) {
 		}
 		p.Intent = strings.TrimSpace(p.Intent)
 		p.Kind = strings.TrimSpace(p.Kind)
+		p.SubKind = strings.TrimSpace(p.SubKind)
 		if strings.TrimSpace(p.Output) == "" && p.Intent == "" {
 			return nil, fmt.Errorf("%s line %d: empty \"output\" (a row needs an output, or an \"intent\" to be a label-only command example)", path, lineNo)
 		}

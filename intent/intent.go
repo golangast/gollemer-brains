@@ -138,6 +138,9 @@ type Classifier struct {
 	KindWeights [][]float64       `json:"kindWeights,omitempty"` // [kind][feature]
 	KindBias    []float64         `json:"kindBias,omitempty"`    // [kind]
 
+	SubKinds       map[string]string `json:"subkinds,omitempty"`       // label -> sub-kind, for labels whose rows carried one
+	SubKindParents map[string]string `json:"subkindParents,omitempty"` // sub-kind -> kind: each sub-kind sits under exactly one kind
+
 	featIdx map[string]int // feature index, rebuilt by Train and Load; not persisted
 	bpeTok  *bpe.Tokenizer // rebuilt by Train and Load under the BPE scheme; not persisted
 }
@@ -328,6 +331,37 @@ func KindMap(pairs []data.Pair) (map[string]string, error) {
 	return m, nil
 }
 
+// SubKindMap derives the label -> sub-kind and
+// sub-kind -> kind maps of a set of pairs and validates
+// them, with KindMap's discipline: a label carrying two
+// sub-kinds is a data error, a sub-kind sitting under
+// two kinds is a data error, and a sub-kind on a label
+// that carries no kind is a data error — a sub-kind is
+// a family WITHIN a kind, never a level of its own.
+// Labels whose rows carry no sub-kind are absent.
+func SubKindMap(pairs []data.Pair, kindMap map[string]string) (subs, parents map[string]string, err error) {
+	subs = map[string]string{}
+	parents = map[string]string{}
+	for _, p := range Rows(pairs) {
+		if p.SubKind == "" {
+			continue
+		}
+		if prev, ok := subs[p.Intent]; ok && prev != p.SubKind {
+			return nil, nil, fmt.Errorf("intent: label %q carries two sub-kinds, %q and %q — a meaning belongs to one sub-kind; fix the data", p.Intent, prev, p.SubKind)
+		}
+		subs[p.Intent] = p.SubKind
+		kind := kindMap[p.Intent]
+		if kind == "" {
+			return nil, nil, fmt.Errorf("intent: label %q carries sub-kind %q but no kind — a sub-kind sits under a kind; fix the data", p.Intent, p.SubKind)
+		}
+		if prev, ok := parents[p.SubKind]; ok && prev != kind {
+			return nil, nil, fmt.Errorf("intent: sub-kind %q sits under two kinds, %q and %q — a sub-kind belongs to one kind; fix the data", p.SubKind, prev, kind)
+		}
+		parents[p.SubKind] = kind
+	}
+	return subs, parents, nil
+}
+
 // Train fits a classifier on every pair that carries an
 // intent, with the default options. It errors when there
 // are no intent rows or only one label (a classifier needs
@@ -359,6 +393,10 @@ func TrainWith(pairs []data.Pair, threshold float64, opts Options) (*Classifier,
 		return nil, fmt.Errorf("intent: only one label (%v) — a classifier needs at least two meanings to choose between", keys(counts))
 	}
 	kindMap, err := KindMap(rows)
+	if err != nil {
+		return nil, err
+	}
+	subMap, subParents, err := SubKindMap(rows, kindMap)
 	if err != nil {
 		return nil, err
 	}
@@ -398,6 +436,10 @@ func TrainWith(pairs []data.Pair, threshold float64, opts Options) (*Classifier,
 	kindSet := map[string]bool{}
 	for _, k := range kindMap {
 		kindSet[k] = true
+	}
+	if len(subMap) > 0 {
+		c.SubKinds = subMap
+		c.SubKindParents = subParents
 	}
 	if len(kindSet) >= 2 {
 		c.Kinds = kindMap
@@ -656,6 +698,30 @@ func (c *Classifier) LabelKinds() map[string]string {
 	return out
 }
 
+// SubKindOf returns the sub-kind a label belongs to —
+// the middle level of the kind tree — or "" when the
+// label carries none (or is unknown).
+func (c *Classifier) SubKindOf(label string) string {
+	return c.SubKinds[label]
+}
+
+// LabelSubKinds returns a copy of the label -> sub-kind
+// map the classifier was trained with (empty when its
+// rows carried no sub-kinds).
+func (c *Classifier) LabelSubKinds() map[string]string {
+	out := make(map[string]string, len(c.SubKinds))
+	for k, v := range c.SubKinds {
+		out[k] = v
+	}
+	return out
+}
+
+// SubKindParent returns the kind a sub-kind sits under,
+// or "" when the sub-kind is unknown.
+func (c *Classifier) SubKindParent(sub string) string {
+	return c.SubKindParents[sub]
+}
+
 // PredictKind returns the most likely KIND of a line — the
 // neighbourhood its meaning lives in — with the same
 // abstention rule as Predict. It is the answer available
@@ -761,6 +827,25 @@ func Load(path string) (*Classifier, error) {
 			if !found {
 				return nil, fmt.Errorf("intent: sidecar %s maps unknown label %q to a kind", path, label)
 			}
+		}
+	}
+	for label, sub := range c.SubKinds {
+		found := false
+		for _, l := range c.Labels {
+			if l == label {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("intent: sidecar %s maps unknown label %q to a sub-kind", path, label)
+		}
+		parent, ok := c.SubKindParents[sub]
+		if !ok {
+			return nil, fmt.Errorf("intent: sidecar %s records no parent kind for sub-kind %q", path, sub)
+		}
+		if kind := c.Kinds[label]; kind != "" && kind != parent {
+			return nil, fmt.Errorf("intent: sidecar %s puts label %q in kind %q but its sub-kind %q under kind %q", path, label, kind, sub, parent)
 		}
 	}
 	if c.Threshold == 0 {
