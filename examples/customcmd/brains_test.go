@@ -231,3 +231,47 @@ func TestBrainsGistRoute(t *testing.T) {
 	}
 	_ = out2
 }
+
+// TestBrainsSilentAbstention: a line no read could take —
+// the label read abstained, the fallback composed
+// nothing, only the kind guess leans talk/find — is
+// claimed silently. It used to reach free generation,
+// whose answer to a missed read was the garble this
+// change exists to retire: no chat answer is produced,
+// nothing is printed, and the line is still claimed (no
+// teach offer follows it).
+func TestBrainsSilentAbstention(t *testing.T) {
+	d, out := brainsDemo(t, nil)
+	called := false
+	d.chatAnswer = func(line string) (string, error) {
+		called = true
+		return "stub chat reply", nil
+	}
+	d.filePredict = nil // the file route is not this line's business
+	read := intentRead{label: "", kindGuess: "find"}
+	if !d.routeAbstain("what does a timer do", nil, read, true) {
+		t.Fatal("routeAbstain did not claim the abstained line")
+	}
+	if called {
+		t.Error("the chat brain was asked to generate on an abstained read")
+	}
+	if got := out.String(); got != "" {
+		t.Errorf("silent abstention printed %q, want nothing", got)
+	}
+
+	// The scope's other half: a TALK kind guess on an
+	// abstained label still goes to generation —
+	// conversation is where a generated reply earns its
+	// keep, and the measured partial replies live there.
+	out.Reset()
+	read = intentRead{label: "", kindGuess: "talk"}
+	if !d.routeAbstain("what does a timer do", nil, read, true) {
+		t.Fatal("routeAbstain did not claim the talk-guessed line")
+	}
+	if !called {
+		t.Error("a talk kind guess no longer reaches the chat brain")
+	}
+	if got := out.String(); !strings.Contains(got, "stub chat reply") {
+		t.Errorf("talk kind guess printed %q, want the chat answer", got)
+	}
+}

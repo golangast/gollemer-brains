@@ -133,8 +133,22 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 //     diffuse neighbourhood, and routing by that guess
 //     alone would send every unknown want to chat and
 //     starve the teach loop;
-//  6. a remaining line whose kind guess is talk or find
-//     goes to the chat brain.
+//  6. a remaining line whose kind guess is FIND is
+//     claimed SILENTLY. It used to go to the chat brain,
+//     but a find-shaped line the label read abstained
+//     on, the factorized fallback could not compose, and
+//     no gist answers has nothing behind it but free
+//     generation — and generation on a missed concept
+//     read is where the garble lived, up to a wrong
+//     concept's text stated confidently. Silence is the
+//     honest answer (the same rule John's no-dead-end
+//     ruling gives unclaimed lines). A remaining line
+//     whose kind guess is TALK still goes to the chat
+//     brain: conversation is generation's home turf, and
+//     the measured record has talk abstentions producing
+//     partial, on-topic replies ("explain variables to
+//     me" opens with the variable gist's own first
+//     sentences) that silence would only lose.
 //
 // A route whose brain is not wired does not fire: the
 // line falls through to the caller's ordinary path.
@@ -168,7 +182,15 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 	if d.looksLikeWant(line, ranked) {
 		return false
 	}
-	if read.kindGuess == "talk" || read.kindGuess == "find" {
+	if read.kindGuess == "find" {
+		// Silent abstention (precedence 6 above): the
+		// line is claimed — no teach offer, no dead-end
+		// line — and nothing is printed. Whether the chat
+		// brain is wired no longer matters here: there is
+		// no read for it to answer from.
+		return true
+	}
+	if read.kindGuess == "talk" {
 		if d.chatAnswer == nil {
 			return false
 		}
