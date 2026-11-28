@@ -122,6 +122,16 @@ func (t *ObjectTable) All() []Object {
 	return out
 }
 
+// ReferencesIn is referencesIn for hosts that seat
+// values themselves (examples/customcmd's presentation
+// path): the objects a line refers back to, computed
+// against the table's current memory — call it BEFORE
+// noting the line's own seats, exactly as Interpret
+// does, or a line would "refer" to its own values.
+func (t *ObjectTable) ReferencesIn(line string) []ObjectRef {
+	return t.referencesIn(line)
+}
+
 // referencesIn finds the objects a line refers BACK to:
 // known values it names again, and "the same <type>"
 // phrases resolved against the table's memory. Values

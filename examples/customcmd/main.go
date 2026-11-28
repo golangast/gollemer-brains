@@ -55,6 +55,15 @@
 // that speaks of files in the plural applies to each
 // file of the plan's folder.
 //
+// The session also remembers what its presentations
+// seated (objects.go): a value bound in one line is a
+// typed OBJECT for the rest of the session, and a later
+// line that refers back to it — "the same folder", or
+// the bare name — gets the remembered value seated,
+// marked "(remembered)" in its arguments. A later line
+// that seats a known value under a conflicting type is
+// told so, in the open; the value stays seated.
+//
 // A presentation on its own runs nothing: the program
 // prints the script it understood, the arguments it
 // heard, a plain-words preview of what the command
@@ -119,6 +128,12 @@ type demo struct {
 	chatGists   map[string]string // per-label taught gist for confident question lines (brains.go)
 	filePredict func(line string) (label string, conf float64)
 	fileExtract func(line string) (raw string, err error)
+
+	// objects is the session's object table (objects.go):
+	// the typed values its presentations have seated,
+	// remembered across lines so a later line can refer
+	// back to them. Created lazily by objectTable().
+	objects *interpret.ObjectTable
 
 	// lastPresent is the single-line match most recently
 	// presented — the only thing a correction ("no, …")
@@ -340,10 +355,23 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 		return
 	}
 	values := bindSlotValues(decl, line, strings.Fields(raw))
+	// The object layer (objects.go): a line that refers
+	// back to a value an earlier presentation seated —
+	// "the same folder", or the bare name — gets that
+	// value seated from the session's memory, marked as
+	// remembered; a seat that contradicts the remembered
+	// type is reported under the arguments. A line with
+	// no reference back and no conflict is untouched by
+	// the layer, byte for byte.
+	values, remembered, conflicts := d.applySessionObjects(decl, line, values)
 	var bound []string
 	for i, slot := range decl.Slots {
 		if i < len(values) && values[i] != "" {
-			bound = append(bound, fmt.Sprintf("%s=%s", slot, values[i]))
+			b := fmt.Sprintf("%s=%s", slot, values[i])
+			if remembered[i] {
+				b += " (remembered)"
+			}
+			bound = append(bound, b)
 		} else {
 			bound = append(bound, fmt.Sprintf("%s=(not heard)", slot))
 		}
@@ -351,6 +379,9 @@ func (d *demo) present(decl cmdmatch.Declaration, score float64, line string) {
 	fmt.Fprintf(d.out, "%s %s\n", d.paint(ansiLabel, "arguments:"), strings.Join(bound, ", "))
 	if len(values) > len(decl.Slots) {
 		fmt.Fprintf(d.out, "(also heard, with no slot to bind: %s)\n", strings.Join(values[len(decl.Slots):], " "))
+	}
+	for _, conflict := range conflicts {
+		fmt.Fprintln(d.out, d.paint(ansiWarn, conflict))
 	}
 	d.printPreview(decl, values)
 	rendered := wouldRun(decl, values)
