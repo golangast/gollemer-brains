@@ -38,26 +38,26 @@ func tableClf() *intent.Classifier {
 func TestDeriveFactors(t *testing.T) {
 	tab := deriveFactors(tableClf())
 	// greeting has no object part: excluded.
-	if _, ok := tab.byLabel["greeting"]; ok {
-		t.Errorf("single-token label greeting was factorized: %v", tab.byLabel["greeting"])
+	if _, ok := tab.ByLabel["greeting"]; ok {
+		t.Errorf("single-token label greeting was factorized: %v", tab.ByLabel["greeting"])
 	}
-	w := tab.byLabel["explain_widget"]
-	if w.kind != "find" || len(w.objects) != 1 || w.objects[0] != "widget" {
+	w := tab.ByLabel["explain_widget"]
+	if w.Kind != "find" || len(w.Objects) != 1 || w.Objects[0] != "widget" {
 		t.Errorf("explain_widget factor = %+v, want kind find objects [widget]", w)
 	}
-	bc := tab.byLabel["explain_buffered_channel"]
-	if bc.kind != "find" || len(bc.objects) != 2 || bc.objects[0] != "buffered" || bc.objects[1] != "channel" {
+	bc := tab.ByLabel["explain_buffered_channel"]
+	if bc.Kind != "find" || len(bc.Objects) != 2 || bc.Objects[0] != "buffered" || bc.Objects[1] != "channel" {
 		t.Errorf("explain_buffered_channel factor = %+v, want kind find objects [buffered channel]", bc)
 	}
-	cf := tab.byLabel["create_file"]
-	if cf.kind != "make" || len(cf.objects) != 1 || cf.objects[0] != "file" {
+	cf := tab.ByLabel["create_file"]
+	if cf.Kind != "make" || len(cf.Objects) != 1 || cf.Objects[0] != "file" {
 		t.Errorf("create_file factor = %+v, want kind make objects [file]", cf)
 	}
 	// A label whose rows carried no kind is excluded.
 	c2 := tableClf()
 	c2.Labels = append(c2.Labels, "mystery_label")
 	tab2 := deriveFactors(c2)
-	if _, ok := tab2.byLabel["mystery_label"]; ok {
+	if _, ok := tab2.ByLabel["mystery_label"]; ok {
 		t.Errorf("kindless label mystery_label was factorized")
 	}
 }
@@ -197,16 +197,16 @@ func walkClf() *intent.Classifier {
 
 func TestDeriveKindTree(t *testing.T) {
 	tree := deriveKindTree(tableClf().LabelKinds())
-	if got := tree.parentOf("explain_widget"); got != "find" {
+	if got := tree.ParentOf("explain_widget"); got != "find" {
 		t.Errorf("parentOf(explain_widget) = %q, want find", got)
 	}
-	if got := tree.parentOf("greeting"); got != "talk" {
+	if got := tree.ParentOf("greeting"); got != "talk" {
 		t.Errorf("parentOf(greeting) = %q, want talk", got)
 	}
-	if got := tree.parentOf("no_such_label"); got != "" {
+	if got := tree.ParentOf("no_such_label"); got != "" {
 		t.Errorf("parentOf(unknown) = %q, want \"\"", got)
 	}
-	kids := tree.children["find"]
+	kids := tree.Children["find"]
 	want := []string{"explain_buffered_channel", "explain_channel", "explain_gadget", "explain_widget"}
 	if len(kids) != len(want) {
 		t.Fatalf("children[find] = %v, want %v", kids, want)

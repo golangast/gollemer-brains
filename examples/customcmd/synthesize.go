@@ -236,8 +236,8 @@ func replaceValue(decl cmdmatch.Declaration, src, slot, v, pv string) string {
 	start := 0
 	words := spanWords(src)
 	for _, h := range claimAnchors(decl, words) {
-		if h.slot == slot {
-			start = words[h.end-1].end
+		if h.Slot == slot {
+			start = words[h.End-1].End
 		}
 	}
 	i := strings.Index(src[start:], v)
@@ -254,11 +254,11 @@ func replaceValue(decl cmdmatch.Declaration, src, slot, v, pv string) string {
 func cousinVariants(decl cmdmatch.Declaration, src string, emit func(string) bool) bool {
 	protected := protectedWords(decl, src)
 	for _, w := range spanWords(src) {
-		if protected[w.norm] {
+		if protected[w.Norm] {
 			continue
 		}
-		for _, cousin := range cmdmatch.Cousins(w.norm) {
-			if emit(src[:w.start] + surfaceForm(cousin, w.raw) + src[w.end:]) {
+		for _, cousin := range cmdmatch.Cousins(w.Norm) {
+			if emit(src[:w.Start] + surfaceForm(cousin, w.Raw) + src[w.End:]) {
 				return true
 			}
 		}
@@ -320,7 +320,7 @@ func seatVariants(decl cmdmatch.Declaration, src string, emit func(string) bool)
 	}
 	used := map[string]bool{}
 	for _, w := range spanWords(src) {
-		used[w.norm] = true
+		used[w.Norm] = true
 	}
 	var pool []string
 	for _, v := range placeValues {
@@ -387,28 +387,28 @@ func rearrangedForm(decl cmdmatch.Declaration, src string) string {
 	var fromHit, toHit *anchorHit
 	for _, h := range claimAnchors(decl, words) {
 		h := h
-		switch h.slot {
+		switch h.Slot {
 		case "from":
 			fromHit = &h
 		case "to":
 			toHit = &h
 		}
 	}
-	if fromHit == nil || toHit == nil || fromHit.start >= toHit.start {
+	if fromHit == nil || toHit == nil || fromHit.Start >= toHit.Start {
 		return ""
 	}
-	if len(words)-toHit.start < 2 {
+	if len(words)-toHit.Start < 2 {
 		return ""
 	}
 	var parts []string
-	for _, w := range words[:fromHit.start] {
-		parts = append(parts, w.raw)
+	for _, w := range words[:fromHit.Start] {
+		parts = append(parts, w.Raw)
 	}
-	for _, w := range words[toHit.start:] {
-		parts = append(parts, w.raw)
+	for _, w := range words[toHit.Start:] {
+		parts = append(parts, w.Raw)
 	}
-	for _, w := range words[fromHit.start:toHit.start] {
-		parts = append(parts, w.raw)
+	for _, w := range words[fromHit.Start:toHit.Start] {
+		parts = append(parts, w.Raw)
 	}
 	return strings.Join(parts, " ")
 }
@@ -421,15 +421,15 @@ func rearrangedForm(decl cmdmatch.Declaration, src string) string {
 func shortForm(decl cmdmatch.Declaration, src string) string {
 	words := spanWords(src)
 	for _, h := range claimAnchors(decl, words) {
-		if h.slot != "from" {
+		if h.Slot != "from" {
 			continue
 		}
-		if h.start < 2 || h.start >= len(words) {
+		if h.Start < 2 || h.Start >= len(words) {
 			return ""
 		}
 		var parts []string
-		for _, w := range words[:h.start] {
-			parts = append(parts, w.raw)
+		for _, w := range words[:h.Start] {
+			parts = append(parts, w.Raw)
 		}
 		return strings.Join(parts, " ")
 	}
