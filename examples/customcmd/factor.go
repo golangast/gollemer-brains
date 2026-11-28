@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sort"
 	"strings"
 	"unicode"
 
@@ -24,6 +25,24 @@ import (
 // behaviour is unchanged. A confident primary read is
 // never overridden; the fallback is consumed at exactly
 // the point the primary read is (see readIntent).
+//
+// The kind tree (round 4) makes the label→kind parent
+// relationship the composition walks EXPLICIT, and adds
+// the parent walk: when composition inside the predicted
+// kind finds NO candidate — the kind read may itself
+// have abstained, or pointed at a neighbourhood the
+// line's objects do not live in — the walk starts from
+// the classifier's narrow read instead: its top label,
+// abstained or not, up to that label's PARENT kind, and
+// composition runs once more among the parent's children.
+// A weak narrow read thus inherits its parent kind's
+// candidates systematically instead of the composition
+// depending on the kind guess alone. Two levels only —
+// label and kind — by design: no deeper hierarchy, no
+// transitive closure. Ambiguity is final at either level:
+// a step that finds two or more candidates abstains
+// outright, and the walk never rescues an ambiguous step
+// by trying another kind.
 
 // labelFactor is one label's factorization: its kind and
 // the object tokens of its name (the tokens beyond the
@@ -41,6 +60,43 @@ type labelFactor struct {
 // can never name a label or kind the classifier lacks.
 type factorTable struct {
 	byLabel map[string]labelFactor
+	tree    *kindTree
+}
+
+// kindTree is the explicit two-level tree over the
+// classifier's inventory: every label that carries a
+// kind has that kind as its PARENT, and every kind's
+// CHILDREN are its labels. It is derived from the same
+// LabelKinds map the factors come from — one source of
+// truth, so the tree can never disagree with the
+// classifier about which neighbourhood a meaning lives
+// in. Children are sorted: the walk's candidate order
+// is fixed, never map order.
+type kindTree struct {
+	parent   map[string]string   // label -> kind
+	children map[string][]string // kind -> sorted labels
+}
+
+// deriveKindTree builds the tree from a label→kind map.
+func deriveKindTree(kinds map[string]string) *kindTree {
+	t := &kindTree{
+		parent:   make(map[string]string, len(kinds)),
+		children: make(map[string][]string),
+	}
+	for label, kind := range kinds {
+		t.parent[label] = kind
+		t.children[kind] = append(t.children[kind], label)
+	}
+	for kind := range t.children {
+		sort.Strings(t.children[kind])
+	}
+	return t
+}
+
+// parentOf returns a label's kind — the one step up the
+// tree — or "" when the label carries no kind.
+func (t *kindTree) parentOf(label string) string {
+	return t.parent[label]
 }
 
 // deriveFactors builds the table. Labels with no object
@@ -50,7 +106,10 @@ type factorTable struct {
 // object.
 func deriveFactors(clf *intent.Classifier) *factorTable {
 	kinds := clf.LabelKinds()
-	t := &factorTable{byLabel: make(map[string]labelFactor, len(clf.Labels))}
+	t := &factorTable{
+		byLabel: make(map[string]labelFactor, len(clf.Labels)),
+		tree:    deriveKindTree(kinds),
+	}
 	for _, label := range clf.Labels {
 		kind := kinds[label]
 		parts := strings.Split(label, "_")
@@ -126,26 +185,30 @@ func objectCousinPresent(words map[string]bool, object string) bool {
 	return false
 }
 
-// fallbackRead composes a read for a line the label read
-// left behind: the predicted kind plus the line's object
-// words. A label is a candidate when its kind is the
-// predicted kind and its WHOLE object set is present in
-// the line (subset, not intersection — otherwise
-// explain_buffered_channel would collide with
-// explain_channel on every channel line). Exactly one
-// candidate is adopted; any other count abstains.
-func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
-	if kindGuess == "" {
-		return "", false
+// composeIn runs the factor composition inside ONE kind:
+// a label is a candidate when it is a child of the kind
+// (its factor kind matches) and its WHOLE object set is
+// present in the line (subset, not intersection —
+// otherwise explain_buffered_channel would collide with
+// explain_channel on every channel line). It returns the
+// candidate and the candidate COUNT: the count is what
+// separates "nothing here" (0 — the walk may look
+// elsewhere) from "too much here" (2+ — ambiguity, which
+// is final). Candidates are visited in sorted label
+// order; the count makes the outcome order-independent
+// anyway, but a fixed visit order keeps the code as
+// deterministic as its result.
+func (t *factorTable) composeIn(words map[string]bool, kind string) (string, int) {
+	labels := make([]string, 0, len(t.byLabel))
+	for label := range t.byLabel {
+		labels = append(labels, label)
 	}
-	t := d.factors()
-	if t == nil {
-		return "", false
-	}
-	words := lineObjectWords(line)
+	sort.Strings(labels)
 	found := ""
-	for label, f := range t.byLabel {
-		if f.kind != kindGuess {
+	n := 0
+	for _, label := range labels {
+		f := t.byLabel[label]
+		if f.kind != kind {
 			continue
 		}
 		ok := true
@@ -158,13 +221,55 @@ func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 		if !ok {
 			continue
 		}
-		if found != "" {
-			return "", false // a second candidate: abstain
-		}
+		n++
 		found = label
 	}
-	if found == "" {
+	return found, n
+}
+
+// fallbackRead composes a read for a line the label read
+// left behind. Step one is the original composition: the
+// predicted kind plus the line's object words, inside the
+// predicted kind's children. Step two is the parent walk
+// (see the header): when step one found NO candidate —
+// never when it found two or more — the classifier's top
+// label names a parent kind, and composition runs once
+// more inside that kind. Exactly one candidate at either
+// step is adopted; any other outcome abstains.
+func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
+	t := d.factors()
+	if t == nil {
 		return "", false
 	}
-	return found, true
+	words := lineObjectWords(line)
+	if kindGuess != "" {
+		label, n := t.composeIn(words, kindGuess)
+		if n == 1 {
+			return label, true
+		}
+		if n > 1 {
+			return "", false // ambiguity is final: no walk
+		}
+	}
+	// The parent walk: the narrow read's top label, up
+	// one level to its parent kind, composition among
+	// the parent's children. A classifier whose ranking
+	// is empty (no feature evidence) names no parent,
+	// and a top label with no kind has none to walk to.
+	if d.clf == nil {
+		return "", false
+	}
+	ranked := d.clf.RankedLabels(line)
+	if len(ranked) == 0 {
+		return "", false
+	}
+	parent := t.tree.parentOf(ranked[0].Label)
+	if parent == "" || parent == kindGuess {
+		return "", false
+	}
+	label, n := t.composeIn(words, parent)
+	if n == 1 {
+		return label, true
+	}
+	return "", false
 }

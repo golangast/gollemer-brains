@@ -171,3 +171,95 @@ func TestFallbackGistRoute(t *testing.T) {
 		t.Errorf("composed read did not gist-route:\n%s", got)
 	}
 }
+
+// walkClf ranks create_file top on a line carrying file,
+// gadget and widget: its parent kind (make) composes
+// cleanly there, which is exactly what the walk must NOT
+// reach when the first composition step was ambiguous.
+func walkClf() *intent.Classifier {
+	// Features: file=0, gadget=1, widget=2.
+	return &intent.Classifier{
+		Labels:    []string{"create_file", "explain_gadget", "explain_widget"},
+		Words:     []string{"file", "gadget", "widget"},
+		Weights:   [][]float64{{3, 0, 0}, {0, 1, 0}, {0, 0, 1}},
+		Bias:      []float64{0, 0, 0},
+		Threshold: 0.5,
+		Kinds: map[string]string{
+			"create_file":    "make",
+			"explain_gadget": "find",
+			"explain_widget": "find",
+		},
+		KindLabels:  []string{"find", "make"},
+		KindWeights: [][]float64{{0, 0, 0}, {0, 0, 0}},
+		KindBias:    []float64{0, 0},
+	}
+}
+
+func TestDeriveKindTree(t *testing.T) {
+	tree := deriveKindTree(tableClf().LabelKinds())
+	if got := tree.parentOf("explain_widget"); got != "find" {
+		t.Errorf("parentOf(explain_widget) = %q, want find", got)
+	}
+	if got := tree.parentOf("greeting"); got != "talk" {
+		t.Errorf("parentOf(greeting) = %q, want talk", got)
+	}
+	if got := tree.parentOf("no_such_label"); got != "" {
+		t.Errorf("parentOf(unknown) = %q, want \"\"", got)
+	}
+	kids := tree.children["find"]
+	want := []string{"explain_buffered_channel", "explain_channel", "explain_gadget", "explain_widget"}
+	if len(kids) != len(want) {
+		t.Fatalf("children[find] = %v, want %v", kids, want)
+	}
+	for i := range want {
+		if kids[i] != want[i] {
+			t.Fatalf("children[find] = %v, want sorted %v", kids, want)
+		}
+	}
+}
+
+func TestParentWalkAdopts(t *testing.T) {
+	d := &demo{clf: wireClf()}
+	// No kind guess at all: the original fallback
+	// abstained here outright. The walk starts from the
+	// top label (explain_widget), goes up to its parent
+	// kind (find), and composes there.
+	got, ok := d.fallbackRead("what is a widget", "")
+	if !ok || got != "explain_widget" {
+		t.Errorf("fallbackRead via parent walk = %q, %v; want explain_widget", got, ok)
+	}
+	// A kind guess whose neighbourhood holds no
+	// candidate: the walk still applies.
+	got, ok = d.fallbackRead("what is a widget", "talk")
+	if !ok || got != "explain_widget" {
+		t.Errorf("fallbackRead via parent walk (kind talk) = %q, %v; want explain_widget", got, ok)
+	}
+}
+
+func TestParentWalkAbstains(t *testing.T) {
+	d := &demo{clf: wireClf()}
+	// The parent kind composes nothing for this line:
+	// the walk changes nothing.
+	if got, ok := d.fallbackRead("what", ""); ok {
+		t.Errorf("fallbackRead(%q) = %q, want abstention", "what", got)
+	}
+	// A classifier with no weights ranks nothing: no
+	// parent is named, the walk cannot start.
+	d2 := &demo{clf: tableClf()}
+	if got, ok := d2.fallbackRead("what is a widget", ""); ok {
+		t.Errorf("fallbackRead with weightless classifier = %q, want abstention", got)
+	}
+}
+
+func TestParentWalkAmbiguityIsFinal(t *testing.T) {
+	d := &demo{clf: walkClf()}
+	// Inside find, the line composes TWO candidates
+	// (gadget and widget): ambiguity. The top label is
+	// create_file, whose parent kind would compose
+	// cleanly — the walk must not rescue an ambiguous
+	// step by changing neighbourhoods.
+	got, ok := d.fallbackRead("create a file what is a widget and a gadget", "find")
+	if ok {
+		t.Errorf("fallbackRead = %q, want abstention (ambiguity is final)", got)
+	}
+}
