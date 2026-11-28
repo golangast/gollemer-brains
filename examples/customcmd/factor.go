@@ -4,6 +4,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/golangast/gollemer-brains/cmdmatch"
 	"github.com/golangast/gollemer-brains/intent"
 	"github.com/golangast/gollemer-brains/tokenizer"
 )
@@ -100,6 +101,31 @@ func objectPresent(words map[string]bool, object string) bool {
 	return words[object] || words[object+"s"]
 }
 
+// objectCousinPresent reports whether a COUSIN of the
+// object token is present in the line's words, in the
+// same verbatim-or-plural forms objectPresent accepts.
+// The cousins are cmdmatch's synonym families — the one
+// vocabulary of word kinship in the repo — so an unseen
+// word for a known object ("directory" for folder,
+// "document" for file, "alarm" for reminder) counts as
+// the object it names. This is the kind affinity the
+// fallback needed: the cousin alone adopts nothing —
+// the candidate must still match the predicted KIND,
+// and the exactly-one-candidate rule is untouched, so a
+// cousin that opens a second candidate pushes toward
+// abstaining exactly as the plural fold does. The
+// families' deliberate separations carry the safety:
+// file and folder are NOT cousins, so "delete the folder"
+// still cannot compose delete_file.
+func objectCousinPresent(words map[string]bool, object string) bool {
+	for _, c := range cmdmatch.Cousins(object) {
+		if words[c] || words[c+"s"] {
+			return true
+		}
+	}
+	return false
+}
+
 // fallbackRead composes a read for a line the label read
 // left behind: the predicted kind plus the line's object
 // words. A label is a candidate when its kind is the
@@ -124,7 +150,7 @@ func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 		}
 		ok := true
 		for _, obj := range f.objects {
-			if !objectPresent(words, obj) {
+			if !objectPresent(words, obj) && !objectCousinPresent(words, obj) {
 				ok = false
 				break
 			}

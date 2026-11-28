@@ -87,6 +87,16 @@ func TestFallbackReadExactlyOne(t *testing.T) {
 		{"what is a widget", "", ""},
 		// An object of another kind entirely: abstain.
 		{"what is a widget", "talk", ""},
+		// A cousin of the object counts as the object,
+		// under the same kind discipline: "document" is
+		// file's cousin, in its verbatim and plural forms.
+		{"create a document", "make", "create_file"},
+		{"create documents", "make", "create_file"},
+		{"create a document", "find", ""},
+		// The families' deliberate separation is the
+		// control: a folder is NOT a cousin of file, so
+		// the folder line composes nothing.
+		{"create a folder", "make", ""},
 	}
 	for _, c := range cases {
 		got, ok := d.fallbackRead(c.line, c.kind)
