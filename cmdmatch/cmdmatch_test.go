@@ -309,3 +309,33 @@ func TestPlanFieldsRoundTrip(t *testing.T) {
 		t.Errorf("unstaged script gained plan fields: %+v", plain)
 	}
 }
+
+func TestSemanticTieBreakOrdersExactTies(t *testing.T) {
+	// Two scripts with identical profiles tie exactly on
+	// Score for a from/to-shaped line. The one declaring
+	// the slots the line is shaped to fill ranks first —
+	// and the verdict is still the matcher's abstention:
+	// the tiebreak orders a tie, it does not break the
+	// margin bar.
+	reg := &Registry{Scripts: []Declaration{
+		{Name: "alpha", Command: "a.sh", Description: "copy the photos"},
+		{Name: "beta", Command: "b.sh", Description: "copy the photos", Slots: []string{"from", "to"}},
+	}}
+	m := NewMatcher(reg)
+	ranked := m.Rank("copy the photos from jim to jake")
+	if len(ranked) != 2 || ranked[0].Score != ranked[1].Score {
+		t.Fatalf("ranked = %+v, want an exact Score tie", ranked)
+	}
+	if ranked[0].Script.Name != "beta" || ranked[0].Fit != 2 {
+		t.Errorf("tie order = %s (fit %d) first, want beta (fit 2)", ranked[0].Script.Name, ranked[0].Fit)
+	}
+	if _, _, ok := m.Match("copy the photos from jim to jake"); ok {
+		t.Error("Match presented a winner inside the margin bar; the tiebreak must not change verdicts")
+	}
+	// A line with no slot shape leaves the tie to
+	// registry order, exactly as before.
+	ranked = m.Rank("copy the photos")
+	if ranked[0].Script.Name != "alpha" {
+		t.Errorf("shapeless tie order = %s first, want alpha (registry order)", ranked[0].Script.Name)
+	}
+}

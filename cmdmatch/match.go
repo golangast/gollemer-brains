@@ -433,11 +433,84 @@ type Scored struct {
 	Score   float64 // weighted coverage of the line, 0..1
 	Mass    float64 // matched weighted mass (the floor's measure)
 	Matched int     // distinct matched content words (the two-words bar)
+
+	// Fit and DefMass are the SEMANTIC TIEBREAK keys:
+	// they order candidates whose primary Score is
+	// exactly equal, and nothing else — a candidate
+	// behind on Score never passes one ahead of it,
+	// however well it fits. Fit is slot-type fit: the
+	// line carries a shape (a from…to span, a file name,
+	// a folder word) and the script declares the slot
+	// that shape seats in. DefMass is the part of Mass
+	// resting on the script's DEFINING words matched
+	// exactly — the description its owner wrote, as
+	// opposed to examples or cousins.
+	Fit     int
+	DefMass float64
+}
+
+// lineShape is what the semantic tiebreak can see of a
+// line's shape: the slot-shaped spans it carries,
+// computed from the raw line (from/to are stopwords to
+// the content pass, so the shape must be read before
+// they are dropped).
+type lineShape struct {
+	fromTo     bool // a "from" word before a "to" word
+	fileToken  bool // a dotted file name (notes.txt)
+	folderWord bool // folder / directory / dir
+}
+
+func shapeOf(line string) lineShape {
+	var sh lineShape
+	seenFrom := false
+	for _, tok := range wordTokens(line) {
+		switch tok {
+		case "from":
+			seenFrom = true
+		case "to":
+			if seenFrom {
+				sh.fromTo = true
+			}
+		case "folder", "directory", "dir":
+			sh.folderWord = true
+		}
+	}
+	for _, f := range strings.Fields(line) {
+		f = strings.Trim(f, ".,;:!?\"'")
+		if i := strings.Index(f, "."); i > 0 && i < len(f)-1 {
+			sh.fileToken = true
+		}
+	}
+	return sh
+}
+
+// slotFit scores a declaration's declared slots against
+// the line's shape: a candidate that takes the arguments
+// the line is shaped to give fits the line better than
+// one that takes none of them.
+func slotFit(decl Declaration, sh lineShape) int {
+	has := map[string]bool{}
+	for _, s := range decl.Slots {
+		has[s] = true
+	}
+	fit := 0
+	if sh.fromTo && has["from"] && has["to"] {
+		fit += 2
+	}
+	if sh.fileToken && has["file"] {
+		fit += 2
+	}
+	if sh.folderWord && has["folder"] {
+		fit++
+	}
+	return fit
 }
 
 // Rank scores a line against every registered script,
-// best first. It applies the typo repair to line words no
-// profile knows before scoring.
+// best first — by Score, with exact Score ties ordered
+// by the semantic keys on Scored (Fit, then DefMass)
+// before registry order. It applies the typo repair to
+// line words no profile knows before scoring.
 func (m *Matcher) Rank(line string) []Scored {
 	words := contentWords(line)
 	// Typo repair: an unknown word with exactly one
@@ -467,16 +540,20 @@ func (m *Matcher) Rank(line string) []Scored {
 	for _, w := range repaired {
 		denom += m.idf(w)
 	}
+	sh := shapeOf(line)
 	out := make([]Scored, 0, len(m.profiles))
 	for _, p := range m.profiles {
 		mass := 0.0
+		defMass := 0.0
 		matched := 0
 		for i, w := range repaired {
 			weight := 0.0
+			exactDefining := false
 			if defining, ok := p.has(w); ok {
 				weight = m.idf(w)
 				if defining {
 					weight *= 1.5
+					exactDefining = true
 				}
 			} else if ex, ok := p.expanded[w]; ok {
 				// A cousin match: borrow the source
@@ -495,14 +572,31 @@ func (m *Matcher) Rank(line string) []Scored {
 				weight *= 0.5
 			}
 			mass += weight
+			if exactDefining {
+				defMass += weight
+			}
 		}
 		score := 0.0
 		if denom > 0 {
 			score = mass / denom
 		}
-		out = append(out, Scored{Script: p.decl, Score: score, Mass: mass, Matched: matched})
+		out = append(out, Scored{Script: p.decl, Score: score, Mass: mass, Matched: matched, Fit: slotFit(p.decl, sh), DefMass: defMass})
 	}
-	sort.SliceStable(out, func(i, j int) bool { return out[i].Score > out[j].Score })
+	// Best first by Score; an EXACT tie on Score falls
+	// to the semantic keys (slot-type fit, then defining
+	// mass) before it falls to registry order, which the
+	// stable sort preserves as the last resort. Every key
+	// is computed from slices in fixed order, so the
+	// ordering is as deterministic as the scores are.
+	sort.SliceStable(out, func(i, j int) bool {
+		if out[i].Score != out[j].Score {
+			return out[i].Score > out[j].Score
+		}
+		if out[i].Fit != out[j].Fit {
+			return out[i].Fit > out[j].Fit
+		}
+		return out[i].DefMass > out[j].DefMass
+	})
 	return out
 }
 
