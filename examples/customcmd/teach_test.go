@@ -101,6 +101,7 @@ func TestTeachOnAbstainClosesLoop(t *testing.T) {
 	// no value is seated in the line, so no value swaps).
 	wantExamples := []string{
 		"create a folder",
+		"can you create a folder",
 		"build a folder",
 		"generate a folder",
 		"create a directory",

@@ -50,9 +50,14 @@ func TestSynthesizeCapAndDedup(t *testing.T) {
 }
 
 func TestSynthesizeOneSubstitution(t *testing.T) {
-	// Every variant of a simple entry differs from its
-	// source in exactly one token: one cousin swapped in,
-	// or one value swapped out — never a rewrite.
+	// Every variant of a simple entry is one declared
+	// move away from its source, never a free rewrite:
+	// a substitution differs in exactly one token (one
+	// cousin swapped in, or one value swapped out); the
+	// shape moves are the question form (the source with
+	// its "can you" dress), a rearrangement (the same
+	// tokens, reordered), or the short form (a strict
+	// prefix of the source).
 	decl := cmdmatch.Declaration{
 		Name:        "mover",
 		Description: "move the files from jim to jake",
@@ -63,10 +68,114 @@ func TestSynthesizeOneSubstitution(t *testing.T) {
 	if len(out) == 0 {
 		t.Fatal("no variants for a substitutable entry")
 	}
-	for _, v := range out {
-		if d := wordDiff(decl.Description, v); d != 1 {
-			t.Errorf("variant %q differs from the source in %d tokens, want exactly 1", v, d)
+	sameTokens := func(a, b string) bool {
+		count := map[string]int{}
+		for _, f := range strings.Fields(a) {
+			count[f]++
 		}
+		for _, f := range strings.Fields(b) {
+			count[f]--
+		}
+		for _, n := range count {
+			if n != 0 {
+				return false
+			}
+		}
+		return true
+	}
+	for _, v := range out {
+		switch {
+		case wordDiff(decl.Description, v) == 1:
+		case v == "can you "+decl.Description:
+		case sameTokens(decl.Description, v):
+		case strings.HasPrefix(decl.Description, v+" "):
+		default:
+			t.Errorf("variant %q is no declared move away from the source", v)
+		}
+	}
+}
+
+func TestSynthesizeSeatVariants(t *testing.T) {
+	// A generic description seats no values, so the
+	// value move cannot fire — the seat move rewrites
+	// the generic seat phrase with pool pairs instead,
+	// in pool order, skipping pool values the sentence
+	// already uses as words ("photos" is this entry's
+	// topic, so it is never seated as a value).
+	decl := cmdmatch.Declaration{
+		Name:        "photodump",
+		Description: "copy the photos from one folder to another",
+		Slots:       []string{"from", "to"},
+		Examples:    []string{"copy the photos from one folder to another"},
+	}
+	out := synthesizeExamples(decl)
+	for _, want := range []string{
+		"copy the photos from jim to jake",
+		"copy the photos from holidays to backup",
+	} {
+		found := false
+		for _, v := range out {
+			if v == want {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("variants %q lack the seated variant %q", out, want)
+		}
+	}
+	for _, v := range out {
+		if strings.Contains(v, "to photos") || strings.Contains(v, "from photos to") {
+			t.Errorf("variant %q seated the topic word \"photos\" as a value", v)
+		}
+	}
+}
+
+func TestSynthesizeShapeVariants(t *testing.T) {
+	// The shape moves on a plain from/to entry: the
+	// question form, the destination-first rearrangement,
+	// and the short form with the slot tail dropped.
+	decl := cmdmatch.Declaration{
+		Name:        "photodump",
+		Description: "copy the photos from one folder to another",
+		Slots:       []string{"from", "to"},
+		Examples:    []string{"copy the photos from one folder to another"},
+	}
+	out := synthesizeExamples(decl)
+	for _, want := range []string{
+		"can you copy the photos from one folder to another",
+		"copy the photos to another from one folder",
+		"copy the photos",
+	} {
+		found := false
+		for _, v := range out {
+			if v == want {
+				found = true
+			}
+		}
+		if !found {
+			t.Errorf("variants %q lack the shape variant %q", out, want)
+		}
+	}
+}
+
+func TestSynthesizeImperativeForm(t *testing.T) {
+	// A teach-on-ask want line keeps its framing as the
+	// description; the imperative under the frame is
+	// among its variants.
+	decl := cmdmatch.Declaration{
+		Name:        "greeter",
+		Description: "i want to greet the visitors at the door",
+		Examples:    []string{"i want to greet the visitors at the door"},
+	}
+	out := synthesizeExamples(decl)
+	found := false
+	for _, v := range out {
+		if v == "greet the visitors at the door" {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("variants %q lack the stripped imperative", out)
 	}
 }
 

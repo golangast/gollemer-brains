@@ -1,6 +1,7 @@
 package main
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/golangast/gollemer-brains/cmdmatch"
@@ -55,9 +56,39 @@ import (
 // reason — synthesis only ever ADDS examples; the
 // description itself is never rewritten.
 
+// Two more moves widen the shapes one taught sentence
+// covers, both word-preserving or seat-filling rather
+// than substitutive:
+//
+//   - GENERIC SEATING: a description whose from/to seat
+//     is generic ("copy the photos from one folder to
+//     another") seats no values, so the value move above
+//     never fires on it — yet the values are exactly the
+//     words a later want will carry. When the entry
+//     declares both seats, the generic seat phrase is
+//     rewritten with pool value pairs ("… from jim to
+//     jake", "… from holidays to backup"), so the pool's
+//     ordinary values join the profile as example words
+//     in the seats they belong in.
+//   - REQUEST SHAPES: the same want arrives as a bare
+//     imperative, a question ("can you …"), a short form
+//     with the slot tail dropped, a rearrangement with
+//     the to-phrase before the from-phrase, or — from
+//     the teach-on-ask door, whose descriptions ARE want
+//     lines — framed by "i want to …", whose stripped
+//     imperative is the shape later wants take. Each
+//     shape is stored verbatim; the matcher stems and
+//     stopwords its way past the differences it can, and
+//     the stored set simply covers the shapes it cannot.
+
 // maxSynthesizedExamples caps the variants one teach or
-// correction event may add to an entry.
-const maxSynthesizedExamples = 6
+// correction event may add to an entry. Six was the
+// first round's cap, and the cousin move alone could
+// fill it (a verb-rich description's cousins were cut
+// at six, and a seat or shape move would have had no
+// room at all); ten covers the value, seat and shape
+// moves whole and leaves the cousins the rest.
+const maxSynthesizedExamples = 10
 
 // The value pools, by seat: the generic corpus's common
 // values (see the file header). The file seat has no
@@ -111,10 +142,17 @@ func synthesizeExamples(decl cmdmatch.Declaration) []string {
 // given source sentences, in the context of decl (its
 // slots anchor and protect, its description supplies the
 // span pass's stop words), skipping anything already in
-// existing. Value substitutions are emitted first — they
-// are the scarcer move, since a generic description seats
-// no values at all — and cousin substitutions fill the
-// remaining budget.
+// existing. The emission order spends the budget on the
+// scarcest moves first: value substitutions (a generic
+// description seats no values at all, so they are rare),
+// generic seating (the same scarcity, one level up —
+// the values a generic description's wants will carry),
+// and the request shapes (a handful per sentence).
+// Cousin substitutions fill what budget remains: they
+// are the most plentiful move and the most redundant —
+// the matcher's own expansion already half-matches a
+// cousin, where nothing else covers a missing value or
+// an unstored shape at all.
 func synthesizeFrom(decl cmdmatch.Declaration, sources []string, existing map[string]bool) []string {
 	seen := map[string]bool{}
 	for s := range existing {
@@ -130,6 +168,16 @@ func synthesizeFrom(decl cmdmatch.Declaration, sources []string, existing map[st
 	}
 	for _, src := range sources {
 		if valueVariants(decl, src, emit) {
+			return out
+		}
+	}
+	for _, src := range sources {
+		if seatVariants(decl, src, emit) {
+			return out
+		}
+	}
+	for _, src := range sources {
+		if shapeVariants(decl, src, emit) {
 			return out
 		}
 	}
@@ -237,6 +285,172 @@ func protectedWords(decl cmdmatch.Declaration, src string) map[string]bool {
 		}
 	}
 	return out
+}
+
+// reGenericSeat matches a generic from/to seat phrase —
+// "from one folder to another", "from a folder to a
+// folder" — the shape a declared description uses when
+// it names no values of its own.
+var reGenericSeat = regexp.MustCompile(`(?i)\bfrom\s+(one|a|the)\s+(folder|place|directory|dir)\s+to\s+(another|one|a|the)(\s+(folder|place|directory|dir))?\b`)
+
+// seatVariants emits src with its generic from/to seat
+// rewritten to seat pool value pairs — at most two pairs,
+// drawn in pool order, skipping any pool value the
+// source already uses as a word (a folder the sentence
+// names "photos" as its topic is not also seated as a
+// value). Only an entry declaring both seats earns the
+// move: the pairs land in the seats the declaration
+// itself names.
+func seatVariants(decl cmdmatch.Declaration, src string, emit func(string) bool) bool {
+	hasFrom, hasTo := false, false
+	for _, s := range decl.Slots {
+		if s == "from" {
+			hasFrom = true
+		}
+		if s == "to" {
+			hasTo = true
+		}
+	}
+	if !hasFrom || !hasTo {
+		return false
+	}
+	loc := reGenericSeat.FindStringIndex(src)
+	if loc == nil {
+		return false
+	}
+	used := map[string]bool{}
+	for _, w := range spanWords(src) {
+		used[w.norm] = true
+	}
+	var pool []string
+	for _, v := range placeValues {
+		if !used[v] {
+			pool = append(pool, v)
+		}
+	}
+	for i := 0; i+1 < len(pool) && i < 4; i += 2 {
+		v := src[:loc[0]] + "from " + pool[i] + " to " + pool[i+1] + src[loc[1]:]
+		if emit(v) {
+			return true
+		}
+	}
+	return false
+}
+
+// shapeVariants emits the request shapes of src: the
+// question form, the from/to rearrangement, the short
+// form with the slot tail dropped, and the bare
+// imperative under a want framing. Each is the source's
+// own words re-dressed — no word is substituted, so the
+// anchor and value protections the substitution moves
+// observe are preserved by construction (a rearranged
+// value travels with its anchor; a dropped tail drops
+// its values whole rather than altering them).
+func shapeVariants(decl cmdmatch.Declaration, src string, emit func(string) bool) bool {
+	lower := strings.ToLower(src)
+	if strings.HasPrefix(lower, "please ") {
+		if emit("can you " + src[len("please "):]) {
+			return true
+		}
+	} else if !strings.HasPrefix(lower, "can you") && !strings.HasPrefix(lower, "could you") {
+		if emit("can you " + src) {
+			return true
+		}
+	}
+	if v := rearrangedForm(decl, src); v != "" {
+		if emit(v) {
+			return true
+		}
+	}
+	if v := shortForm(decl, src); v != "" {
+		if emit(v) {
+			return true
+		}
+	}
+	if v := imperativeForm(src); v != "" {
+		if emit(v) {
+			return true
+		}
+	}
+	return false
+}
+
+// rearrangedForm swaps src's from-phrase and to-phrase:
+// "copy the photos from one folder to another" becomes
+// "copy the photos to another from one folder" — the
+// order a want takes when the destination is named
+// first. Both anchors must be claimed, from before to,
+// and the to-phrase must carry at least one word beyond
+// its anchor.
+func rearrangedForm(decl cmdmatch.Declaration, src string) string {
+	words := spanWords(src)
+	var fromHit, toHit *anchorHit
+	for _, h := range claimAnchors(decl, words) {
+		h := h
+		switch h.slot {
+		case "from":
+			fromHit = &h
+		case "to":
+			toHit = &h
+		}
+	}
+	if fromHit == nil || toHit == nil || fromHit.start >= toHit.start {
+		return ""
+	}
+	if len(words)-toHit.start < 2 {
+		return ""
+	}
+	var parts []string
+	for _, w := range words[:fromHit.start] {
+		parts = append(parts, w.raw)
+	}
+	for _, w := range words[toHit.start:] {
+		parts = append(parts, w.raw)
+	}
+	for _, w := range words[fromHit.start:toHit.start] {
+		parts = append(parts, w.raw)
+	}
+	return strings.Join(parts, " ")
+}
+
+// shortForm drops src's slot tail: everything from the
+// from-anchor on. "copy the photos from one folder to
+// another" becomes "copy the photos" — the shape of a
+// want that names no seats. The head must keep at least
+// two words and something must actually be dropped.
+func shortForm(decl cmdmatch.Declaration, src string) string {
+	words := spanWords(src)
+	for _, h := range claimAnchors(decl, words) {
+		if h.slot != "from" {
+			continue
+		}
+		if h.start < 2 || h.start >= len(words) {
+			return ""
+		}
+		var parts []string
+		for _, w := range words[:h.start] {
+			parts = append(parts, w.raw)
+		}
+		return strings.Join(parts, " ")
+	}
+	return ""
+}
+
+// wantFramings are the first-person frames a teach-on-ask
+// want line can carry; the imperative under the frame is
+// the shape later wants take.
+var wantFramings = []string{"i want to ", "i need to ", "i would like to ", "please "}
+
+// imperativeForm strips a want framing from src's head,
+// or returns "" when src wears none.
+func imperativeForm(src string) string {
+	lower := strings.ToLower(src)
+	for _, f := range wantFramings {
+		if strings.HasPrefix(lower, f) {
+			return src[len(f):]
+		}
+	}
+	return ""
 }
 
 // surfaceForm dresses a cousin (written in the table's
