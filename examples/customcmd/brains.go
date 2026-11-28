@@ -80,6 +80,14 @@ type intentRead struct {
 	// primary read; the mark is internal (no annotation
 	// is ever printed) and exists for tests and tuning.
 	fallback bool
+	// withheld records a confident primary read the
+	// disjointness check set aside (disjoint.go): the
+	// label it was, and the disjoint-kind rival it was
+	// torn against. Both empty when nothing was
+	// withheld. The mark is internal, like fallback's.
+	withheld       string
+	withheldRival  string
+	withheldRivalK string // the rival's kind (for the inspect trace)
 }
 
 // readIntent asks the in-memory classifier about a line.
@@ -99,6 +107,21 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 	r.label, r.conf = d.clf.Predict(line)
 	if r.label != "" {
 		r.kind = d.clf.KindOf(r.label)
+		// The disjointness validation (disjoint.go): a
+		// confident read torn against a disjoint-kind
+		// rival within the near-tie gap is withheld —
+		// the line continues as an abstention below,
+		// fallback and kind routing included.
+		ranked := d.clf.RankedLabels(line)
+		if len(ranked) > 0 && ranked[0].Label == r.label {
+			if rival, ok := disjointWithhold(d.clf.KindOf, ranked); ok {
+				r.withheld = r.label
+				r.withheldRival = rival
+				r.withheldRivalK = d.clf.KindOf(rival)
+				r.label = ""
+				r.kind = ""
+			}
+		}
 	}
 	r.kindGuess, r.kindConf = d.clf.PredictKind(line)
 	if r.label == "" {
