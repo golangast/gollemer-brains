@@ -31,6 +31,12 @@ func TestDeclarationFlowInfersRelations(t *testing.T) {
 			t.Errorf("relation %d = %v, want %v", i, decl.Relations[i], want[i])
 		}
 	}
+	// The concept property rides along: the sentence
+	// speaks of copying FILES, so the entry's object
+	// type is inferred as file.
+	if decl.ObjectType != "file" {
+		t.Errorf("taught object type = %q, want file (inferred from the description)", decl.ObjectType)
+	}
 	// And the entry still matches the way it always did.
 	if _, _, ok := d.matcher.Match("copy files from jim to jake"); !ok {
 		t.Errorf("the taught command no longer matches its own shape")

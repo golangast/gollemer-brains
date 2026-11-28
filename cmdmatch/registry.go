@@ -87,6 +87,14 @@ type Declaration struct {
 	// its slot's type, and relation ranges are checked
 	// against it. Optional per slot.
 	SlotTypes map[string]string `json:"slot_types,omitempty"`
+	// ObjectType declares the type of the thing this
+	// command acts on as a whole (its ActsOn, typed): a
+	// concept property, stated alongside the examples
+	// that define the concept — identity stays
+	// example-defined; the property is an addition the
+	// relations layer and hosts can reason over, never
+	// a replacement for the examples.
+	ObjectType string `json:"object_type,omitempty"`
 }
 
 // Registry is a loaded registry file: an optional comment
@@ -170,6 +178,9 @@ func (r *Registry) Validate() error {
 			if !KnownValueType(typ) {
 				return fmt.Errorf("script %q declares unknown value type %q for slot %q", s.Name, typ, slot)
 			}
+		}
+		if s.ObjectType != "" && !KnownValueType(s.ObjectType) {
+			return fmt.Errorf("script %q declares unknown object type %q", s.Name, s.ObjectType)
 		}
 	}
 	return nil

@@ -91,6 +91,7 @@ import (
 	"github.com/golangast/gollemer-brains/cmdmatch"
 	"github.com/golangast/gollemer-brains/data"
 	"github.com/golangast/gollemer-brains/intent"
+	"github.com/golangast/gollemer-brains/interpret"
 )
 
 // demo is the REPL's state. extract is the trained
@@ -567,6 +568,12 @@ func (d *demo) persist(decl cmdmatch.Declaration) bool {
 	// sentence becomes inspectable, validatable data.
 	if len(decl.Relations) == 0 {
 		decl.Relations = cmdmatch.DeriveRelations(decl)
+	}
+	// And the concept property the sentence implies: the
+	// type of the thing the command acts on, read off its
+	// description's own object words.
+	if decl.ObjectType == "" {
+		decl.ObjectType = interpret.DeclarationProperties(decl).ObjectType
 	}
 	if err := d.reg.Add(decl); err != nil {
 		fmt.Fprintf(d.out, "not saved: %v\n", err)
