@@ -200,6 +200,17 @@ type Reading struct {
 	LabelConf float64
 	Kind      string
 	Fallback  bool
+	// Relational marks a Command adopted by the
+	// relational composition (relational.go) after the
+	// matcher abstained — the relation factor's read,
+	// not the matcher's.
+	Relational bool
+	// WithheldCommand names a command read the relation
+	// disjointness check set aside: the line both moved
+	// a value and cancelled that same value, so the
+	// read was torn and Command was cleared. (Withheld,
+	// above, is the same discipline on the label read.)
+	WithheldCommand string
 
 	Withheld      string
 	WithheldRival string
@@ -223,10 +234,23 @@ func (in *Interpreter) Interpret(line string) Reading {
 			r.Slots = SpanBind(decl, line)
 			r.Trace = append(r.Trace, in.traceMatch(line, decl, score))
 			in.readRelations(decl, &r)
+			in.checkRelationConflict(decl, &r)
 		} else {
 			ranked := in.matcher.Rank(line)
 			if len(ranked) > 0 {
 				r.Trace = append(r.Trace, fmt.Sprintf("matcher: no script (best %s %.2f, below the bars)", ranked[0].Script.Name, ranked[0].Score))
+			}
+			// The relational composition: the matcher
+			// abstained, but the line's relation cues and
+			// object words may still compose exactly one
+			// stated-relations declaration.
+			if decl, trace, ok := in.ComposeRelational(line); ok {
+				r.Command = decl.Name
+				r.Relational = true
+				r.Slots = SpanBind(decl, line)
+				r.Trace = append(r.Trace, trace)
+				in.readRelations(decl, &r)
+				in.checkRelationConflict(decl, &r)
 			}
 		}
 	}
@@ -350,6 +374,29 @@ func (in *Interpreter) readRelations(decl cmdmatch.Declaration, r *Reading) {
 // knows.
 func (in *Interpreter) Objects() *ObjectTable {
 	return in.objects
+}
+
+// checkRelationConflict applies relation disjointness
+// to a command reading: a line that both moves a value
+// and cancels that same value is torn, and the read is
+// withheld — set aside into Withheld, the command
+// cleared — exactly as a torn kind read is withheld.
+// The trace keeps the whole story.
+func (in *Interpreter) checkRelationConflict(decl cmdmatch.Declaration, r *Reading) {
+	if r.Command == "" {
+		return
+	}
+	tear, ok := RelationConflict(r.Line, decl, r.Slots)
+	if !ok {
+		return
+	}
+	r.WithheldCommand = decl.Name
+	r.Trace = append(r.Trace, fmt.Sprintf("relation disjointness: withheld %s — %s; the read is set aside, not blended", decl.Name, tear))
+	r.Command = ""
+	r.CommandScore = 0
+	r.Relational = false
+	r.Slots = nil
+	r.SlotTypes = nil
 }
 
 // traceMatch renders the matcher provenance of a matched
