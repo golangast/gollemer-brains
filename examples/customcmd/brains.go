@@ -107,6 +107,7 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 	r.label, r.conf = d.clf.Predict(line)
 	if r.label != "" {
 		r.kind = d.clf.KindOf(r.label)
+		d.tracef("intent: %s (%.2f), kind %s", r.label, r.conf, r.kind)
 		// The disjointness validation (disjoint.go): a
 		// confident read torn against a disjoint-kind
 		// rival within the near-tie gap is withheld —
@@ -118,17 +119,30 @@ func (d *demo) readIntent(line string) (intentRead, bool) {
 				r.withheld = r.label
 				r.withheldRival = rival
 				r.withheldRivalK = d.clf.KindOf(rival)
+				d.tracef("disjointness: withheld %s (%s, %.2f) — rival %s (%s, %.2f) is within %.2f and the kinds are opposites; the read is set aside, not blended",
+					r.label, r.kind, r.conf, rival, r.withheldRivalK, ranked[1].Prob, disjointGap)
 				r.label = ""
 				r.kind = ""
 			}
 		}
+	} else {
+		if ranked := d.clf.RankedLabels(line); len(ranked) > 0 {
+			d.tracef("intent: abstained (best %s %.2f, below %.2f)", ranked[0].Label, ranked[0].Prob, d.clf.Threshold)
+		} else {
+			d.tracef("intent: abstained (no feature evidence)")
+		}
 	}
 	r.kindGuess, r.kindConf = d.clf.PredictKind(line)
+	if r.kindGuess != "" {
+		d.tracef("intent: kind guess %s (%.2f)", r.kindGuess, r.kindConf)
+	}
 	if r.label == "" {
 		if label, ok := d.fallbackRead(line, r.kindGuess); ok {
 			r.label = label
 			r.kind = d.clf.KindOf(label)
 			r.fallback = true
+		} else if d.inspect {
+			d.tracef("fallback: no unique composition — the abstention stands")
 		}
 	}
 	return r, true
@@ -183,6 +197,7 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 		if d.filePredict == nil {
 			return false
 		}
+		d.tracef("route: file brain (label %s)", read.label)
 		d.fileRoute(line, read)
 		return true
 	}
@@ -191,6 +206,7 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 			if d.chatAnswer == nil {
 				return false
 			}
+			d.tracef("route: chat brain (label %s, kind %s)", read.label, read.kind)
 			d.chatRoute(line, read)
 			return true
 		}
@@ -211,12 +227,14 @@ func (d *demo) routeAbstain(line string, ranked []cmdmatch.Scored, read intentRe
 		// line — and nothing is printed. Whether the chat
 		// brain is wired no longer matters here: there is
 		// no read for it to answer from.
+		d.tracef("route: silence — a find-shaped line no read could take (silent abstention)")
 		return true
 	}
 	if read.kindGuess == "talk" {
 		if d.chatAnswer == nil {
 			return false
 		}
+		d.tracef("route: chat brain (kind guess talk, no label)")
 		d.chatRoute(line, read)
 		return true
 	}
@@ -306,9 +324,11 @@ func looksLikeQuestion(line string) bool {
 func (d *demo) answerChat(line string, read intentRead) (string, error) {
 	if read.label != "" && looksLikeQuestion(line) {
 		if gist, ok := d.chatGists[read.label]; ok && strings.TrimSpace(gist) != "" {
+			d.tracef("chat: the taught gist for %s answers (no generation)", read.label)
 			return gist, nil
 		}
 	}
+	d.tracef("chat: free generation")
 	return d.chatAnswer(line)
 }
 
@@ -384,6 +404,7 @@ func (d *demo) teachOffer(line string, ranked []cmdmatch.Scored, read intentRead
 	if !d.looksLikeWant(line, ranked) && !(haveRead && read.label != "" && wantKinds[read.kind]) {
 		return false
 	}
+	d.tracef("route: teach offer — an unmatched want no brain took")
 	d.teachFlow(line)
 	return true
 }

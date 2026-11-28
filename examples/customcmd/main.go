@@ -140,6 +140,14 @@ type demo struct {
 	// but the gate's confirmation must come from the
 	// interactive prompt (run.go).
 	interactive bool
+
+	// inspect turns on the provenance traces
+	// (inspect.go): one [inspect] line per decision on
+	// the handled line's path, printed after its
+	// ordinary output. Off, nothing is collected or
+	// printed and output is byte-identical.
+	inspect bool
+	trace   []string
 }
 
 // presentedMatch is a match the REPL just presented:
@@ -183,6 +191,12 @@ func (d *demo) reloadIfChanged() {
 // handle runs one input line. It returns false only for
 // quit/exit.
 func (d *demo) handle(line string) bool {
+	// The inspect trace (inspect.go) is per handled
+	// line: collected at the decision points below,
+	// printed after the line's ordinary output. Off,
+	// both the collection and the printing are no-ops.
+	d.trace = nil
+	defer d.flushInspect()
 	line = strings.TrimSpace(line)
 	if line == "" {
 		return true
@@ -250,6 +264,7 @@ func (d *demo) handle(line string) bool {
 	decl, score, ok := d.matcher.Match(line)
 	if !ok {
 		ranked := d.matcher.Rank(line)
+		d.traceMatcherAbstain(ranked)
 		// A near tie between two scripts is a question,
 		// not a coin flip (tie.go): the one place the
 		// abstain path speaks before the brains. Declining
@@ -280,6 +295,7 @@ func (d *demo) handle(line string) bool {
 		return true
 	}
 
+	d.traceMatch(line, decl, score)
 	d.presentMatch(decl, score, line)
 	return true
 }
@@ -581,6 +597,7 @@ func main() {
 	chatFlag := flag.String("chat", "brain.gob", "path to the trained chat brain (.gob trained on examples/pairs.jsonl)")
 	fileFlag := flag.String("filebrain", "filebrain.gob", "path to the trained file brain (.gob trained on examples/filecommands.jsonl)")
 	pairsFlag := flag.String("pairs", "examples/pairs.jsonl", "path to the labeled pairs the intent classifier trains on, in memory")
+	inspectFlag := flag.Bool("inspect", false, "print a provenance trace ([inspect] lines) after each line's output: which words, cousin links, kind-tree steps and rules produced the result")
 	flag.Parse()
 
 	b, err := brain.LoadBrain(*modelFlag)
@@ -615,6 +632,7 @@ func main() {
 		out:          os.Stdout,
 		color:        colorEnabled(),
 		interactive:  interactive,
+		inspect:      *inspectFlag,
 	}
 
 	// The intent classifier trains IN MEMORY from the

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 	"unicode"
@@ -245,9 +246,11 @@ func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 	if kindGuess != "" {
 		label, n := t.composeIn(words, kindGuess)
 		if n == 1 {
+			d.tracef("fallback: kind guess %s + the line's objects compose %s (%s)", kindGuess, label, t.explainComposition(words, label))
 			return label, true
 		}
 		if n > 1 {
+			d.tracef("fallback: %d candidates inside kind %s — ambiguity is final, no walk", n, kindGuess)
 			return "", false // ambiguity is final: no walk
 		}
 	}
@@ -269,7 +272,41 @@ func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 	}
 	label, n := t.composeIn(words, parent)
 	if n == 1 {
+		d.tracef("fallback: parent walk — top label %s (%.2f) up to parent kind %s, whose children compose %s (%s)", ranked[0].Label, ranked[0].Prob, parent, label, t.explainComposition(words, label))
 		return label, true
 	}
 	return "", false
+}
+
+// explainComposition renders, for the inspect trace,
+// how each of an adopted label's object words was found
+// in the line: verbatim, as its plural surface form, or
+// through a cousin link (naming the cousin the line
+// actually carried). It re-derives what composeIn
+// checked, for the one adopted label only.
+func (t *factorTable) explainComposition(words map[string]bool, label string) string {
+	f := t.byLabel[label]
+	parts := make([]string, 0, len(f.objects))
+	for _, obj := range f.objects {
+		switch {
+		case words[obj]:
+			parts = append(parts, obj+" verbatim")
+		case words[obj+"s"]:
+			parts = append(parts, obj+" as plural "+obj+"s")
+		default:
+			via := ""
+			for _, c := range cmdmatch.Cousins(obj) {
+				if words[c] {
+					via = c
+					break
+				}
+				if words[c+"s"] {
+					via = c + "s"
+					break
+				}
+			}
+			parts = append(parts, fmt.Sprintf("%s via cousin %s", obj, via))
+		}
+	}
+	return strings.Join(parts, "; ")
 }

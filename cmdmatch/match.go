@@ -619,3 +619,69 @@ func (m *Matcher) Match(line string) (Declaration, float64, bool) {
 	}
 	return best.Script, best.Score, true
 }
+
+// WordHit is one line word's provenance against one
+// script's profile — the inspect surface (round 4):
+// which words of the line the profile knows, and HOW
+// it knows them. Via is "defining" (the word is in the
+// script's description or name), "example" (only in an
+// example sentence), "cousin" (the word is a synonym
+// cousin of a profile word — Source names that word and
+// Defining its class), or "" when the word does not
+// reach the profile at all. ScoredAs differs from Word
+// when the typo repair scored the word as a neighbouring
+// vocabulary word.
+type WordHit struct {
+	Word     string
+	ScoredAs string
+	Via      string
+	Source   string
+	Defining bool
+}
+
+// Explain returns the provenance of a line's content
+// words against the named script's profile, in line
+// order, applying the same typo repair Rank applies
+// before scoring — so the explanation is of the match
+// that actually happened, not of a cleaner line. An
+// unknown script name explains nothing (nil). Explain
+// changes no scores: it reads the same profiles Rank
+// reads, and exists so a match can be inspected instead
+// of treated as a black-box guess.
+func (m *Matcher) Explain(line, name string) []WordHit {
+	var prof *profile
+	for i := range m.profiles {
+		if m.profiles[i].decl.Name == name {
+			prof = &m.profiles[i]
+			break
+		}
+	}
+	if prof == nil {
+		return nil
+	}
+	words := contentWords(line)
+	out := make([]WordHit, 0, len(words))
+	for _, w := range words {
+		hit := WordHit{Word: w, ScoredAs: w}
+		scored := w
+		if _, known := m.df[w]; !known && !m.expandedVocab[w] {
+			if fix, ok := m.repair(w); ok {
+				scored = fix
+				hit.ScoredAs = fix
+			}
+		}
+		if defining, ok := prof.has(scored); ok {
+			if defining {
+				hit.Via = "defining"
+			} else {
+				hit.Via = "example"
+			}
+		} else if ex, ok := prof.expanded[scored]; ok {
+			hit.Via = "cousin"
+			hit.Source = ex.source
+			hit.Defining = ex.defining
+		}
+		out = append(out, hit)
+	}
+	return out
+}
