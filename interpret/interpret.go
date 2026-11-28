@@ -75,6 +75,7 @@ type Interpreter struct {
 	matcher *cmdmatch.Matcher
 	clf     *intent.Classifier
 	factors *FactorTable
+	objects *ObjectTable
 }
 
 // Open loads an interpreter from files: a declarations
@@ -125,7 +126,7 @@ func New(reg *cmdmatch.Registry, clf *intent.Classifier) *Interpreter {
 	if reg == nil && clf == nil {
 		panic("interpret: New needs a registry, a classifier, or both")
 	}
-	in := &Interpreter{reg: reg, clf: clf}
+	in := &Interpreter{reg: reg, clf: clf, objects: NewObjectTable()}
 	if reg != nil {
 		in.matcher = cmdmatch.NewMatcher(reg)
 	}
@@ -188,6 +189,12 @@ type Reading struct {
 	// A violation is a report, never a removal: the
 	// value stays seated in Slots either way.
 	Violations []string
+	// References is the object layer's read-back: the
+	// objects this line refers to that the session
+	// already knows — named again, or as "the same
+	// folder" — each with the type the session knows
+	// it by (objects.go).
+	References []ObjectRef
 
 	Label     string
 	LabelConf float64
@@ -293,23 +300,56 @@ func (in *Interpreter) readIntent(line string, r *Reading) {
 // declaration that never named its relations gets the
 // reading it always got.
 func (in *Interpreter) readRelations(decl cmdmatch.Declaration, r *Reading) {
+	// The object layer reads the line against the
+	// session's memory BEFORE this line's own seats are
+	// noted: a reference is to something an EARLIER line
+	// introduced.
+	r.References = in.objects.referencesIn(r.Line)
+	lookup := in.objects.LookupType
 	if len(r.Slots) > 0 {
 		r.SlotTypes = make(map[string]string, len(r.Slots))
 		for slot, value := range r.Slots {
-			if t := ValueType(decl, slot, value, nil); t != "" {
+			if t := ValueType(decl, slot, value, lookup); t != "" {
 				r.SlotTypes[slot] = t
 			}
 		}
 	}
-	if len(decl.Relations) == 0 {
-		return
+	if len(decl.Relations) > 0 {
+		hops, violations := ValidateRelations(decl, r.Slots, lookup)
+		r.Trace = append(r.Trace, hops...)
+		for _, v := range violations {
+			r.Violations = append(r.Violations, v)
+			r.Trace = append(r.Trace, v)
+		}
 	}
-	hops, violations := ValidateRelations(decl, r.Slots, nil)
-	r.Trace = append(r.Trace, hops...)
-	for _, v := range violations {
-		r.Violations = append(r.Violations, v)
-		r.Trace = append(r.Trace, v)
+	// Note the seats: the values become session objects,
+	// typed as resolved. A conflict with a remembered
+	// type is a violation — reported, and the value
+	// stays seated (objects.go).
+	for _, slot := range decl.Slots {
+		value, seated := r.Slots[slot]
+		if !seated {
+			continue
+		}
+		if _, conflict := in.objects.Note(value, r.SlotTypes[slot], slot, decl.Name); conflict != "" {
+			r.Violations = append(r.Violations, conflict)
+			r.Trace = append(r.Trace, conflict)
+		}
 	}
+	for _, ref := range r.References {
+		if ref.Via != "named again" {
+			r.Trace = append(r.Trace, fmt.Sprintf("object: %q is the %s from earlier (%s)", ref.Value, ref.Type, ref.Via))
+		}
+	}
+}
+
+// Objects returns the interpreter's session object
+// table: every value its lines have seated, with the
+// type it carries — the object layer's memory, exposed
+// so a host program can show or use what the session
+// knows.
+func (in *Interpreter) Objects() *ObjectTable {
+	return in.objects
 }
 
 // traceMatch renders the matcher provenance of a matched
