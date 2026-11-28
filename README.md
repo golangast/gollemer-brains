@@ -54,6 +54,24 @@ go run ./examples/customcmd     say what you want; get the script, the preview, 
 go run ./examples/thoughtsort   dump your thoughts; get them back sorted
 go run ./examples/assistant     ask questions and work with files in one place
 go run ./examples/filecmd       work with files in a sandbox
+go run ./examples/triage        read support tickets against meanings a help desk declared
 ```
+
+## Your own content
+
+Nothing above is special to the words in this repo. The meanings
+live in two files — a declarations file saying what each thing
+means, and a pairs file of example lines teaching those meanings —
+and any program can read lines against them through the
+`interpret` package: hand it the two files, get back what each
+line means. The triage example is exactly that, in a domain that
+is not this repo's: a help desk's actions and customer lines,
+declared in its folder, interpreted from a pull. The file formats
+are the contract, written down in [FORMATS.md](FORMATS.md).
+
+The limit is plain here too: it interprets a domain exactly as
+far as that domain's meanings have been declared, and no further.
+It does not read arbitrary text and understand it — a line
+outside the declared meanings gets an abstention, not a guess.
 
 License: GPL-3.0.
