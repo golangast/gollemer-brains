@@ -29,21 +29,31 @@ import (
 //
 // The kind tree (round 4) makes the label→kind parent
 // relationship the composition walks EXPLICIT, and adds
-// the parent walk: when composition inside the predicted
-// kind finds NO candidate — the kind read may itself
-// have abstained, or pointed at a neighbourhood the
-// line's objects do not live in — the walk starts from
+// the parent walk: when the kind read ABSTAINED — it
+// named no neighbourhood at all — the walk starts from
 // the classifier's narrow read instead: its top label,
 // abstained or not, up to that label's PARENT kind, and
-// composition runs once more among the parent's children.
-// A weak narrow read thus inherits its parent kind's
-// candidates systematically instead of the composition
-// depending on the kind guess alone. Two levels only —
-// label and kind — by design: no deeper hierarchy, no
-// transitive closure. Ambiguity is final at either level:
-// a step that finds two or more candidates abstains
-// outright, and the walk never rescues an ambiguous step
-// by trying another kind.
+// composition runs among the parent's children. A weak
+// narrow read thus inherits its parent kind's candidates
+// systematically instead of the composition depending on
+// the kind guess alone. Two levels only — label and
+// kind — by design: no deeper hierarchy, no transitive
+// closure. Ambiguity is final: a step that finds two or
+// more candidates abstains outright, and the walk never
+// rescues an ambiguous step by trying another kind.
+//
+// The walk fills a SILENCE, it does not override a
+// statement: when the kind read spoke and its
+// neighbourhood composed nothing, the walk does not
+// cross into a different kind. Measured, not taste:
+// the unscoped walk's one changed line across the
+// probe corpora was "what does a timer do" — a find
+// question (kind guess find 0.89) whose top label is
+// set_timer; walking into schedule composed set_timer
+// from the bare object "timer", a wrong adoption that
+// would have earned a question line a teach offer.
+// With the scope, the walk fires only where the kind
+// read is missing — the case it exists for.
 
 // labelFactor is one label's factorization: its kind and
 // the object tokens of its name (the tokens beyond the
@@ -232,10 +242,10 @@ func (t *factorTable) composeIn(words map[string]bool, kind string) (string, int
 // left behind. Step one is the original composition: the
 // predicted kind plus the line's object words, inside the
 // predicted kind's children. Step two is the parent walk
-// (see the header): when step one found NO candidate —
-// never when it found two or more — the classifier's top
-// label names a parent kind, and composition runs once
-// more inside that kind. Exactly one candidate at either
+// (see the header): it runs only when the kind read
+// abstained — a spoken kind guess whose neighbourhood
+// composed nothing is an answer, not an invitation to
+// try another kind. Exactly one candidate at either
 // step is adopted; any other outcome abstains.
 func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 	t := d.factors()
@@ -251,8 +261,8 @@ func (d *demo) fallbackRead(line, kindGuess string) (string, bool) {
 		}
 		if n > 1 {
 			d.tracef("fallback: %d candidates inside kind %s — ambiguity is final, no walk", n, kindGuess)
-			return "", false // ambiguity is final: no walk
 		}
+		return "", false
 	}
 	// The parent walk: the narrow read's top label, up
 	// one level to its parent kind, composition among

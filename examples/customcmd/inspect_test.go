@@ -71,15 +71,14 @@ func TestInspectFallbackTrace(t *testing.T) {
 }
 
 func TestInspectParentWalkTrace(t *testing.T) {
-	// A kind guess of talk names a neighbourhood whose
-	// only child here (tell_story) composes nothing for
-	// this line, so the fallback walks: the trace must
-	// show the kind-tree step it took.
+	// No kind guess: the fallback walks from the top
+	// label to its parent kind. The trace must show
+	// the kind-tree step it took.
 	d, _ := brainsDemo(t, nil)
 	d.inspect = true
 	d.clf = wireClf()
 	d.factorTbl = nil
-	if _, ok := d.fallbackRead("what is a widget", "talk"); !ok {
+	if _, ok := d.fallbackRead("what is a widget", ""); !ok {
 		t.Fatal("parent walk did not adopt")
 	}
 	joined := strings.Join(d.trace, "\n")

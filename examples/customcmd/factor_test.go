@@ -228,11 +228,20 @@ func TestParentWalkAdopts(t *testing.T) {
 	if !ok || got != "explain_widget" {
 		t.Errorf("fallbackRead via parent walk = %q, %v; want explain_widget", got, ok)
 	}
-	// A kind guess whose neighbourhood holds no
-	// candidate: the walk still applies.
-	got, ok = d.fallbackRead("what is a widget", "talk")
-	if !ok || got != "explain_widget" {
-		t.Errorf("fallbackRead via parent walk (kind talk) = %q, %v; want explain_widget", got, ok)
+}
+
+func TestParentWalkRespectsSpokenKindGuess(t *testing.T) {
+	d := &demo{clf: wireClf()}
+	// The kind read SPOKE (talk) and its neighbourhood
+	// composed nothing. The walk does not cross into a
+	// different kind to fix that — it fills a missing
+	// kind read, it does not override a present one.
+	// (The measured case: "what does a timer do", kind
+	// guess find, top label set_timer — the unscoped
+	// walk adopted set_timer for a question line.)
+	got, ok := d.fallbackRead("what is a widget", "talk")
+	if ok {
+		t.Errorf("fallbackRead across a spoken kind guess = %q, want abstention", got)
 	}
 }
 
@@ -261,5 +270,13 @@ func TestParentWalkAmbiguityIsFinal(t *testing.T) {
 	got, ok := d.fallbackRead("create a file what is a widget and a gadget", "find")
 	if ok {
 		t.Errorf("fallbackRead = %q, want abstention (ambiguity is final)", got)
+	}
+	// The same ambiguity AT the walk level: no kind
+	// guess, the top label's parent kind (find) holds
+	// both composed candidates — the walk abstains too.
+	d2 := &demo{clf: walkClf()}
+	got, ok = d2.fallbackRead("what is a widget and a gadget", "")
+	if ok {
+		t.Errorf("fallbackRead via walk = %q, want abstention (ambiguous in the parent kind)", got)
 	}
 }
