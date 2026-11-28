@@ -25,20 +25,49 @@
 // with -resume to continue a killed run instead of starting
 // over. See the README for the data format and the checkpoint
 // discipline.
+//
+// Training a whole domain folder is one command:
+//
+//	go run ./cmd/train -dir path/to/domain
+//
+// -dir names a folder holding that domain's own pairs.jsonl;
+// the brain is written into the same folder as brain.gob
+// (with its .intents.json sidecar), using the standard
+// recipe — 60 epochs, the copy layer, light augment and
+// synonym passes, checkpoints every 10 epochs — the recipe
+// this repo's own brains are trained with. No path in the
+// repo is assumed: the folder can live anywhere, and -data,
+// -out, and the recipe flags still override the -dir
+// defaults individually when given.
 package main
 
 import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/golangast/gollemer-brains/brain"
 	"github.com/golangast/gollemer-brains/data"
 )
 
+// The standard recipe: the flag values -dir trains with
+// unless a flag is given explicitly. They are the values
+// the repo's shipped brains are trained with (the chat
+// recipe), so a domain trained with one command is
+// trained the way the repo trains its own.
+const (
+	stdEpochs    = 60
+	stdLayers    = "copy"
+	stdAugment   = 0.3
+	stdSynonyms  = 0.3
+	stdCkptEvery = 10
+)
+
 func main() {
-	dataFlag := flag.String("data", "", "path to the JSONL pairs file (required)")
+	dirFlag := flag.String("dir", "", "domain folder to train in one command: reads <dir>/pairs.jsonl, writes <dir>/brain.gob, standard recipe (see above)")
+	dataFlag := flag.String("data", "", "path to the JSONL pairs file (required without -dir)")
 	outFlag := flag.String("out", "brain.gob", "where to write the trained brain")
 	epochsFlag := flag.Int("epochs", 200, "total epochs to reach")
 	layersFlag := flag.String("layers", "", "comma-separated layers to switch on (supported: char, copy)")
@@ -50,8 +79,40 @@ func main() {
 	ckptEveryFlag := flag.Int("ckpt-every", 1, "epochs between <out>.latest checkpoint writes (1 = every epoch; higher trades a few replayed epochs on resume for less checkpoint I/O)")
 	flag.Parse()
 
+	// -dir resolves the one-command defaults: the folder's
+	// own pairs file in, the folder's own brain out, and
+	// the standard recipe — each only where the matching
+	// flag was not given explicitly.
+	if *dirFlag != "" {
+		given := map[string]bool{}
+		flag.Visit(func(f *flag.Flag) { given[f.Name] = true })
+		if !given["data"] {
+			*dataFlag = filepath.Join(*dirFlag, "pairs.jsonl")
+		}
+		if !given["out"] {
+			*outFlag = filepath.Join(*dirFlag, "brain.gob")
+		}
+		if !given["epochs"] {
+			*epochsFlag = stdEpochs
+		}
+		if !given["layers"] {
+			*layersFlag = stdLayers
+		}
+		if !given["augment"] {
+			*augmentFlag = stdAugment
+		}
+		if !given["synonyms"] {
+			*synonymsFlag = stdSynonyms
+		}
+		if !given["ckpt-every"] {
+			*ckptEveryFlag = stdCkptEvery
+		}
+		fmt.Printf("train: domain folder %s — data %s, out %s, standard recipe (epochs %d, layers %s, augment %.1f, synonyms %.1f)\n",
+			*dirFlag, *dataFlag, *outFlag, *epochsFlag, *layersFlag, *augmentFlag, *synonymsFlag)
+	}
+
 	if *dataFlag == "" {
-		fmt.Fprintln(os.Stderr, "train: -data is required")
+		fmt.Fprintln(os.Stderr, "train: -data is required (or give -dir for a domain folder)")
 		flag.Usage()
 		os.Exit(2)
 	}
