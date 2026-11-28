@@ -4392,3 +4392,81 @@
 {"input": "i want to book a sleeper train", "output": "A sleeper train \u2014 you're asking me to book travel. I understand.", "intent": "book_travel", "kind": "travel"}
 {"input": "book the ferry for saturday morning", "output": "The ferry on saturday \u2014 that's a book-travel request. I follow you.", "intent": "book_travel", "kind": "travel"}
 {"input": "reserve two plane tickets", "output": "Two plane tickets \u2014 you're asking me to book travel. I hear you.", "intent": "book_travel", "kind": "travel"}
+{"input": "move the file to the archive folder", "output": "Move the file \u2014 that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "move my photos to the other folder", "output": "The photos \u2014 I hear you: that's a move-a-file request. I understand.", "intent": "move_file", "kind": "make"}
+{"input": "move the report to the shared folder", "output": "You want the report moved. I understand \u2014 that's a move request, and I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "can you move the file to the new folder", "output": "Got it \u2014 move the file. I can't do that part here, but I understand.", "intent": "move_file", "kind": "make"}
+{"input": "please move the documents to the other drive", "output": "Move the documents \u2014 yes, I hear you: that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "i want to move my files to the external drive", "output": "Move the files \u2014 that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "move the old files to the storage folder", "output": "The old files \u2014 I hear you: that's a move-a-file request. I understand.", "intent": "move_file", "kind": "make"}
+{"input": "transfer the file to the other folder", "output": "You want the file moved. I understand \u2014 that's a move request, and I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "shift the photos to the new folder", "output": "Got it \u2014 move the photos. I can't do that part here, but I understand.", "intent": "move_file", "kind": "make"}
+{"input": "relocate the documents to the archive", "output": "Move the documents \u2014 yes, I hear you: that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "move the data to the other server", "output": "Move the data \u2014 that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "move the file from the downloads folder to documents", "output": "The file \u2014 I hear you: that's a move-a-file request. I understand.", "intent": "move_file", "kind": "make"}
+{"input": "move my music to the other folder", "output": "You want the music moved. I understand \u2014 that's a move request, and I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "can you move the report over to the shared folder", "output": "Got it \u2014 move the report. I can't do that part here, but I understand.", "intent": "move_file", "kind": "make"}
+{"input": "move the backup file to the vault folder", "output": "Move the backup file \u2014 yes, I hear you: that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "please move the photos from the camera folder to the library", "output": "Move the photos \u2014 that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "i need to move the file to the project folder", "output": "The file \u2014 I hear you: that's a move-a-file request. I understand.", "intent": "move_file", "kind": "make"}
+{"input": "move the spreadsheet to the finance folder", "output": "You want the spreadsheet moved. I understand \u2014 that's a move request, and I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "move the copies to the other folder", "output": "Got it \u2014 move the copies. I can't do that part here, but I understand.", "intent": "move_file", "kind": "make"}
+{"input": "move the folder to the other drive", "output": "Move the folder \u2014 yes, I hear you: that's asking me to move a file. I follow you.", "intent": "move_file", "kind": "make"}
+{"input": "copy the file to the backup folder", "output": "Copy the file \u2014 that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "copy my photos to the external drive", "output": "The photos \u2014 I hear you: that's a copy-a-file request. I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the report to the shared folder", "output": "You want a copy of the report. I understand \u2014 that's a copy request, and I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "make a copy of the document", "output": "Got it \u2014 copy the document. I can't do that part here, but I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "can you copy the file to the other folder", "output": "Copy the file \u2014 yes, I hear you: that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "please copy the documents to the spare drive", "output": "Copy the documents \u2014 that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "i want a copy of the file in the shared folder", "output": "The file \u2014 I hear you: that's a copy-a-file request. I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "duplicate the file into the archive folder", "output": "You want a copy of the file. I understand \u2014 that's a copy request, and I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the data to the other server", "output": "Got it \u2014 copy the data. I can't do that part here, but I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "copy my music to the backup drive", "output": "Copy the music \u2014 yes, I hear you: that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "make a copy of my photos on the external drive", "output": "Copy the photos \u2014 that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the spreadsheet to the finance folder", "output": "The spreadsheet \u2014 I hear you: that's a copy-a-file request. I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "please make a copy of the report", "output": "You want a copy of the report. I understand \u2014 that's a copy request, and I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the old files to the storage folder", "output": "Got it \u2014 copy the old files. I can't do that part here, but I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "i need a copy of the document for the meeting", "output": "Copy the document \u2014 yes, I hear you: that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the file from the downloads folder to documents", "output": "Copy the file \u2014 that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "clone the documents folder to the backup drive", "output": "The documents \u2014 I hear you: that's a copy-a-file request. I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the backup to the other drive", "output": "You want a copy of the backup. I understand \u2014 that's a copy request, and I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "can you duplicate the photos into the shared folder", "output": "Got it \u2014 copy the photos. I can't do that part here, but I understand.", "intent": "copy_file", "kind": "make"}
+{"input": "copy the moved file back to the original folder", "output": "Copy the file \u2014 yes, I hear you: that's asking me to copy a file. I follow you.", "intent": "copy_file", "kind": "make"}
+{"input": "back up my files", "output": "Back up the files \u2014 that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the photos to the external drive", "output": "The photos \u2014 I hear you: that's a back-up request. I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "make a backup of my documents", "output": "You want the documents backed up. I understand \u2014 that's a backup request, and I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the report to the shared folder", "output": "Got it \u2014 back up the report. I can't do that part here, but I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "can you back up my photos", "output": "Back up the photos \u2014 yes, I hear you: that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "please back up the files to the cloud", "output": "Back up the files \u2014 that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "i want to back up my documents to the external drive", "output": "The documents \u2014 I hear you: that's a back-up request. I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the data before the update", "output": "You want the data backed up. I understand \u2014 that's a backup request, and I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "make a backup copy of the file", "output": "Got it \u2014 back up the file. I can't do that part here, but I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "back up my music library", "output": "Back up the music \u2014 yes, I hear you: that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "back the photos up to the spare drive", "output": "Back up the photos \u2014 that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "save a backup of the documents", "output": "The documents \u2014 I hear you: that's a back-up request. I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "please make a backup of the report", "output": "You want the report backed up. I understand \u2014 that's a backup request, and I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the whole folder to the cloud", "output": "Got it \u2014 back up the folder. I can't do that part here, but I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "i need a backup of my files", "output": "Back up the files \u2014 yes, I hear you: that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the photos from the camera folder", "output": "Back up the photos \u2014 that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "copy the files to the backup drive", "output": "The files \u2014 I hear you: that's a back-up request. I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "back up the moved files as well", "output": "You want the files backed up. I understand \u2014 that's a backup request, and I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "make a safety copy of the documents", "output": "Got it \u2014 back up the documents. I can't do that part here, but I understand.", "intent": "backup_files", "kind": "make"}
+{"input": "back up everything to the external drive", "output": "Back up everything \u2014 yes, I hear you: that's asking me to back files up. I follow you.", "intent": "backup_files", "kind": "make"}
+{"input": "stop copying the files", "output": "Stopped. What else is on your mind?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel the backup", "output": "Alright, dropped. What else is on your mind?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "don't copy that file", "output": "Okay, I won't. We can do something else.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "stop the backup, it's the wrong drive", "output": "Stopped. Good catch \u2014 what next?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "never mind the copy, i already have one", "output": "Never minded. Where shall we go next?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "cancel the move to the new folder", "output": "Cancelled. What else is on your mind?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "don't back the files up yet", "output": "Alright, holding off. What else?", "intent": "cancel_stop", "kind": "talk"}
+{"input": "forget the copy, it can wait", "output": "Forgotten. We can talk about something else.", "intent": "cancel_stop", "kind": "talk"}
+{"input": "remind me to back up my photos tonight", "output": "Back up the photos \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me to move the car in the morning", "output": "Move the car \u2014 I hear you: something not to forget. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "don't forget to copy the keys", "output": "Copy the keys \u2014 you want a reminder. I understand \u2014 that's a set-a-reminder request.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me to copy the file before friday", "output": "Copy the file \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "don't forget to move the meeting notes", "output": "Move the meeting notes \u2014 I hear you: something not to forget. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "remind me to make a backup this weekend", "output": "Make a backup \u2014 that's asking me to remind you. I follow you.", "intent": "set_reminder", "kind": "schedule"}
+{"input": "delete the copy of the file", "output": "The copy \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "remove the backup copy from the folder", "output": "The backup copy \u2014 I hear you: a file to delete. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "delete the moved files", "output": "The moved files \u2014 that's asking me to delete a file. I follow you.", "intent": "delete_file", "kind": "remove"}
+{"input": "delete the duplicate file", "output": "The duplicate \u2014 I hear you: a file to delete. I follow you.", "intent": "delete_file", "kind": "remove"}
