@@ -176,6 +176,19 @@ type Reading struct {
 	CommandScore float64
 	Slots        map[string]string
 
+	// SlotTypes is the resolved type of each seated
+	// value (declared on the slot, remembered by the
+	// session's object table, read off the value's
+	// shape, or the slot family's default — strongest
+	// evidence first; see relations.go).
+	SlotTypes map[string]string
+	// Violations names the checks a seated value
+	// FAILED — a relation range it does not fit, a type
+	// the session already knows it by another name.
+	// A violation is a report, never a removal: the
+	// value stays seated in Slots either way.
+	Violations []string
+
 	Label     string
 	LabelConf float64
 	Kind      string
@@ -202,6 +215,7 @@ func (in *Interpreter) Interpret(line string) Reading {
 			r.CommandScore = score
 			r.Slots = SpanBind(decl, line)
 			r.Trace = append(r.Trace, in.traceMatch(line, decl, score))
+			in.readRelations(decl, &r)
 		} else {
 			ranked := in.matcher.Rank(line)
 			if len(ranked) > 0 {
@@ -267,6 +281,34 @@ func (in *Interpreter) readIntent(line string, r *Reading) {
 			}
 			r.Trace = append(r.Trace, "fallback: no unique composition — the abstention stands")
 		}
+	}
+}
+
+// readRelations fills a matched reading's relation
+// facts: the seated values' resolved types, the
+// relation hops that fit their stated ranges (trace),
+// and the violations that did not (Violations, and the
+// trace too — a violation is provenance like any other
+// decision). Only STATED relations are validated: a
+// declaration that never named its relations gets the
+// reading it always got.
+func (in *Interpreter) readRelations(decl cmdmatch.Declaration, r *Reading) {
+	if len(r.Slots) > 0 {
+		r.SlotTypes = make(map[string]string, len(r.Slots))
+		for slot, value := range r.Slots {
+			if t := ValueType(decl, slot, value, nil); t != "" {
+				r.SlotTypes[slot] = t
+			}
+		}
+	}
+	if len(decl.Relations) == 0 {
+		return
+	}
+	hops, violations := ValidateRelations(decl, r.Slots, nil)
+	r.Trace = append(r.Trace, hops...)
+	for _, v := range violations {
+		r.Violations = append(r.Violations, v)
+		r.Trace = append(r.Trace, v)
 	}
 }
 

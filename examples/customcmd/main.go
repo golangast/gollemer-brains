@@ -559,6 +559,15 @@ func (d *demo) addFlow() {
 // over the new registry, so the entry matches from the
 // next line on. Nothing anywhere is retrained.
 func (d *demo) persist(decl cmdmatch.Declaration) bool {
+	// Teach-time relation inference: a declaration that
+	// states no relations gets the ones its own shape
+	// implies — the from/to slots named as moves_from /
+	// moves_to, the Needs list as requires edges — written
+	// into the registry, so what was implicit in the
+	// sentence becomes inspectable, validatable data.
+	if len(decl.Relations) == 0 {
+		decl.Relations = cmdmatch.DeriveRelations(decl)
+	}
 	if err := d.reg.Add(decl); err != nil {
 		fmt.Fprintf(d.out, "not saved: %v\n", err)
 		return false

@@ -71,6 +71,22 @@ type Declaration struct {
 	ActsOn      string   `json:"acts_on,omitempty"`
 	Needs       []string `json:"needs,omitempty"`
 	Steps       []string `json:"steps,omitempty"`
+
+	// Relations names the typed relationships this
+	// command stands in (see relations.go): each names
+	// a relation type, the slot it runs through, and —
+	// for edges whose far side is a name, like requires
+	// — its target. Optional; a declaration that states
+	// none still carries the relations its shape implies
+	// (DeriveRelations names them), but only STATED
+	// relations are validated and composed over.
+	Relations []Relation `json:"relations,omitempty"`
+	// SlotTypes declares the value type of individual
+	// slots (person, folder, file, time, place…): the
+	// object layer's contract. A seated value carries
+	// its slot's type, and relation ranges are checked
+	// against it. Optional per slot.
+	SlotTypes map[string]string `json:"slot_types,omitempty"`
 }
 
 // Registry is a loaded registry file: an optional comment
@@ -138,6 +154,22 @@ func (r *Registry) Validate() error {
 				return fmt.Errorf("script %q declares slot %q twice", s.Name, slot)
 			}
 			slots[slot] = true
+		}
+		for _, rel := range s.Relations {
+			if !KnownRelation(rel.Name) {
+				return fmt.Errorf("script %q declares unknown relation %q (known: %s)", s.Name, rel.Name, strings.Join(RelationNames(), ", "))
+			}
+			if rel.Slot != "" && !slots[rel.Slot] {
+				return fmt.Errorf("script %q declares relation %q on slot %q, which it does not declare", s.Name, rel.Name, rel.Slot)
+			}
+		}
+		for slot, typ := range s.SlotTypes {
+			if !slots[slot] {
+				return fmt.Errorf("script %q declares a type for slot %q, which it does not declare", s.Name, slot)
+			}
+			if !KnownValueType(typ) {
+				return fmt.Errorf("script %q declares unknown value type %q for slot %q", s.Name, typ, slot)
+			}
 		}
 	}
 	return nil
