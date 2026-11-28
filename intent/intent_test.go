@@ -286,3 +286,47 @@ func TestCountByLabel(t *testing.T) {
 		t.Fatalf("counts = %v", counts)
 	}
 }
+
+func TestRankedLabels(t *testing.T) {
+	c, err := Train(toyPairs(), DefaultThreshold)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ranked := c.RankedLabels("hello there friend")
+	if len(ranked) != len(c.Labels) {
+		t.Fatalf("ranked %d labels, want %d", len(ranked), len(c.Labels))
+	}
+	// The winner agrees with Predict's confidence-bearing
+	// read, and the order is probability-descending with
+	// name-broken ties.
+	label, conf := c.Predict("hello there friend")
+	if ranked[0].Label != label && conf >= DefaultThreshold {
+		t.Errorf("ranked winner %q, Predict winner %q", ranked[0].Label, label)
+	}
+	for i := 1; i < len(ranked); i++ {
+		if ranked[i].Prob > ranked[i-1].Prob {
+			t.Errorf("ranked out of order at %d: %v", i, ranked)
+		}
+		if ranked[i].Prob == ranked[i-1].Prob && ranked[i].Label < ranked[i-1].Label {
+			t.Errorf("probability tie not name-ordered at %d: %v", i, ranked)
+		}
+	}
+	sum := 0.0
+	for _, ls := range ranked {
+		sum += ls.Prob
+	}
+	if sum < 0.999 || sum > 1.001 {
+		t.Errorf("probabilities sum to %v, want ~1", sum)
+	}
+	// No evidence: nil, not a ranking of priors.
+	if got := c.RankedLabels("zzzqqq wwwvvv"); got != nil {
+		t.Errorf("no-evidence line ranked %v, want nil", got)
+	}
+	// Deterministic across calls.
+	again := c.RankedLabels("hello there friend")
+	for i := range ranked {
+		if ranked[i] != again[i] {
+			t.Fatalf("RankedLabels not deterministic at %d", i)
+		}
+	}
+}

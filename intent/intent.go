@@ -572,6 +572,56 @@ func (c *Classifier) Predict(line string) (string, float64) {
 	return best(c.Labels, c.Weights, c.Bias, c.fcCounts(line), c.Threshold)
 }
 
+// LabelScore is one label's probability for a line, as
+// RankedLabels reports it.
+type LabelScore struct {
+	Label string
+	Prob  float64
+}
+
+// RankedLabels returns every label's probability for a
+// line, best first — the full read Predict takes only the
+// winner of. Callers that must reason about the RUNNER-UP
+// (a near-tie between two meanings, the narrow read a
+// fallback walk starts from) use this instead of guessing
+// from the winner's confidence alone. The order is total
+// and deterministic: probability descending, and exact
+// probability ties broken by label name (Labels are stored
+// sorted, so the tie-break is stable across processes).
+// A line with no feature evidence at all returns nil —
+// the same no-evidence rule best applies — rather than a
+// ranking of priors.
+func (c *Classifier) RankedLabels(line string) []LabelScore {
+	x := c.fcCounts(line)
+	evidence := 0.0
+	for _, v := range x.val {
+		evidence += v
+	}
+	if evidence == 0 {
+		return nil
+	}
+	logits := make([]float64, len(c.Labels))
+	for l := range c.Labels {
+		s := c.Bias[l]
+		for k, j := range x.idx {
+			s += c.Weights[l][j] * x.val[k]
+		}
+		logits[l] = s
+	}
+	probs := softmax(logits)
+	out := make([]LabelScore, len(c.Labels))
+	for i, label := range c.Labels {
+		out[i] = LabelScore{Label: label, Prob: probs[i]}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Prob != out[j].Prob {
+			return out[i].Prob > out[j].Prob
+		}
+		return out[i].Label < out[j].Label
+	})
+	return out
+}
+
 // fcCounts is the classifier's featurizer applied to a line.
 func (c *Classifier) fcCounts(line string) sparseVec {
 	if c.featIdx == nil { // a Classifier built by hand, not Train/Load
