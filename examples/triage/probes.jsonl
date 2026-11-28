@@ -1,0 +1,34 @@
+{"input": "my card got charged twice this month", "expect": "route_billing"}
+{"input": "there is a mistake on my invoice", "expect": "route_billing"}
+{"input": "the app freezes every time i open it", "expect": "route_technical"}
+{"input": "i keep getting an error when i save", "expect": "route_technical"}
+{"input": "i am locked out of my account since tuesday", "expect": "route_account"}
+{"input": "our admin left and nobody can get in", "expect": "route_account"}
+{"input": "how do i change my password", "expect": "answer_password"}
+{"input": "i forgot my login, how do i get back in", "expect": "answer_password"}
+{"input": "how much is the team plan per month", "expect": "answer_pricing"}
+{"input": "what does the upgrade cost", "expect": "answer_pricing"}
+{"input": "when is support available on weekends", "expect": "answer_hours"}
+{"input": "how long until someone replies to me", "expect": "answer_hours"}
+{"input": "nothing loads at all, the whole service is down", "expect": "escalate_outage"}
+{"input": "our entire team is blocked, everything is broken", "expect": "escalate_outage"}
+{"input": "i want all my data deleted under gdpr", "expect": "escalate_legal"}
+{"input": "my lawyer will be in touch about this", "expect": "escalate_legal"}
+{"input": "this is the same issue i already reported", "expect": "close_duplicate"}
+{"input": "duplicate of the ticket from yesterday", "expect": "close_duplicate"}
+{"input": "the fix worked, thanks, all good now", "expect": "close_resolved"}
+{"input": "it is working again so you can close this", "expect": "close_resolved"}
+{"input": "the same problem is back again", "expect": "reopen_ticket"}
+{"input": "it broke again after you closed it", "expect": "reopen_ticket"}
+{"input": "any news on my ticket yet", "expect": "track_status"}
+{"input": "what is happening with my request", "expect": "track_status"}
+{"input": "page the on-call engineer", "expect": "cmd:page-oncall"}
+{"input": "this belongs with the billing team", "expect": "cmd:route-to-billing"}
+{"input": "forward this from support to the vendor", "expect": "cmd:forward-to-vendor"}
+{"input": "email them the reset guide", "expect": "cmd:send-password-guide"}
+{"input": "what is the weather like in chicago today", "expect": ""}
+{"input": "book me a flight to denver on friday", "expect": ""}
+{"input": "i love the new design, great job", "expect": ""}
+{"input": "can you recommend a good restaurant nearby", "expect": ""}
+{"input": "the meeting moved to three o clock", "expect": ""}
+{"input": "happy birthday to the whole team", "expect": ""}

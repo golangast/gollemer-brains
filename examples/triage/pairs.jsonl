@@ -1,0 +1,288 @@
+{"input": "my invoice is wrong", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "i was charged twice", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "there is an extra charge on my card", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "my bill is higher than usual", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "i need a refund for the last payment", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the invoice total does not match the quote", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "my card was billed after i cancelled", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "why was i charged this month", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the payment failed but the money left my account", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "i need a copy of my receipt for expenses", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "my discount code did not apply at checkout", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the tax on my invoice looks wrong", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "i was billed for a plan i do not use", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "can someone check this charge on my statement", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "my subscription renewed without warning", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the price changed but my bill did not", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "can you tell me why this charge is on my card", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "please send the invoice to my email again", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "i want to dispute this bill", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "how do i pay the outstanding balance", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the amount on my latest bill makes no sense", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "good morning, my payment went through twice", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "we were charged for two accounts by mistake", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "what is this fee on my statement for", "output": "Routing this to the billing team.", "intent": "route_billing", "kind": "route"}
+{"input": "the app crashes when i click save", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "i get an error message every time i log in", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the page never finishes loading", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "my export comes out empty", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the sync has been stuck for an hour", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "buttons do nothing when i tap them", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the screen goes blank after the update", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "it logs me out every few minutes", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the search stopped working yesterday", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "uploads fail with a timeout", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the app is painfully slow since the update", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "i cannot attach files anymore", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the dashboard shows the wrong numbers", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "notifications stopped arriving", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the installer quits halfway through", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "two of my projects disappeared from the list", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "can you help me, the export button does nothing", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "please look at this, the app will not start", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "i want to report a bug in the editor", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "how do i fix the sync error on my phone", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "it loads fine but will not save anything", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "every morning the first login fails", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "the report prints blank pages", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "my files will not open since yesterday", "output": "Routing this to the technical team.", "intent": "route_technical", "kind": "route"}
+{"input": "i am locked out of my account", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my account says it is suspended", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "the person who ran our workspace left the company", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "nobody on our team can get into the admin panel", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my two factor code never arrives", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "someone changed our account email and it was not us", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "i cannot verify my identity to recover the account", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "our whole team lost access this morning", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my account was merged with a stranger's account", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "the login says my account does not exist", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "i need the owner role moved to me", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my colleague cannot accept her invitation", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "we are locked out and the owner is away", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "the app says access denied even with the right login", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "a former employee still has access to our account", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my account got flagged and i cannot get in", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "can you restore access for our team", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "please unlock my account, i am the owner", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "i want to add my partner as an admin", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "how do i get back into my account after the email change", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "the new hire cannot join our workspace", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "we lost the only admin account we had", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "someone in our office got locked out too", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "my login works on the web but not in the app", "output": "Routing this to the account team.", "intent": "route_account", "kind": "route"}
+{"input": "how do i reset my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "where do i change my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "i forgot my password, how do i get a new one", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "what are the steps to reset a password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "can i change the password on my login", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "how often should i change my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "the reset link expired, how do i get another", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "where is the password reset page", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "how do i set a stronger password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "does the password need special characters", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "how do i update my password before it expires", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "what do i do when i cannot remember my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "is there a way to reset the password myself", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "how long does a password reset take", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "can i reuse an old password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "where do i manage my password settings", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "can you walk me through resetting my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "please tell me how to change my password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "i want a new password, what do i do", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "our team keeps asking how to reset their passwords", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "the password page will not accept my new password", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "what makes a password valid here", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "my reset email never showed up, what now", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "is the password the same as the app login", "output": "Here is how to reset your password: open settings, choose security, then reset password.", "intent": "answer_password", "kind": "answer"}
+{"input": "how much does the pro plan cost", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what is the price of the team plan", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "how much is it per user each month", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "is there a discount for paying yearly", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what does the enterprise tier include", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "how much would ten seats cost us", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "is the first month free", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what is the difference between the basic and pro plans", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "do you charge per project or per user", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "how much is the upgrade from basic", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "are there any setup fees", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what happens to the price if we add more users", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "is there a cheaper plan for a small team", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "how much does the add-on cost", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "when does the trial end and billing start", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "can i get a quote for fifty seats", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "can you send me the price list", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "please quote me for the yearly plan", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "i want to know what the business plan costs", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "how much do you charge a nonprofit", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "the pricing page confused me, what is included", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "good value matters to us, what is the cheapest tier", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "do prices go up after the first year", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what would five users cost on the pro plan", "output": "The plans and their prices are on the pricing page; the team plan is billed per user each month.", "intent": "answer_pricing", "kind": "answer"}
+{"input": "what are your support hours", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "is support available on sundays", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "how fast do you usually reply", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "when will someone get back to me", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "is there phone support or only email", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "how long is the wait for an answer today", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "do you answer tickets at night", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "what time does the help desk open", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "is anyone there on holidays", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "how soon can i expect a response", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "do you have live chat and when is it on", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "what is the average reply time", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "are you open on weekends at all", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "when does support close for the day", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "how long before a human looks at my ticket", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "is support faster on the pro plan", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "can you tell me your opening hours", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "please let me know when the desk is staffed", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "i want to know how long replies usually take", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "how do i reach a person outside business hours", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "the chat said nobody is available, when will they be", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "what are the holiday hours this year", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "is the desk open right now", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "when is the best time to get a fast answer", "output": "Support hours and typical reply times are listed on the help page.", "intent": "answer_hours", "kind": "answer"}
+{"input": "the whole service is down", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "nothing works at all this morning", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "every page returns an error for our whole company", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "we are completely blocked and losing money", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the platform has been down for two hours", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "all of our users are affected at once", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "total outage on our side, nothing loads", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the system went down during our launch", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "nobody in the company can sign in at all", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "this is urgent, production is down", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the outage is costing us customers right now", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "everything broke at the same time", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "our customers cannot reach the service either", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the site is down for everyone, not just us", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "we have a complete work stoppage because of this", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "it is still down and getting worse", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "can you confirm the service is down for everyone", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "please treat this as urgent, we are down", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "i want this escalated, nothing has worked for hours", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "how do we reach the emergency team, the site is dead", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the whole office is offline because of this", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "this is the third outage this month and we are fed up", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "every customer of ours is calling us about your downtime", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "the service died in the middle of our busiest day", "output": "Escalating this as an outage to the on-call team.", "intent": "escalate_outage", "kind": "escalate"}
+{"input": "i want my data deleted under the privacy law", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "my lawyer asked me to contact you", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "we need a copy of all data you hold on us", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "this is a formal complaint about data handling", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "delete my personal data completely", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "we will take legal action if this is not resolved", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "i am reporting a breach of our data agreement", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "send me everything you have stored about me", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "our compliance team needs your data policy in writing", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "i never consented to this data being kept", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "a regulator asked us about your service", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "we need to speak to your legal department", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "export all of my personal information for a legal request", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "this violates the contract we signed", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "i am filing a complaint with the data authority", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "remove every trace of my account data permanently", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "can you put me through to your privacy officer", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "please delete the data you hold on our company", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "i want a formal answer about where our data is stored", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "how do i make a data access request", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "the contract says you delete data on request, so delete it", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "we found our customer data in a place it should not be", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "a court order requires you to preserve these records", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "your terms changed and we never agreed to them", "output": "Escalating this to the legal and privacy team.", "intent": "escalate_legal", "kind": "escalate"}
+{"input": "this ticket is a duplicate", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "i already reported this exact issue", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "same problem as my earlier ticket", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this repeats the report i sent yesterday", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "someone else on my team filed the same thing", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "duplicate, please merge it with the other one", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "i sent this twice by accident", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this is the same bug as before", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "two tickets exist for this one problem", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this issue is already being handled elsewhere", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "same report, i opened it again by mistake", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this duplicates the ticket from last week", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "another ticket covers this already", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "i reported this under a different title", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this is a copy of my previous request", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "the same issue came in through two channels", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "can you merge this with my other ticket", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "please close this one, it is the same as before", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "i want to withdraw this, i already have a ticket open", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "how do i mark this as a duplicate myself", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "the same fault got logged by two of our offices", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "this and the earlier one are one and the same", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "yes this is a duplicate of the other ticket", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "we opened two by mistake when the form hung", "output": "Closing this ticket as a duplicate.", "intent": "close_duplicate", "kind": "resolve"}
+{"input": "it works now, thanks", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the problem is fixed on my end", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "all good, you can close this", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the update fixed it for me", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "i found the answer myself, never mind", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "it started working again this morning", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "resolved, the restart did it", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "no longer an issue for us", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the new version fixed the problem", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "thanks, that solved it", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "it was a typo in my settings, sorry", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "everything is back to normal here", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the issue went away on its own", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "my mistake, it works fine", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "closing the loop, we are sorted", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "fixed after clearing the cache", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "can you close this now, it is sorted", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "please mark this as done, the fix worked", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "i want to confirm the problem is gone", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "how do i close a ticket that fixed itself", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the engineer sorted it on the call, thanks", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "good news, the restart fixed everything", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "we tested it this morning and it works", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "no need to keep this open, all fixed", "output": "Closing this ticket as resolved.", "intent": "close_resolved", "kind": "resolve"}
+{"input": "the problem came back", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "it broke again after the fix", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "reopening this, the issue returned", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the same error is happening again today", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "it worked for a day and then failed again", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "this is not fixed after all", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the bug is back since the last update", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "same issue again, please reopen", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "it stopped working again last night", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the fix did not hold", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "we are seeing the same crash again", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "it relapsed, exactly the same symptoms", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "reopen please, still broken on our side", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the problem returned this morning", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "again the same failure as before", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "it is happening again after you closed it", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "can you reopen my ticket from last week", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "please look again, the fault is back", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "i want this reopened, it failed again today", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "how do i reopen a closed ticket, the issue returned", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the same symptoms started again after the weekend", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "good for a day, then the error came back", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "we closed it too soon, it is broken again", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "the fix worked until the update, now it is back", "output": "Reopening this ticket.", "intent": "reopen_ticket", "kind": "track"}
+{"input": "any update on my ticket", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "what is the status of my request", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "has anyone looked at my issue yet", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "how is my ticket progressing", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "is my case still open", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "any news on the problem i reported", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "where are we with my request", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "did the team see my ticket", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "what is happening with my case", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "is someone working on this yet", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "can you check the status of my report", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "how far along is my ticket", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "any progress since yesterday", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "is my ticket in the queue still", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "what stage is my request at", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "has my issue been assigned to anyone", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "can you tell me where my ticket stands", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "please check on my case from monday", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "i want an update on the issue i raised", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "how do i follow my ticket's progress", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "the ticket has been quiet for three days, any movement", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "good morning, just checking in on my report", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "has the engineer replied to my case yet", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
+{"input": "my request seems stuck, can someone look", "output": "Here is the current status of your ticket.", "intent": "track_status", "kind": "track"}
